@@ -1795,7 +1795,7 @@ const GAUDIO={0:"https://3rizqimaulana-lgtm.github.io/naffa-audio/The 1975 - Abo
 const TRACKS=[{id:'am',title:'ABOUT YOU',artist:'THE 1975',color:'#c97b84',main:true},{id:'a2',title:'CINNAMON GIRL',artist:'LANA DEL REY',color:'#c9974a'},{id:'a3',title:"YOU'LL BE IN MY HEART",artist:'NIKI',color:'#7a9e7e'},{id:'a4',title:'GUILTY AS SIN? x ABOUT YOU',artist:'TAYLOR SWIFT x THE 1975',color:'#8fa8c8'}];
 const am=document.getElementById('am');
 let cti=0,_au=false,_pp=null,bonusUnlocked=(localStorage.getItem('nbu')==='1');
-let aCtx,anl,aData,micStr,micAnl,micData,micOn=false;
+let aCtx,anl,aData,micStr,micAnl,micData,micOn=false,micCtx=null;
 let openedG=0,cdInt,ptmr=null,panim=null,figAnim=null,uAnim=null,figDone=false;
 let selF='',selA='',selD='The Wildflower Sovereign',maniWish='';
 const BIRTH=new Date("2007-01-23T00:00:00");
@@ -2239,19 +2239,24 @@ function requestMicThenStart(){
       if(micStr)micStr.getTracks().forEach(function(t){t.stop();});
       micStr=stream;
 
-      // Reuse AudioContext yang sudah ada (dari audio player) agar tidak bentrok
-      // Kalau belum ada, buat baru
+      // Gunakan AudioContext TERPISAH khusus mic — jangan reuse aCtx musik,
+      // karena createMediaStreamSource dan createMediaElementSource pada context
+      // yang sama bisa konflik device/sample-rate di beberapa browser.
       var mc;
       try {
-        if(aCtx && aCtx.state !== 'closed') {
-          mc = aCtx;
-        } else {
-          mc = new(window.AudioContext||window.webkitAudioContext)();
-          aCtx = mc;
-        }
+        mc = new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
       } catch(e) {
-        mc = new(window.AudioContext||window.webkitAudioContext)();
+        try{ mc = new(window.AudioContext||window.webkitAudioContext)(); }
+        catch(e2){
+          if(gate)gate.innerHTML=`
+            <p style="font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(201,123,132,.6);letter-spacing:1px;text-align:center;line-height:1.8;">Audio engine tidak didukung browser ini.<br>Ketuk kue untuk meniup.</p>
+            <button onclick="blowManual()" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:2px;padding:10px 24px;background:transparent;border:1px solid rgba(201,151,74,.4);border-radius:30px;color:var(--gold-lt);cursor:pointer;margin-top:4px;">✦ Tiup Lilin Sekarang!</button>`;
+          if(gate)gate.style.display='flex';
+          stream.getTracks().forEach(function(t){t.stop();});
+          return;
+        }
       }
+      micCtx = mc;
 
       function startAnalyser() {
         try {
@@ -2321,7 +2326,12 @@ function initMic(){
     if(micStr)micStr.getTracks().forEach(t=>t.stop());
     micStr=str;
     let mc;
-    try{mc=(aCtx&&aCtx.state!=='closed')?aCtx:new(window.AudioContext||window.webkitAudioContext)();if(!aCtx||aCtx.state==='closed')aCtx=mc;}catch(e){mc=new(window.AudioContext||window.webkitAudioContext)();}
+    try{
+      mc = (micCtx && micCtx.state!=='closed') ? micCtx : new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
+      micCtx = mc;
+    }catch(e){
+      try{mc=new(window.AudioContext||window.webkitAudioContext)();micCtx=mc;}catch(e2){return;}
+    }
     function doInit(){
       try{
         const ms=mc.createMediaStreamSource(str);
@@ -2385,6 +2395,7 @@ function resetAll(){
   // Stop all audio
   try{TRACKS.forEach(t=>{const e=document.getElementById(t.id);if(e){e.pause();e.currentTime=0;}});}catch(e){}
   try{if(micStr){micStr.getTracks().forEach(t=>t.stop());micStr=null;}micOn=false;}catch(e){}
+  try{if(micCtx&&micCtx.state!=='closed'){micCtx.close();}micCtx=null;}catch(e){}
   try{const mst=document.getElementById('micst');if(mst)mst.style.display='none';}catch(e){}
   cti=0;
   try{am.pause();am.currentTime=0;}catch(e){}
