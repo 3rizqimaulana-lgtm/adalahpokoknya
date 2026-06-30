@@ -1795,7 +1795,7 @@ const GAUDIO={0:"https://3rizqimaulana-lgtm.github.io/naffa-audio/The 1975 - Abo
 const TRACKS=[{id:'am',title:'ABOUT YOU',artist:'THE 1975',color:'#c97b84',main:true},{id:'a2',title:'CINNAMON GIRL',artist:'LANA DEL REY',color:'#c9974a'},{id:'a3',title:"YOU'LL BE IN MY HEART",artist:'NIKI',color:'#7a9e7e'},{id:'a4',title:'GUILTY AS SIN? x ABOUT YOU',artist:'TAYLOR SWIFT x THE 1975',color:'#8fa8c8'}];
 const am=document.getElementById('am');
 let cti=0,_au=false,_pp=null,bonusUnlocked=(localStorage.getItem('nbu')==='1');
-let aCtx,anl,aData,micStr,micAnl,micData,micOn=false,micCtx=null;
+let aCtx,anl,aData,micStr,micAnl,micData,micOn=false;
 let openedG=0,cdInt,ptmr=null,panim=null,figAnim=null,uAnim=null,figDone=false;
 let selF='',selA='',selD='The Wildflower Sovereign',maniWish='';
 const BIRTH=new Date("2007-01-23T00:00:00");
@@ -2238,79 +2238,40 @@ function requestMicThenStart(){
       if(gate)gate.style.display='none';
       if(micStr)micStr.getTracks().forEach(function(t){t.stop();});
       micStr=stream;
-
-      // Gunakan AudioContext TERPISAH khusus mic — jangan reuse aCtx musik,
-      // karena createMediaStreamSource dan createMediaElementSource pada context
-      // yang sama bisa konflik device/sample-rate di beberapa browser.
-      var mc;
-      try {
-        mc = new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
-      } catch(e) {
-        try{ mc = new(window.AudioContext||window.webkitAudioContext)(); }
-        catch(e2){
-          if(gate)gate.innerHTML=`
-            <p style="font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(201,123,132,.6);letter-spacing:1px;text-align:center;line-height:1.8;">Audio engine tidak didukung browser ini.<br>Ketuk kue untuk meniup.</p>
-            <button onclick="blowManual()" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:2px;padding:10px 24px;background:transparent;border:1px solid rgba(201,151,74,.4);border-radius:30px;color:var(--gold-lt);cursor:pointer;margin-top:4px;">✦ Tiup Lilin Sekarang!</button>`;
-          if(gate)gate.style.display='flex';
-          stream.getTracks().forEach(function(t){t.stop();});
-          return;
-        }
-      }
-      micCtx = mc;
-
-      function startAnalyser() {
-        try {
-          var ms=mc.createMediaStreamSource(stream);
-          micAnl=mc.createAnalyser();micAnl.fftSize=1024;
-          var hp=mc.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(100,mc.currentTime);
-          var lp=mc.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(800,mc.currentTime);
-          ms.connect(hp);hp.connect(lp);lp.connect(micAnl);
-          micData=new Uint8Array(micAnl.frequencyBinCount);
-          micOn=true;
-          document.getElementById('micst').style.display='flex';
-          var bl=30,cs=[],cal=true;
-          function gv(){micAnl.getByteFrequencyData(micData);var s=0;for(var i=3;i<=30;i++)s+=micData[i];return s/28;}
-          setTimeout(function(){bl=cs.length?cs.reduce(function(a,b){return a+b;})/cs.length:20;cal=false;},1000);
-          var bc=0,act=true;
-          function cb(){
-            if(!act)return;
-            var v=gv();
-            if(cal){cs.push(v);}
-            else if(micOn){
-              var th=Math.max(55,bl*2);
-              if(v>th){bc++;if(bc>3){act=false;execBlow();}}
-              else{bc=Math.max(0,bc-1);}
-            }
-            requestAnimationFrame(cb);
+      var mc=new(window.AudioContext||window.webkitAudioContext)();
+      mc.resume().then(function(){
+        var ms=mc.createMediaStreamSource(stream);
+        micAnl=mc.createAnalyser();micAnl.fftSize=1024;
+        var hp=mc.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(100,mc.currentTime);
+        var lp=mc.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(800,mc.currentTime);
+        ms.connect(hp);hp.connect(lp);lp.connect(micAnl);
+        micData=new Uint8Array(micAnl.frequencyBinCount);
+        micOn=true;
+        document.getElementById('micst').style.display='flex';
+        var bl=30,cs=[],cal=true;
+        function gv(){micAnl.getByteFrequencyData(micData);var s=0;for(var i=3;i<=30;i++)s+=micData[i];return s/28;}
+        setTimeout(function(){bl=cs.length?cs.reduce(function(a,b){return a+b;})/cs.length:20;cal=false;},1000);
+        var bc=0,act=true;
+        function cb(){
+          if(!act)return;
+          var v=gv();
+          if(cal){cs.push(v);}
+          else if(micOn){
+            var th=Math.max(55,bl*2);
+            if(v>th){bc++;if(bc>3){act=false;execBlow();}}
+            else{bc=Math.max(0,bc-1);}
           }
-          cb();
-        } catch(e) {
-          // AudioContext error — tampilkan fallback manual
-          if(gate)gate.innerHTML=`
-            <p style="font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(201,123,132,.6);letter-spacing:1px;text-align:center;line-height:1.8;">Mikrofon terdeteksi tapi audio engine gagal.<br>Gunakan tombol di bawah.</p>
-            <button onclick="blowManual()" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:2px;padding:10px 24px;background:transparent;border:1px solid rgba(201,151,74,.4);border-radius:30px;color:var(--gold-lt);cursor:pointer;margin-top:4px;">✦ Tiup Lilin Sekarang!</button>`;
-          if(gate)gate.style.display='flex';
+          requestAnimationFrame(cb);
         }
-      }
-
-      // Resume AudioContext dulu (wajib setelah user gesture)
-      if(mc.state === 'suspended') {
-        mc.resume().then(startAnalyser).catch(function(){
-          // resume gagal — langsung coba anyway
-          startAnalyser();
-        });
-      } else {
-        startAnalyser();
-      }
+        cb();
+      });
     })
     .catch(function(err){
       var msg='';
       if(err.name==='NotAllowedError'||err.name==='PermissionDeniedError'){
-        msg='Izin mikrofon ditolak. Ketuk gambar kue untuk meniup.';
-      } else if(err.name==='NotFoundError'||err.name==='DevicesNotFoundError'){
+        msg='Izin ditolak. Ketuk gambar kue untuk meniup.';
+      } else if(err.name==='NotFoundError'){
         msg='Mikrofon tidak ditemukan. Ketuk gambar kue untuk meniup.';
-      } else if(err.name==='NotReadableError'||err.name==='TrackStartError'){
-        msg='Mikrofon sedang dipakai app lain. Ketuk kue untuk meniup.';
       } else {
         msg='Mikrofon tidak bisa diakses. Ketuk gambar kue untuk meniup.';
       }
@@ -2319,39 +2280,14 @@ function requestMicThenStart(){
         <button onclick="blowManual()" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:2px;padding:10px 24px;background:transparent;border:1px solid rgba(201,151,74,.4);border-radius:30px;color:var(--gold-lt);cursor:pointer;margin-top:4px;">✦ Tiup Lilin Sekarang!</button>`;
     });
 }
-function initMic(){
-  if(micOn||!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return;
-  setBG('cake');
-  navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(str=>{
-    if(micStr)micStr.getTracks().forEach(t=>t.stop());
-    micStr=str;
-    let mc;
-    try{
-      mc = (micCtx && micCtx.state!=='closed') ? micCtx : new(window.AudioContext||window.webkitAudioContext)({latencyHint:'interactive'});
-      micCtx = mc;
-    }catch(e){
-      try{mc=new(window.AudioContext||window.webkitAudioContext)();micCtx=mc;}catch(e2){return;}
-    }
-    function doInit(){
-      try{
-        const ms=mc.createMediaStreamSource(str);
-        micAnl=mc.createAnalyser();micAnl.fftSize=1024;
-        const hp=mc.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(100,mc.currentTime);
-        const lp=mc.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(800,mc.currentTime);
-        ms.connect(hp);hp.connect(lp);lp.connect(micAnl);
-        micData=new Uint8Array(micAnl.frequencyBinCount);micOn=true;
-        const gate2=document.getElementById('mic-gate');if(gate2)gate2.style.display='none';
-        document.getElementById('micst').style.display='flex';
-        let bl=30,cs=[],cal=true;
-        function gv(){micAnl.getByteFrequencyData(micData);let s=0;for(let i=3;i<=30;i++)s+=micData[i];return s/28;}
-        setTimeout(()=>{bl=cs.length?cs.reduce((a,b)=>a+b)/cs.length:20;cal=false;},1000);
-        let bc=0,act=true;
-        function cb(){if(!act)return;const v=gv();if(cal){cs.push(v);}else if(micOn){const th=Math.max(55,bl*2);const norm=Math.min(1,Math.max(0,(v-Math.max(10,bl))/(th)));if(window._cakeFlames&&norm>0.1){window._cakeFlames.forEach(function(f){if(!f.blown){f.phase+=norm*(Math.random()-0.5)*0.8;}});}if(v>th){bc++;if(bc>=8){act=false;execBlow();return;}}else bc=Math.max(0,bc-1);}requestAnimationFrame(cb);}cb();
-      }catch(e){}
-    }
-    if(mc.state==='suspended'){mc.resume().then(doInit).catch(doInit);}else{doInit();}
-  }).catch(()=>{});
-}
+function initMic(){if(micOn||!navigator.mediaDevices)return;setBG('cake');navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(str=>{if(micStr)micStr.getTracks().forEach(t=>t.stop());micStr=str;const mc=new(window.AudioContext||window.webkitAudioContext)(),ms=mc.createMediaStreamSource(str);micAnl=mc.createAnalyser();micAnl.fftSize=1024;const hp=mc.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(100,mc.currentTime);const lp=mc.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(800,mc.currentTime);ms.connect(hp);hp.connect(lp);lp.connect(micAnl);micData=new Uint8Array(micAnl.frequencyBinCount);micOn=true;var gate2=document.getElementById('mic-gate');if(gate2)gate2.style.display='none';document.getElementById('micst').style.display='flex';let bl=30,cs=[],cal=true;function gv(){micAnl.getByteFrequencyData(micData);let s=0;for(let i=3;i<=30;i++)s+=micData[i];return s/28;}setTimeout(()=>{bl=cs.length?cs.reduce((a,b)=>a+b)/cs.length:20;cal=false;},1000);let bc=0,act=true;function cb(){if(!act)return;const v=gv();if(cal){cs.push(v);}else if(micOn){const th=Math.max(55,bl*2);
+    // Visual: api lilin merespons volume tiupan — perbesar flicker dan miringkan
+    const norm=Math.min(1,Math.max(0,(v-Math.max(10,bl))/(th)));
+    if(window._cakeFlames&&norm>0.1){window._cakeFlames.forEach(function(f){if(!f.blown){
+      // Tambah distorsi ke phase agar api terlihat tertiup
+      f.phase+=norm*(Math.random()-0.5)*0.8;
+    }});}
+    if(v>th){bc++;if(bc>=8){act=false;execBlow();return;}}else bc=Math.max(0,bc-1);}requestAnimationFrame(cb);}cb();}).catch(()=>{});}
 
 // CELEBRATE
 function showBloom(col){sfx('ok');for(let i=0;i<20;i++)setTimeout(()=>bloom(Math.random()*window.innerWidth,Math.random()*window.innerHeight*.7,col),i*45);}
@@ -2395,7 +2331,6 @@ function resetAll(){
   // Stop all audio
   try{TRACKS.forEach(t=>{const e=document.getElementById(t.id);if(e){e.pause();e.currentTime=0;}});}catch(e){}
   try{if(micStr){micStr.getTracks().forEach(t=>t.stop());micStr=null;}micOn=false;}catch(e){}
-  try{if(micCtx&&micCtx.state!=='closed'){micCtx.close();}micCtx=null;}catch(e){}
   try{const mst=document.getElementById('micst');if(mst)mst.style.display='none';}catch(e){}
   cti=0;
   try{am.pause();am.currentTime=0;}catch(e){}
