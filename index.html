@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Taman Bulan Naffa — Selamat Ulang Tahun ke-20</title>
+<title>Taman Bulan Naffa</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Josefin+Sans:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -116,6 +116,10 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
 .pinput::placeholder{color:rgba(201,151,74,.3);font-size:1rem;}
 .phint{font-size:.72rem;color:rgba(250,246,240,.45);font-family:'Space Mono',monospace;line-height:1.6;margin-top:6px;}
 .mdisp{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:500;color:var(--rose-lt);margin:12px 0;letter-spacing:.05em;}
+.mdisp-sqrt{display:inline-flex;align-items:center;position:relative;padding:0 4px 0 20px;vertical-align:middle;}
+.mdisp-sqrt::before{content:'';position:absolute;left:0;bottom:0;width:12px;height:100%;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:skewX(-12deg);}
+.mdisp-sqrt::after{content:'';position:absolute;top:0;left:12px;right:0;height:2px;background:currentColor;}
+.mdisp-sqrt-num{position:relative;z-index:1;line-height:1;}
 
 /* COUNTDOWN */
 .tgrid{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin:20px 0;}
@@ -306,7 +310,7 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
   <div class="lk-card">
     <div class="lk-icon">✦</div>
     <div class="lk-em" id="lk-emletter" tabindex="0" role="button" aria-label="Buka dengan kata sandi">N</div>
-    <div class="lk-sub">Taman Bulan · Ulang Tahun ke-20</div>
+    <div class="lk-sub">Taman Bulan · Naffa</div>
     <div class="lk-divider"></div>
     <p class="lk-msg">Taman ini masih tertutup rapat, menunggu hari yang sudah ditentukan untuk mekar.</p>
     <div class="lk-grid">
@@ -332,7 +336,7 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
 <!-- SPLASH -->
 <div id="splash">
   <div class="sp-em">✦ N ✦</div>
-  <div class="sp-sub">Taman Bulan · Ulang Tahun ke-20</div>
+  <div class="sp-sub">Taman Bulan · Naffa</div>
   <div class="sp-bw"><div class="sp-bar" id="spbar"></div></div>
   <div class="sp-st" id="spst">menanam benih kenangan...</div>
 </div>
@@ -404,7 +408,7 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
     <div class="clabel">✦ Gerbang Pertama · Teka-Teki Bunga</div>
     <h2 style="font-size:1.6rem;font-weight:500;color:var(--cream);margin-bottom:10px;">Berapa Kelopak Usiamu?</h2>
     <p style="font-size:.8rem;color:rgba(250,246,240,.6);line-height:1.6;margin-bottom:14px;">Di kebun rahasia ini, sebuah mawar mekar sebanyak usiamu hari ini. Hitunglah:</p>
-    <div class="mdisp">2³ × 3 − √16 = ?</div>
+    <div class="mdisp">2⁵ &minus; 12 = ?</div>
     <div class="pwrap">
       <input type="tel" id="ca" class="pinput" placeholder="✦" maxlength="2" autocomplete="off">
       <div class="phint" id="h1">Kamu pasti bisa menghitungnya.</div>
@@ -2181,7 +2185,7 @@ function go(f,t){const fe=document.getElementById(f);fe.style.opacity='0';fe.sty
 function bloom(x,y,col){for(let i=0;i<14;i++){const d=document.createElement('div');d.className='bdot';const a=(i/14)*Math.PI*2,dist=35+Math.random()*55,sz=Math.random()*6+3;d.style.cssText=`left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${col};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist}px;--dur:${.5+Math.random()*.4}s;margin-left:-${sz/2}px;margin-top:-${sz/2}px;border-radius:${Math.random()>.5?'50%':'30%'};`;document.body.appendChild(d);setTimeout(()=>d.remove(),1000);}}
 
 // PROGRESS
-function initProg(){const d=document.getElementById('pdots');d.innerHTML='';STAGES.forEach((_,i)=>{const p=document.createElement('div');p.className='pdot'+(i===0?' active':'');p.id='pd'+i;d.appendChild(p);});updProg(0);document.getElementById('phud').style.opacity='1';}
+function initProg(){const d=document.getElementById('pdots');d.innerHTML='';STAGES.forEach((_,i)=>{const p=document.createElement('div');p.className='pdot'+(i===0?' active':'');p.id='pd'+i;d.appendChild(p);});updProg(0);document.getElementById('phud').style.opacity='1';runTerm();}
 function updProg(i){STAGES.forEach((_,j)=>{const p=document.getElementById('pd'+j);if(!p)return;p.className='pdot'+(j<i?' done':j===i?' active':'');});document.getElementById('plbl').textContent=(i+1)+'/'+STAGES.length;}
 
 // PARALLAX
@@ -2203,14 +2207,18 @@ function runTerm(){if(_termRan)return;_termRan=true;
 function goS2(){
   go('s1','s2');
   unlkA();
-  // Hanya mulai audio jika belum ada yang berjalan — cegah tabrakan saat replay
-  const anyPlaying = TRACKS.some(t=>{ const e=document.getElementById(t.id); return e&&!e.paused; }) || (am&&!am.paused);
-  if(!anyPlaying) playA();
-  setTimeout(()=>{initViz();document.getElementById('ahud').style.opacity='1';updNP(cti);},500);
+  // Jika ada pilihan track dari replay, putar itu — kalau tidak, putar track utama
+  const targetTrack = _pendingTrackAfterReset >= 0 ? _pendingTrackAfterReset : 0;
+  if(_pendingTrackAfterReset >= 0){
+    bonusUnlocked = true;
+    _pendingTrackAfterReset = -1;
+  }
+  setTimeout(function(){ swT(targetTrack); }, 300);
+  setTimeout(()=>{initViz();document.getElementById('ahud').style.opacity='1';updNP(targetTrack);},500);
 }
 
 // HINTS
-function showHint(s){sfx('tr');if(s===1){document.getElementById('h1').textContent="Petunjuk: 8×3 = 24, dikurangi 4 = usia sakral Naffa hari ini.";document.getElementById('h1').style.color='var(--sage-lt)';}else{document.getElementById('h2').textContent="Petunjuk: Tahun kelahiran Naffa adalah 2007 (23 Januari 2007).";document.getElementById('h2').style.color='var(--rose-lt)';}}
+function showHint(s){sfx('tr');if(s===1){document.getElementById('h1').textContent="Petunjuk: 2⁵ = 32, dikurangi 12 = usia sakral Naffa hari ini.";document.getElementById('h1').style.color='var(--sage-lt)';}else{document.getElementById('h2').textContent="Petunjuk: Tahun kelahiran Naffa adalah 2007 (23 Januari 2007).";document.getElementById('h2').style.color='var(--rose-lt)';}}
 
 // VERIFY
 function verify1(){const a=document.getElementById('ca').value.trim();if(a==='20'){sfx('ok');go('s2','s2b');}else{sfx('err');document.getElementById('ca').value='';alert('Coba hitung lagi ya! 🌸');}}
@@ -2318,7 +2326,37 @@ async function sendWish(){let w=(document.getElementById('wta').value||'').trim(
 // CANDLE
 // goS10 defined below with cake canvas init
 function resetFlames(){['fb2','fg2','fb0','fg0'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('blown');});}
-function execBlow(){sfx('ok');if(navigator.vibrate)navigator.vibrate([80,40,80,40,200]);['fb2','fg2','fb0','fg0'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('blown');});const ov=document.createElement('div');ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,20,16,0);z-index:999;pointer-events:none;transition:background 2s ease;';document.body.appendChild(ov);requestAnimationFrame(()=>ov.style.background='rgba(26,20,16,.6)');if(micStr){micStr.getTracks().forEach(t=>t.stop());micStr=null;}micOn=false;document.getElementById('micst').style.display='none';setTimeout(()=>{ov.remove();setBG('gold');go('s10','s11');},2400);}
+function execBlow(){
+  sfx('ok');
+  if(navigator.vibrate)navigator.vibrate([80,40,80,40,200]);
+  // Tandai blown di elemen CSS (untuk overlay lilin di luar canvas)
+  ['fb2','fg2','fb0','fg0'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.add('blown');});
+
+  // Padamkan api di canvas satu per satu dengan jeda
+  const fl = window._cakeFlames;
+  if(fl && fl.length){
+    fl.forEach((f, i) => {
+      setTimeout(() => {
+        f.blown = true;
+        f.blowProg = 0;
+        // Percikan terakhir sebelum padam
+        f._lastSpark = true;
+        setTimeout(() => { f._lastSpark = false; }, 300);
+      }, i * 180);
+    });
+  }
+
+  // Overlay gelap masuk setelah api mulai padam
+  const ov=document.createElement('div');
+  ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(26,20,16,0);z-index:999;pointer-events:none;transition:background 2.2s ease;';
+  document.body.appendChild(ov);
+  setTimeout(()=>{ ov.style.background='rgba(26,20,16,.72)'; }, 350);
+
+  if(micStr){micStr.getTracks().forEach(t=>t.stop());micStr=null;}
+  micOn=false;
+  document.getElementById('micst').style.display='none';
+  setTimeout(()=>{ov.remove();setBG('gold');go('s10','s11');},2800);
+}
 
 // MIC
 function requestMicThenStart(){
@@ -2509,6 +2547,19 @@ document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(e.target&&e
   // Mulai preload audio utama diam-diam saat splash
   try{am.preload='auto';am.src=GAUDIO[0];}catch(e){}
   function runSplash(){
+    // Reset splash ke kondisi awal dulu (kalau sempat jalan di balik lock gate)
+    bar.style.width='0%';
+    st.textContent=msgs[0];
+    sp.style.opacity='1';
+    sp.style.display='flex';
+    p=0;
+    // Pastikan semua screen kembali ke posisi awal
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    var s1=document.getElementById('s1'); if(s1) s1.classList.add('active');
+    // Reset terminal s1 agar bisa berjalan lagi
+    if(typeof _termRan !== 'undefined') _termRan=false;
+    var tbox=document.getElementById('tbox'); if(tbox) tbox.innerHTML='';
+    var entbtn=document.getElementById('entbtn'); if(entbtn) entbtn.style.display='none';
     const iv=setInterval(()=>{p+=Math.random()*16+7;if(p>100)p=100;bar.style.width=p+'%';st.textContent=msgs[Math.min(3,Math.floor(p/25))];if(p>=100){clearInterval(iv);setTimeout(()=>{sp.style.opacity='0';setTimeout(()=>{sp.style.display='none';initProg();},800);},400);}},85);
   }
   // Jika gerbang kunci masih aktif, tunda splash sampai gerbang benar-benar terbuka
@@ -2713,22 +2764,31 @@ function initCakeCanvas() {
     flames.forEach((fl, fi) => {
       if (fl.blown && fl.blowProg >= 1) return;
 
-      const alpha = fl.blown ? Math.max(0, 1 - fl.blowProg * 2.5) : 1;
-      if (fl.blown) fl.blowProg = Math.min(1, fl.blowProg + 0.03);
+      // Progres padam lebih lambat agar dramatis, mengecil dan meliuk dulu
+      if (fl.blown) fl.blowProg = Math.min(1, fl.blowProg + 0.022);
 
-      // Flicker parameters — setiap lilin punya frekuensi beda agar tidak sinkron
+      const bp = fl.blown ? fl.blowProg : 0;
+      // Alpha: mulai fade di 40% progres agar ada waktu untuk efek mengecil
+      const alpha = fl.blown ? Math.max(0, 1 - Math.max(0, bp - 0.4) * 2.5) : 1;
+      // Scale mengecil seiring padam (dari 1 ke 0)
+      const dyingScale = fl.blown ? Math.max(0, 1 - bp * 1.1) : 1;
+      // Meliuk ke samping saat padam (tiupan dari sisi)
+      const dyingLean = fl.blown ? bp * 18 : 0;
+
       const flick1 = Math.sin(frame * 0.11 + fl.phase) * 0.5 + Math.sin(frame * 0.07 + fi * 1.3) * 0.3;
       const flick2 = Math.cos(frame * 0.13 + fl.phase * 1.7) * 0.4;
-      const flickX = flick1 * 2.5; // sway horizontal
-      const flickScale = 1 + flick2 * 0.12; // scale naik-turun
+      const flickX = flick1 * 2.5 + dyingLean;
+      const flickScale = (1 + flick2 * 0.12) * dyingScale;
 
       const fx = fl.x + flickX;
       const baseY = fl.baseY;
       const flameH = H * 0.085 * flickScale;
-      const flameW = W * 0.022 * (1 + Math.abs(flick1) * 0.15);
+      const flameW = W * 0.022 * (1 + Math.abs(flick1) * 0.15) * dyingScale;
       const tipY = baseY - flameH;
 
-      // --- Candlelight ambient glow menerangi kue ---
+      if (flameH < 0.5 || flameW < 0.5) return;
+
+      // --- Candlelight ambient glow ---
       ctx.save();
       ctx.globalAlpha = (0.18 + Math.abs(flick2) * 0.06) * alpha;
       const ambR = W * 0.28;
@@ -2742,7 +2802,7 @@ function initCakeCanvas() {
       ctx.fill();
       ctx.restore();
 
-      // --- Outer glow (halo besar) ---
+      // --- Outer glow ---
       ctx.save();
       ctx.globalAlpha = (0.22 + flick2 * 0.08) * alpha;
       const og = ctx.createRadialGradient(fx, tipY + flameH * 0.5, 0, fx, tipY + flameH * 0.4, flameW * 3.5);
@@ -2755,29 +2815,19 @@ function initCakeCanvas() {
       ctx.fill();
       ctx.restore();
 
-      // --- Api utama: teardrop shape ---
-      // Gambar pakai bezier: lebar di bawah, runcing di atas
+      // --- Api utama: teardrop ---
       function drawTeardrop(cx, by, tw, th, globalA, fillStyle) {
         ctx.save();
         ctx.globalAlpha = globalA * alpha;
         ctx.fillStyle = fillStyle;
         ctx.beginPath();
-        ctx.moveTo(cx, by - th);          // ujung atas (runcing)
-        ctx.bezierCurveTo(
-          cx + tw * 1.1, by - th * 0.55, // kanan atas
-          cx + tw,       by,              // kanan bawah
-          cx,            by + th * 0.08   // titik bawah
-        );
-        ctx.bezierCurveTo(
-          cx - tw,       by,              // kiri bawah
-          cx - tw * 1.1, by - th * 0.55, // kiri atas
-          cx,            by - th          // kembali ke ujung atas
-        );
+        ctx.moveTo(cx, by - th);
+        ctx.bezierCurveTo(cx + tw * 1.1, by - th * 0.55, cx + tw, by, cx, by + th * 0.08);
+        ctx.bezierCurveTo(cx - tw, by, cx - tw * 1.1, by - th * 0.55, cx, by - th);
         ctx.fill();
         ctx.restore();
       }
 
-      // Lapisan 1: outer flame (oranye-merah)
       const g1 = ctx.createLinearGradient(fx, tipY, fx, baseY);
       g1.addColorStop(0, 'rgba(255,80,0,0)');
       g1.addColorStop(0.3, 'rgba(255,120,10,0.9)');
@@ -2785,7 +2835,6 @@ function initCakeCanvas() {
       g1.addColorStop(1, 'rgba(200,80,0,0.6)');
       drawTeardrop(fx, baseY, flameW, flameH, 0.9, g1);
 
-      // Lapisan 2: mid flame (oranye-kuning)
       const fw2 = flameW * 0.68, fh2 = flameH * 0.82;
       const g2 = ctx.createLinearGradient(fx, baseY - fh2, fx, baseY);
       g2.addColorStop(0, 'rgba(255,200,40,0)');
@@ -2793,7 +2842,6 @@ function initCakeCanvas() {
       g2.addColorStop(1, 'rgba(255,160,20,0.7)');
       drawTeardrop(fx, baseY, fw2, fh2, 0.92, g2);
 
-      // Lapisan 3: inner flame (putih-kuning terang)
       const fw3 = flameW * 0.38, fh3 = flameH * 0.58;
       const g3 = ctx.createLinearGradient(fx, baseY - fh3, fx, baseY);
       g3.addColorStop(0, 'rgba(255,255,240,0)');
@@ -2801,7 +2849,6 @@ function initCakeCanvas() {
       g3.addColorStop(1, 'rgba(255,240,100,0.85)');
       drawTeardrop(fx, baseY, fw3, fh3, 0.97, g3);
 
-      // Lapisan 4: core putih panas (paling dalam)
       ctx.save();
       ctx.globalAlpha = (0.85 + flick2 * 0.1) * alpha;
       const core = ctx.createRadialGradient(fx, baseY - fh3 * 0.3, 0, fx, baseY - fh3 * 0.3, flameW * 0.22);
@@ -2814,34 +2861,50 @@ function initCakeCanvas() {
       ctx.fill();
       ctx.restore();
 
-      // --- Percikan api kecil (sparks) ---
-      if (!fl.blown && Math.random() < 0.18) {
-        ctx.save();
-        ctx.globalAlpha = (Math.random() * 0.6 + 0.3) * alpha;
-        const sx = fx + (Math.random() - 0.5) * flameW * 2.5;
-        const sy = baseY - flameH * (0.5 + Math.random() * 0.6);
-        const sr = Math.random() * 1.2 + 0.3;
-        ctx.fillStyle = 'rgba(255,230,100,0.9)';
-        ctx.beginPath();
-        ctx.arc(sx, sy, sr, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
+      // --- Percikan api ---
+      // Saat normal: percikan kecil sesekali
+      // Saat padam (blown, progres 0-0.35): percikan banyak meledak ke atas
+      const isDying = fl.blown && bp < 0.4;
+      const sparkChance = isDying ? 0.85 : 0.18;
+      const sparkCount = isDying ? 6 : 1;
+      if (Math.random() < sparkChance) {
+        for (let s = 0; s < sparkCount; s++) {
+          ctx.save();
+          ctx.globalAlpha = (Math.random() * 0.7 + 0.3) * alpha;
+          const spreadX = isDying ? flameW * 5 : flameW * 2.5;
+          const spreadY = isDying ? flameH * 2.2 : flameH * 1.1;
+          const sx = fx + (Math.random() - 0.5) * spreadX;
+          const sy = baseY - flameH * (0.3 + Math.random() * 0.8) - (isDying ? Math.random() * H * 0.04 : 0);
+          const sr = isDying ? Math.random() * 2 + 0.5 : Math.random() * 1.2 + 0.3;
+          ctx.fillStyle = isDying ? 'rgba(255,180,60,0.95)' : 'rgba(255,230,100,0.9)';
+          ctx.beginPath();
+          ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
       }
     });
   }
 
   function drawSmoke(ctx, flames, frame) {
     flames.forEach(fl => {
-      if (!fl.blown || fl.blowProg < 0.1) return;
-      const smokeAlpha = Math.min(1, fl.blowProg * 1.5) * 0.5;
-      for (let i = 0; i < 5; i++) {
-        const t = (frame * 0.015 + i * 0.4) % 1;
-        const sx = fl.x + Math.sin(frame * 0.03 + i * 1.2) * 8;
-        const sy = fl.baseY - H * 0.04 - t * H * 0.15;
-        const sr = t * 10 + 2;
+      if (!fl.blown || fl.blowProg < 0.08) return;
+      // Asap makin tebal saat awal padam, lalu perlahan memudar
+      const smokeAlpha = Math.min(1, fl.blowProg * 2.2) * Math.max(0, 1 - (fl.blowProg - 0.5) * 1.4) * 0.65;
+      if (smokeAlpha <= 0) return;
+      const pCount = 8;
+      for (let i = 0; i < pCount; i++) {
+        const t = (frame * 0.012 + i / pCount) % 1;
+        const wobble = Math.sin(frame * 0.025 + i * 1.8 + fl.phase) * 10;
+        const sx = fl.x + wobble;
+        const sy = fl.baseY - H * 0.03 - t * H * 0.22;
+        const sr = t * 14 + 2;
         ctx.save();
         ctx.globalAlpha = (1 - t) * smokeAlpha;
-        ctx.fillStyle = 'rgba(220,210,200,.6)';
+        const smokeG = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr);
+        smokeG.addColorStop(0, 'rgba(200,190,180,.7)');
+        smokeG.addColorStop(1, 'rgba(180,170,160,0)');
+        ctx.fillStyle = smokeG;
         ctx.beginPath();
         ctx.arc(sx, sy, sr, 0, Math.PI * 2);
         ctx.fill();
@@ -3339,6 +3402,7 @@ document.addEventListener('visibilitychange', function() {
 
 // ===== TRACK REPLAY SELECTOR =====
 let selectedReplayTrack = 0;
+let _pendingTrackAfterReset = -1; // track yang akan diputar setelah reset selesai, dibaca oleh goS2
 
 function selectTrackReplay(idx) {
   selectedReplayTrack = idx;
@@ -3354,12 +3418,8 @@ function resetAllWithTrack() {
   _doResetWithTrack();
 }
 function _doResetWithTrack() {
-  const trackIdx = selectedReplayTrack;
+  _pendingTrackAfterReset = selectedReplayTrack;
   resetAll();
-  setTimeout(function() {
-    bonusUnlocked = true;
-    swT(trackIdx);
-  }, 1200);
 }
 
 // ===== LOCK GATE COUNTDOWN & AUTO-UNLOCK =====
