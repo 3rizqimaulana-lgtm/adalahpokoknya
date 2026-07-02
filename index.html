@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Taman Bulan Naffa</title>
+
+<!-- Favicon: inisial N berbentuk bulan -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%231a1410'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='18' font-weight='700' fill='%23e8c87a'%3EN%3C/text%3E%3C/svg%3E">
+
+<!-- Meta SEO & preview link (WhatsApp, Instagram, dll) -->
+<meta name="description" content="Sebuah taman digital yang dibuat dengan sepenuh hati — khusus untukmu, Naffa.">
+<meta property="og:title" content="Taman Bulan Naffa ✦">
+<meta property="og:description" content="Sebuah taman digital yang dibuat dengan sepenuh hati — khusus untukmu, Naffa.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://3rizqimaulana-lgtm.github.io/og-preview.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Taman Bulan Naffa ✦">
+<meta name="twitter:description" content="Sebuah taman digital yang dibuat dengan sepenuh hati — khusus untukmu, Naffa.">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Josefin+Sans:wght@300;400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -63,6 +76,32 @@ window._db=null;
 #lockgate .lk-pwinput.lk-shake{animation:lkShake .4s ease;}
 @keyframes lkShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
 @media(max-width:420px){#lockgate .lk-card{padding:38px 24px;}#lockgate .lk-block{min-width:54px;padding:12px 6px;}#lockgate .lk-val{font-size:1.5rem;}}
+
+/* Sembunyikan focus ring saat pakai mouse */
+body.no-focus-ring *:focus{outline:none!important;}
+#skip-letter-btn:hover{border-color:rgba(201,151,74,.6)!important;color:rgba(201,151,74,.85)!important;}
+
+/* TOMBOL KEMBALI antar stage */
+.btn-back{position:fixed;top:18px;left:18px;z-index:6000;background:rgba(20,16,12,.7);border:1px solid rgba(201,151,74,.25);border-radius:50px;padding:7px 16px;font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:2px;color:rgba(201,151,74,.7);cursor:pointer;transition:all .3s ease;backdrop-filter:blur(8px);display:none;}
+.btn-back:hover{background:rgba(20,16,12,.95);border-color:rgba(201,151,74,.6);color:rgba(201,151,74,1);}
+
+/* LOADING INDICATOR audio non-utama */
+#audio-loading{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(20,16,12,.88);border:1px solid rgba(201,151,74,.3);border-radius:50px;padding:9px 20px;font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:2px;color:rgba(232,200,122,.85);z-index:8000;display:none;white-space:nowrap;}
+#audio-loading::before{content:'';display:inline-block;width:8px;height:8px;border:1.5px solid rgba(201,151,74,.4);border-top-color:rgba(201,151,74,.9);border-radius:50%;animation:spin .7s linear infinite;margin-right:8px;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#audio-tap-hint{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:rgba(20,16,12,.92);border:1px solid rgba(201,151,74,.35);border-radius:50px;padding:10px 20px;font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:2px;color:rgba(232,200,122,.9);z-index:8000;opacity:0;pointer-events:none;transition:opacity .4s ease,transform .4s ease;white-space:nowrap;}
+#audio-tap-hint.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* TOMBOL FULLSCREEN */
+#fs-btn{position:fixed;bottom:22px;right:22px;z-index:7000;background:rgba(20,16,12,.75);border:1px solid rgba(201,151,74,.3);border-radius:12px;padding:9px 12px;cursor:pointer;color:rgba(232,200,122,.8);font-size:1rem;line-height:1;transition:background .3s,border-color .3s,opacity .3s;backdrop-filter:blur(8px);opacity:.6;}
+#fs-btn:hover{background:rgba(20,16,12,.95);border-color:rgba(201,151,74,.6);opacity:1;}
+
+/* PESAN ERROR AUDIO */
+#audio-err{position:fixed;top:18px;left:50%;transform:translateX(-50%);background:rgba(180,80,80,.18);border:1px solid rgba(220,100,100,.35);border-radius:50px;padding:8px 18px;font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:1.5px;color:rgba(240,180,180,.85);z-index:8000;display:none;text-align:center;}
+
+/* TRANSISI SCREEN lebih halus */
+.screen{transition:opacity .55s cubic-bezier(.4,0,.2,1);opacity:0;pointer-events:none;}
+.screen.active{opacity:1;pointer-events:all;}
 /* Keyboard focus ring — aksesibilitas navigasi keyboard */
 :focus-visible{outline:2px solid rgba(201,151,74,.7)!important;outline-offset:3px!important;}
 body{font-family:'Josefin Sans',sans-serif;background:#0a0806;color:var(--cream);overflow:hidden;height:100vh;width:100vw;}
@@ -143,6 +182,7 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
 /* PHILO */
 .phwrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:680px;width:100%;margin:10px 0;}
 @media(max-width:560px){.phwrap{grid-template-columns:1fr;}}
+@media(max-width:400px){#phud{gap:6px;padding:5px 10px;max-width:94vw;}#phud #pdots{gap:3px;}#phud .pdot{width:4px;height:4px;}}
 .phcol h3{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--sage-lt);letter-spacing:2px;margin-bottom:10px;text-transform:uppercase;}
 .phopt{display:flex;align-items:center;gap:12px;background:rgba(15,12,8,.7);border:1px solid rgba(201,151,74,.15);border-radius:14px;padding:10px 14px;cursor:pointer;margin-bottom:8px;transition:all .3s ease;}
 .phopt:hover{border-color:rgba(201,151,74,.4);background:rgba(201,151,74,.06);}
@@ -250,11 +290,11 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
 #cconf{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:14;display:none;}
 
 /* PROGRESS */
-#phud{position:fixed;left:16px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:50;opacity:0;transition:opacity .5s ease;}
+#phud{position:fixed;left:50%;top:14px;transform:translateX(-50%);display:flex;flex-direction:row;align-items:center;gap:10px;z-index:55;opacity:0;transition:opacity .5s ease;background:rgba(15,12,8,.55);padding:6px 16px;border-radius:20px;backdrop-filter:blur(10px);border:1px solid rgba(201,151,74,.15);}
 .pdot{width:5px;height:5px;border-radius:50%;background:rgba(201,151,74,.2);transition:all .3s ease;}
 .pdot.active{background:var(--gold);transform:scale(1.5);}
 .pdot.done{background:rgba(122,158,126,.5);}
-#plbl{font-family:'Space Mono',monospace;font-size:.48rem;color:rgba(201,151,74,.4);letter-spacing:1px;writing-mode:vertical-rl;text-orientation:mixed;margin-top:4px;}
+#plbl{font-family:'Space Mono',monospace;font-size:.5rem;color:rgba(201,151,74,.55);letter-spacing:1px;white-space:nowrap;}
 
 /* AUDIO HUD */
 #ahud{position:fixed;top:18px;right:18px;z-index:100;display:flex;align-items:center;gap:10px;background:rgba(15,12,8,.88);padding:8px 18px;border-radius:28px;backdrop-filter:blur(20px);border:1px solid rgba(201,151,74,.2);opacity:0;transition:opacity .6s;box-shadow:0 10px 30px rgba(0,0,0,.4);}
@@ -328,6 +368,11 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
     </div>
   </div>
 </div>
+<div id="audio-tap-hint">♪ &nbsp;tap di mana saja untuk memulai musik</div>
+<div id="audio-err">⚠ &nbsp;gagal memuat audio — periksa koneksi internet</div>
+<div id="audio-loading">memuat lagu...</div>
+<button id="back-btn" class="btn-back" onclick="goBack()">← kembali</button>
+<button id="fs-btn" onclick="toggleFS()" title="Layar penuh">⛶</button>
 <div id="bg-layer"></div>
 <div id="bg-layer-b"></div>
 <canvas id="bg-canvas"></canvas>
@@ -351,6 +396,15 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
       <button onclick="document.getElementById('reset-confirm-modal').style.display='none';" style="background:transparent;border:1px solid rgba(250,246,240,.2);color:rgba(250,246,240,.6);padding:11px 24px;border-radius:30px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.72rem;letter-spacing:2px;">Batal</button>
       <button onclick="document.getElementById('reset-confirm-modal').style.display='none';_doResetWithTrack();" style="background:linear-gradient(135deg,var(--rose),var(--gold));border:none;color:#fff;padding:11px 24px;border-radius:30px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.72rem;letter-spacing:2px;font-weight:600;">Ya, Ulangi ✦</button>
     </div>
+  </div>
+</div>
+
+<!-- CUSTOM ALERT MODAL -->
+<div id="ca-modal" onclick="if(event.target===this)closeAlert();" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,8,6,.85);z-index:9995;align-items:center;justify-content:center;backdrop-filter:blur(8px);">
+  <div style="background:rgba(26,20,16,.97);border:1px solid rgba(201,151,74,.3);border-radius:24px;padding:34px 30px;max-width:340px;width:88%;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.7);">
+    <div id="ca-icon" style="font-size:1.8rem;margin-bottom:12px;">🌸</div>
+    <p id="ca-msg" style="font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:var(--cream);line-height:1.7;margin-bottom:24px;"></p>
+    <button onclick="closeAlert()" style="background:linear-gradient(135deg,var(--rose),var(--gold));border:none;color:#fff;padding:11px 30px;border-radius:30px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.72rem;letter-spacing:2px;font-weight:600;">Mengerti</button>
   </div>
 </div>
 
@@ -390,13 +444,14 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
   <span class="mctl" onclick="mNext()">›</span>
 </div>
 <div id="micst" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:8px;background:rgba(15,12,8,.85);border:1px solid rgba(122,158,126,.3);padding:8px 20px;border-radius:24px;backdrop-filter:blur(12px);"><div class="micdot"></div><span style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:2px;color:var(--sage-lt);">TIUPAN TERDETEKSI — TIUP SEKARANG</span></div>
-<div id="phud"><div id="pdots" style="display:flex;flex-direction:column;gap:5px;align-items:center;"></div><span id="plbl">1/20</span></div>
+<div id="phud"><span style="font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:1.5px;color:rgba(201,151,74,.55);white-space:nowrap;">untuk Naffa ✦</span><div id="pdots" style="display:flex;flex-direction:row;gap:5px;align-items:center;"></div><span id="plbl">1/20</span></div>
 
 <!-- S1 PINTU TAMAN -->
 <div class="screen active" id="s1">
   <div style="margin-bottom:10px;">
-    <div style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:4px;color:rgba(201,151,74,.5);margin-bottom:12px;">TAMAN.BULAN / SELAMAT.DATANG</div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:rgba(250,246,240,.7);letter-spacing:2px;">Pintu Taman Sedang Terbuka...</h2>
+    <div style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:4px;color:rgba(201,151,74,.5);margin-bottom:6px;">TAMAN.BULAN / SELAMAT.DATANG</div>
+    <div id="s1-clock" style="font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:3px;color:rgba(201,151,74,.7);margin-bottom:10px;"></div>
+    <h2 id="s1-greet" style="font-family:'Cormorant Garamond',serif;font-size:1.5rem;font-weight:400;color:rgba(250,246,240,.7);letter-spacing:2px;">Pintu Taman Sedang Terbuka...</h2>
   </div>
   <div class="pterm" id="tbox"></div>
   <button class="btn" id="entbtn" onclick="goS2()" style="display:none;"><span aria-hidden="true">✦</span> Masuki Taman</button>
@@ -1610,7 +1665,10 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
   <div class="lyrline" id="lyrline"></div>
   <div class="lscroll" id="lbox"><div id="lparas"></div><div class="lsig" id="lsig"><div class="lsig-name">Rizqi Maulana</div></div></div>
   <div id="scroll-hint" style="font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:2px;color:rgba(201,151,74,.4);margin-top:6px;opacity:1;transition:opacity .5s;animation:hintPulse 2s ease-in-out infinite;">↓ surat masih berlanjut...</div>
-  <button class="btn btn-bl" id="nfl" onclick="go('s8','sfl')" style="display:none;margin-top:16px;">Tulis Surat untuk Dirimu →</button>
+  <div style="display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn btn-bl" id="nfl" onclick="go('s8','sfl')" style="display:none;">Tulis Surat untuk Dirimu →</button>
+    <button id="skip-letter-btn" onclick="skipLetter()" style="display:none;background:transparent;border:1px solid rgba(201,151,74,.3);border-radius:50px;padding:8px 20px;font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:2px;color:rgba(201,151,74,.55);cursor:pointer;transition:all .3s;">lewati surat ↓</button>
+  </div>
 </div>
 
 <!-- SFL FUTURE LETTER -->
@@ -2111,6 +2169,18 @@ let _cm='forest';
 // AUDIO
 let _audGen=0; // penanda generasi — mencegah audio lama "menyusul" play() setelah dibatalkan oleh panggilan baru
 function unlkA(){if(_au)return;_au=true;if(_pp){_pp();_pp=null;}}
+
+// CUSTOM ALERT (pengganti alert() bawaan browser)
+function showAlert(msg,icon){
+  const m=document.getElementById('ca-modal');
+  if(!m){window.alert(msg);return;}
+  const im=document.getElementById('ca-icon');if(im)im.textContent=icon||'🌸';
+  const tx=document.getElementById('ca-msg');if(tx)tx.textContent=msg;
+  m.style.display='flex';
+  try{sfx('err');}catch(e){}
+}
+function closeAlert(){const m=document.getElementById('ca-modal');if(m)m.style.display='none';}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){const m=document.getElementById('ca-modal');if(m&&m.style.display==='flex')closeAlert();}});
 ['touchstart','touchend','mousedown','keydown','click'].forEach(e=>document.addEventListener(e,unlkA,{once:true,passive:true}));
 async function playMain(){
   const myGen=++_audGen;
@@ -2165,9 +2235,11 @@ async function swT(i){
       if(myGen!==_audGen){te.pause();te.currentTime=0;return;}
     }
     else{
+      if(typeof window._showAudioLoading==='function') window._showAudioLoading();
       const r=await fetch(GAUDIO[i]);const b=await r.blob();
-      if(myGen!==_audGen)return; // panggilan ini sudah usang, jangan mainkan
+      if(myGen!==_audGen){if(typeof window._hideAudioLoading==='function')window._hideAudioLoading();return;}
       te.src=URL.createObjectURL(b);te.load();await te.play();
+      if(typeof window._hideAudioLoading==='function') window._hideAudioLoading();
       if(myGen!==_audGen){te.pause();te.currentTime=0;return;}
     }
     te.onended=()=>swT((i+1)%(bonusUnlocked?TRACKS.length:1));
@@ -2179,7 +2251,24 @@ function sfx(t){try{const c=new(window.AudioContext||window.webkitAudioContext)(
 
 // STAGES
 const STAGES=['s1','s2','s2b','scd','str','sph','s3','s3b','sci','spz','svg-screen','srh','s8','sfl','s9','s9b','s10','s11','s13'];
-function go(f,t){const fe=document.getElementById(f);fe.style.opacity='0';fe.style.transform='scale(1.02) translateY(-10px)';sfx('tr');setTimeout(()=>{fe.classList.remove('active');const te=document.getElementById(t);te.classList.add('active');},700);const i=STAGES.indexOf(t);if(i>=0)setTimeout(()=>updProg(i),800);if(navigator.vibrate)navigator.vibrate(50);}
+function go(f,t){
+  const fe=document.getElementById(f);
+  fe.style.transform='scale(1.02) translateY(-10px)';
+  fe.style.opacity='0';
+  sfx('tr');
+  setTimeout(()=>{
+    fe.classList.remove('active');
+    fe.style.transform='';
+    fe.style.opacity='';
+    const te=document.getElementById(t);
+    te.style.opacity='0';
+    te.classList.add('active');
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{ te.style.opacity=''; }));
+  },600);
+  const i=STAGES.indexOf(t);
+  if(i>=0)setTimeout(()=>updProg(i),800);
+  if(navigator.vibrate)navigator.vibrate(50);
+}
 
 // BLOOM
 function bloom(x,y,col){for(let i=0;i<14;i++){const d=document.createElement('div');d.className='bdot';const a=(i/14)*Math.PI*2,dist=35+Math.random()*55,sz=Math.random()*6+3;d.style.cssText=`left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${col};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist}px;--dur:${.5+Math.random()*.4}s;margin-left:-${sz/2}px;margin-top:-${sz/2}px;border-radius:${Math.random()>.5?'50%':'30%'};`;document.body.appendChild(d);setTimeout(()=>d.remove(),1000);}}
@@ -2221,8 +2310,8 @@ function goS2(){
 function showHint(s){sfx('tr');if(s===1){document.getElementById('h1').textContent="Petunjuk: 2⁵ = 32, dikurangi 12 = usia sakral Naffa hari ini.";document.getElementById('h1').style.color='var(--sage-lt)';}else{document.getElementById('h2').textContent="Petunjuk: Tahun kelahiran Naffa adalah 2007 (23 Januari 2007).";document.getElementById('h2').style.color='var(--rose-lt)';}}
 
 // VERIFY
-function verify1(){const a=document.getElementById('ca').value.trim();if(a==='20'){sfx('ok');go('s2','s2b');}else{sfx('err');document.getElementById('ca').value='';alert('Coba hitung lagi ya! 🌸');}}
-function verify2(){const a=document.getElementById('cb').value.trim();if(a==='2007'){sfx('ok');startCD();go('s2b','scd');}else{sfx('err');document.getElementById('cb').value='';alert('Ingat-ingat lagi, kapan benih itu ditanam? 🌿');}}
+function verify1(){const a=document.getElementById('ca').value.trim();if(a==='20'){sfx('ok');miniConfetti();go('s2','s2b');}else{sfx('err');document.getElementById('ca').value='';showAlert('Coba hitung lagi ya! 🌸');}}
+function verify2(){const a=document.getElementById('cb').value.trim();if(a==='2007'){sfx('ok');miniConfetti();startCD();go('s2b','scd');}else{sfx('err');document.getElementById('cb').value='';showAlert('Ingat-ingat lagi, kapan benih itu ditanam? 🌿');}}
 
 // COUNTDOWN
 function startCD(){setBG('moon');if(cdInt)clearInterval(cdInt);cdInt=setInterval(()=>{const n=new Date(),yr=n.getFullYear()-BIRTH.getFullYear();let ann=new Date(BIRTH);ann.setFullYear(n.getFullYear());if(n<ann)ann.setFullYear(n.getFullYear()-1);const d=Math.floor((n-ann)/864e5);document.getElementById('cdy').textContent=String(yr).padStart(2,'0');document.getElementById('cdd').textContent=String(d).padStart(2,'0');document.getElementById('cdh').textContent=String(n.getHours()).padStart(2,'0');document.getElementById('cdm').textContent=String(n.getMinutes()).padStart(2,'0');document.getElementById('cds').textContent=String(n.getSeconds()).padStart(2,'0');document.getElementById('livems').textContent='TOTAL: '+(n-BIRTH).toLocaleString()+' MILIDETIK MEKAR';},1000);}
@@ -2236,7 +2325,7 @@ function pickPhilo(t,v,id){sfx('tr');if(t==='f'){selF=v;['fl1','fl2','fl3','fl4'
 function confirmPhilo(){sfx('ok');document.getElementById('cflval').textContent='Esensi Bunga: '+selF;document.getElementById('canval').textContent='Esensi Hewan: '+selA;go('sph','s3');}
 
 // CHOICE / DESTINY
-function wrongC(el){sfx('err');el.style.borderColor='rgba(201,123,132,.5)';alert('Taman ini mendeteksi kekuatanmu jauh melampaui ini. Pilihlah nomor 3! 🌸');}
+function wrongC(el){sfx('err');el.style.borderColor='rgba(201,123,132,.5)';showAlert('Taman ini mendeteksi kekuatanmu jauh melampaui ini. Pilihlah nomor 3! 🌸');}
 function rightC(el){sfx('ok');el.style.borderColor='var(--sage)';el.style.background='rgba(122,158,126,.08)';setTimeout(()=>go('s3','s3b'),500);}
 function pickDest(t,id){sfx('ok');selD=t;document.querySelectorAll('.dcard').forEach(c=>c.classList.remove('selected'));document.getElementById(id).classList.add('selected');document.getElementById('npath').style.display='inline-flex';document.getElementById('cdyntitle').textContent='[ '+t+' ]';document.getElementById('dynbadge').textContent=t;}
 
@@ -2252,10 +2341,14 @@ function trigLetter(){
   const lyrEl=document.getElementById('lyrline'),lyrs=[{t:600,tx:'"I know you\'re somewhere in the world..."'},{t:5000,tx:'"There\'s something about you..."'},{t:9200,tx:'"That I will never forget."'}];
   lyrs.forEach(l=>setTimeout(()=>{lyrEl.style.opacity='0';setTimeout(()=>{lyrEl.textContent=l.tx;lyrEl.style.opacity='1';},300);},l.t));
   const paras=["Mungkin kamu kaget ada pesan dariku di sini. Aku juga tidak menyangka akhirnya bisa sampai di titik ini, bisa nulis ini semua untuk kamu. Tapi ada sesuatu yang sudah terlalu lama aku tahan, dan rasanya hari ini adalah waktu yang paling tepat untuk akhirnya aku lepaskan.","Naffa, kita tumbuh besar di tempat yang sama. Rumahmu persis di depan rumahku, main bareng dari kecil, satu sekolah dari SD sampai SMP. Kamu adalah salah satu bagian dari masa kecilku yang paling aku ingat. Tapi ada satu hal yang sampai sekarang masih aku bawa. Waktu SMP dulu, ada kata-kataku yang membuat kamu menangis. Aku ingat itu, dan sejujurnya aku tidak pernah bisa benar-benar melupakannya. Jadi dari sini, aku ingin bilang dengan tulus, maaf. Maaf karena kata-kataku pernah menyakitimu, dan maaf karena aku butuh waktu yang sangat lama untuk akhirnya mengucapkan ini.","Waktu kita lulus dan jalan kita mulai berbeda, kamu SMA dan aku SMK, rasa malu itu pelan-pelan berubah jadi jarak yang makin jauh. Kalau kita pernah ketemu di jalan dan aku pura-pura tidak kenal, bukan karena aku tidak ingat kamu. Justru karena aku ingat semuanya, dan aku tidak tahu harus bilang apa. Aku memilih diam, padahal seharusnya tidak. Itu salah, dan aku menyesal.","Sekarang kamu sudah kuliah, dan aku tidak tahu banyak soal kehidupanmu sekarang. Tapi dari jauh aku selalu berharap kamu baik-baik saja, lebih dari baik-baik saja malah. Aku harap setiap harimu ada hal kecil yang bikin kamu senyum, entah itu secangkir minuman favoritmu, percakapan yang hangat sama orang yang kamu sayang, atau sekadar langit sore yang kebetulan bagus. Aku harap kamu punya orang-orang di sekitarmu yang benar-benar ada buat kamu, yang tidak pergi di saat kamu paling butuh mereka.","Di hari-hari yang terasa berat, semoga kamu ingat bahwa kamu sudah melewati banyak hal sebelumnya dan kamu selalu berhasil melewatinya. Kamu lebih kuat dari yang kamu kira, dan lebih dari cukup dari yang pernah kamu ragukan. Semoga kamu tidak pernah terlalu keras sama diri sendiri. Semoga kamu bisa istirahat tanpa rasa bersalah, bisa menangis tanpa malu, dan bisa bangkit lagi dengan caramu sendiri.","Untuk kuliahnya, semoga ilmu yang kamu pelajari terasa bermakna dan tidak sekadar jadi beban. Semoga setiap usahamu ada hasilnya, semoga kamu dikelilingi teman-teman yang baik, dan semoga impian-impianmu pelan-pelan menemukan jalannya satu per satu. Jangan menyerah di tengah jalan, karena aku yakin kamu punya lebih dari cukup untuk sampai ke tujuan.","Semoga ke depannya kamu selalu diberi kesehatan, ketenangan, dan kebahagiaan yang bukan cuma kelihatannya dari luar tapi benar-benar kamu rasakan dari dalam. Semoga setiap doa yang pernah kamu panjatkan dijawab dengan cara yang paling indah. Dan semoga di manapun kamu berada dan apapun yang kamu jalani, kamu selalu menemukan alasan untuk tetap bersyukur dan tetap berjalan maju.","Oh iya, dan semoga kamu nggak pernah kehujanan pas keluar rumah tanpa bawa payung. Semoga lampu merah selalu berubah hijau tepat waktu pas kamu lewat. Semoga kelingkingmu nggak pernah kejedot meja lagi seumur hidup. Semoga makanan yang kamu pesan selalu enak dan porsinya pas. Semoga kamu nggak pernah salah pencet alarm terus kesiangan. Semoga kamu nggak pernah lupa naruh kunci di mana. Semoga baterai hp kamu nggak pernah habis di saat yang paling nggak tepat. Semoga kamu selalu dapet tempat duduk waktu naik angkutan umum. Dan semoga hal-hal kecil yang sering bikin hari jadi kesel itu jarang-jarang menghampirimu, karena kamu udah layak buat hari yang tenang dan menyenangkan setiap harinya.","Hadiah ini mungkin sederhana, tapi ini yang pertama yang pernah aku buat untukmu karena selama ini aku tidak pernah berani. Dibuat sepenuh hati, dari sahabat kecilmu."];
+  window._letterParas = paras;
+  window._letterSkipped = false;
+  // Tampilkan tombol skip setelah 3 detik
+  setTimeout(function(){ var sb=document.getElementById('skip-letter-btn'); if(sb&&!window._letterSkipped) sb.style.display='block'; }, 3000);
   const cont=document.getElementById('lparas');cont.innerHTML='';let pi=0,ci=0;
   setTimeout(()=>{
     let cp=document.createElement('div');cp.className='lpara';cont.appendChild(cp);
-    function ty(){if(pi<paras.length){if(ci<paras[pi].length){cp.innerHTML+=paras[pi][ci++];const lb=document.getElementById('lbox');lb.scrollTop=lb.scrollHeight;setTimeout(ty,22);}else{pi++;ci=0;if(pi<paras.length){cp=document.createElement('div');cp.className='lpara';cont.appendChild(cp);const lb=document.getElementById('lbox');lb.scrollTop=lb.scrollHeight;setTimeout(ty,350);}else{document.getElementById('lsig').style.opacity='1';const sh=document.getElementById('scroll-hint');if(sh)sh.style.opacity='0';setTimeout(()=>{const lb=document.getElementById('lbox');lb.scrollTop=lb.scrollHeight;document.getElementById('nfl').style.display='inline-flex';},800);}}}
+    function ty(){if(pi<paras.length){if(ci<paras[pi].length){cp.innerHTML+=paras[pi][ci++];const lb=document.getElementById('lbox');lb.scrollTop=lb.scrollHeight;if(!window._letterSkipped)setTimeout(ty,22);}else{pi++;ci=0;if(pi<paras.length){cp=document.createElement('div');cp.className='lpara';cont.appendChild(cp);const lb=document.getElementById('lbox');lb.scrollTop=lb.scrollHeight;if(!window._letterSkipped)setTimeout(ty,350);}else{document.getElementById('lsig').style.opacity='1';const sh=document.getElementById('scroll-hint');if(sh)sh.style.opacity='0';setTimeout(()=>{const lb=document.getElementById('lbox');lb.scrollTop=lb.scrollHeight;document.getElementById('nfl').style.display='inline-flex';const sb=document.getElementById('skip-letter-btn');if(sb)sb.style.display='none';},800);}}}
     }ty();
   },11500);
 }
@@ -2264,7 +2357,7 @@ function trigLetter(){
 async function sealFL(){
   const clean=v=>v.replace(/<[^>]*>/g,'').substring(0,200);
   const s=clean((document.getElementById('fls').value||'').trim()),t=clean((document.getElementById('flt').value||'').trim()),p=clean((document.getElementById('flp').value||'').trim());
-  if(!s||!t||!p){alert('Isi ketiga bagian surat dulu ya! 🌿');return;}
+  if(!s||!t||!p){showAlert('Isi ketiga bagian surat dulu ya! 🌿');return;}
   const btn=document.querySelector('#flform button');if(btn){btn.disabled=true;btn.textContent='Menyegel...';}
   sfx('ok');if(navigator.vibrate)navigator.vibrate([40,20,40,20,80]);
   const data={syukur:s,tujuan:t,pesan:p,recipient:'Naffa Febry Cornelia',writtenAt:new Date().toISOString(),openAt:'2030-01-01'};
@@ -2321,7 +2414,7 @@ function cleanFig(){if(figAnim){cancelAnimationFrame(figAnim);figAnim=null;}if(f
 function initUStar(){const uc=document.getElementById('usc');if(!uc)return;uc.width=window.innerWidth;uc.height=window.innerHeight;const ctx=uc.getContext('2d'),stars=[];for(let i=0;i<150;i++)stars.push({x:Math.random()*uc.width,y:Math.random()*uc.height,r:Math.random()*1.2+.3,sp:Math.random()*.003+.001,ph:Math.random()*Math.PI*2});function ul(){ctx.clearRect(0,0,uc.width,uc.height);const now=Date.now()*.001;stars.forEach(s=>{const a=.3+Math.sin(now*s.sp*10+s.ph)*.25;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(250,240,220,${Math.max(0,a)})`;ctx.fill();s.y-=s.sp*.5;if(s.y<0)s.y=uc.height;});uAnim=requestAnimationFrame(ul);}ul();}
 
 // WISH
-async function sendWish(){let w=(document.getElementById('wta').value||'').trim();w=w.replace(/<[^>]*>/g,'').substring(0,200);if(!w){alert('Tuliskan harapanmu! 🌙');return;}document.getElementById('wform').style.display='none';document.getElementById('wsend').style.display='block';let p=0;const pb=document.getElementById('wprog'),st=document.getElementById('wstat'),msgs=['MENANAM HARAPAN...','MENGALIR KE AKAR BUMI...','TERBANG KE CAHAYA BULAN...','TERSAMPAIKAN ✦'];const iv=setInterval(()=>{p=Math.min(p+1.8,90);if(pb)pb.style.width=p+'%';if(st)st.textContent=msgs[Math.min(3,Math.floor(p/23))];},50);let did='lokal-'+Date.now();try{if(window._db){const r=await window._db.collection('universe_wishes').add({wish:w,recipient:'Naffa Febry Cornelia',occasion:'Happy 20th Birthday',createdAt:new Date().toISOString(),device:navigator.userAgent.substring(0,80)});did=r.id;}}catch(e){}clearInterval(iv);if(pb)pb.style.width='100%';if(st)st.textContent='HARAPAN TERSAMPAI ✦';localStorage.setItem('nwish',w);setTimeout(()=>{document.getElementById('wsuc').style.display='block';const di=document.getElementById('wdocid');if(di)di.textContent='ID: '+did.substring(0,20).toUpperCase();sfx('ok');},500);}
+async function sendWish(){let w=(document.getElementById('wta').value||'').trim();w=w.replace(/<[^>]*>/g,'').substring(0,200);if(!w){showAlert('Tuliskan harapanmu! 🌙');return;}document.getElementById('wform').style.display='none';document.getElementById('wsend').style.display='block';let p=0;const pb=document.getElementById('wprog'),st=document.getElementById('wstat'),msgs=['MENANAM HARAPAN...','MENGALIR KE AKAR BUMI...','TERBANG KE CAHAYA BULAN...','TERSAMPAIKAN ✦'];const iv=setInterval(()=>{p=Math.min(p+1.8,90);if(pb)pb.style.width=p+'%';if(st)st.textContent=msgs[Math.min(3,Math.floor(p/23))];},50);let did='lokal-'+Date.now();try{if(window._db){const r=await window._db.collection('universe_wishes').add({wish:w,recipient:'Naffa Febry Cornelia',occasion:'Happy 20th Birthday',createdAt:new Date().toISOString(),device:navigator.userAgent.substring(0,80)});did=r.id;}}catch(e){}clearInterval(iv);if(pb)pb.style.width='100%';if(st)st.textContent='HARAPAN TERSAMPAI ✦';localStorage.setItem('nwish',w);setTimeout(()=>{document.getElementById('wsuc').style.display='block';const di=document.getElementById('wdocid');if(di)di.textContent='ID: '+did.substring(0,20).toUpperCase();sfx('ok');},500);}
 
 // CANDLE
 // goS10 defined below with cake canvas init
@@ -2354,6 +2447,7 @@ function execBlow(){
 
   if(micStr){micStr.getTracks().forEach(t=>t.stop());micStr=null;}
   micOn=false;
+  if(typeof resumeAfterMic==='function')resumeAfterMic();
   document.getElementById('micst').style.display='none';
   setTimeout(()=>{ov.remove();setBG('gold');go('s10','s11');},2800);
 }
@@ -2430,7 +2524,7 @@ function requestMicThenStart(){
         <button onclick="blowManual()" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:2px;padding:10px 24px;background:transparent;border:1px solid rgba(201,151,74,.4);border-radius:30px;color:var(--gold-lt);cursor:pointer;margin-top:4px;">✦ Tiup Lilin Sekarang!</button>`;
     });
 }
-function initMic(){if(micOn||!navigator.mediaDevices)return;setBG('cake');navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(str=>{if(micStr)micStr.getTracks().forEach(t=>t.stop());micStr=str;const mc=new(window.AudioContext||window.webkitAudioContext)(),ms=mc.createMediaStreamSource(str);micAnl=mc.createAnalyser();micAnl.fftSize=1024;const hp=mc.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(100,mc.currentTime);const lp=mc.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(800,mc.currentTime);ms.connect(hp);hp.connect(lp);lp.connect(micAnl);micData=new Uint8Array(micAnl.frequencyBinCount);micOn=true;var gate2=document.getElementById('mic-gate');if(gate2)gate2.style.display='none';document.getElementById('micst').style.display='flex';let bl=30,cs=[],cal=true;function gv(){micAnl.getByteFrequencyData(micData);let s=0;for(let i=3;i<=30;i++)s+=micData[i];return s/28;}setTimeout(()=>{bl=cs.length?cs.reduce((a,b)=>a+b)/cs.length:20;cal=false;},1000);let bc=0,act=true;function cb(){if(!act)return;const v=gv();if(cal){cs.push(v);}else if(micOn){const th=Math.max(55,bl*2);
+function initMic(){if(micOn||!navigator.mediaDevices)return;setBG('cake');navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(str=>{if(micStr)micStr.getTracks().forEach(t=>t.stop());micStr=str;const mc=new(window.AudioContext||window.webkitAudioContext)(),ms=mc.createMediaStreamSource(str);micAnl=mc.createAnalyser();micAnl.fftSize=1024;const hp=mc.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(100,mc.currentTime);const lp=mc.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(800,mc.currentTime);ms.connect(hp);hp.connect(lp);lp.connect(micAnl);micData=new Uint8Array(micAnl.frequencyBinCount);micOn=true;if(typeof pauseForMic==='function')pauseForMic();var gate2=document.getElementById('mic-gate');if(gate2)gate2.style.display='none';document.getElementById('micst').style.display='flex';let bl=30,cs=[],cal=true;function gv(){micAnl.getByteFrequencyData(micData);let s=0;for(let i=3;i<=30;i++)s+=micData[i];return s/28;}setTimeout(()=>{bl=cs.length?cs.reduce((a,b)=>a+b)/cs.length:20;cal=false;},1000);let bc=0,act=true;function cb(){if(!act)return;const v=gv();if(cal){cs.push(v);}else if(micOn){const th=Math.max(55,bl*2);
     // Visual: api lilin merespons volume tiupan — perbesar flicker dan miringkan
     const norm=Math.min(1,Math.max(0,(v-Math.max(10,bl))/(th)));
     if(window._cakeFlames&&norm>0.1){window._cakeFlames.forEach(function(f){if(!f.blown){
@@ -2447,7 +2541,7 @@ const FADJ={Kamomil:'Tangguh',Teratai:'Murni',Magnolia:'Anggun',Lavendel:'Tenang
 const AADJ={'Kupu-Kupu':'Transformatif',Cendrawasih:'Elegan',Rusa:'Intuitif',Merpati:'Damai'};
 const DADJ={'Moonlit':'Penyabar','Botanical':'Pemimpi','Wildflower':'Berdaulat'};
 function autoFill(){const a1=document.getElementById('a1'),a2=document.getElementById('a2'),a3=document.getElementById('a3');if(!a1||!a2||!a3)return;if(!a1.value)for(const[k,v]of Object.entries(FADJ))if(selF.includes(k)){a1.value=v;a1.style.color='var(--rose)';setTimeout(()=>a1.style.color='',1200);break;}if(!a2.value)for(const[k,v]of Object.entries(AADJ))if(selA.includes(k)){a2.value=v;a2.style.color='var(--gold)';setTimeout(()=>a2.style.color='',1200);break;}if(!a3.value)for(const[k,v]of Object.entries(DADJ))if(selD.includes(k)){a3.value=v;a3.style.color='var(--sage)';setTimeout(()=>a3.style.color='',1200);break;}}
-function submitCap(){const clean=v=>v.replace(/<[^>]*>/g,'').trim().substring(0,25);const v1=clean(document.getElementById('a1').value||''),v2=clean(document.getElementById('a2').value||''),v3=clean(document.getElementById('a3').value||'');if(!v1||!v2||!v3){alert('Tuliskan ketiga kata ya! 🌿');return;}maniWish=v1+', '+v2+', '+v3;localStorage.setItem('nm20',maniWish);document.getElementById('cwish').textContent='"'+maniWish+'"';sfx('ok');document.getElementById('capbox').style.display='none';const md=document.getElementById('mdisp');md.textContent='"'+maniWish+'"';md.style.display='block';setTimeout(()=>document.getElementById('outromsg').style.display='block',900);}
+function submitCap(){const clean=v=>v.replace(/<[^>]*>/g,'').trim().substring(0,25);const v1=clean(document.getElementById('a1').value||''),v2=clean(document.getElementById('a2').value||''),v3=clean(document.getElementById('a3').value||'');if(!v1||!v2||!v3){showAlert('Tuliskan ketiga kata ya! 🌿');return;}maniWish=v1+', '+v2+', '+v3;localStorage.setItem('nm20',maniWish);document.getElementById('cwish').textContent='"'+maniWish+'"';sfx('ok');document.getElementById('capbox').style.display='none';const md=document.getElementById('mdisp');md.textContent='"'+maniWish+'"';md.style.display='block';setTimeout(()=>document.getElementById('outromsg').style.display='block',900);}
 
 // S13 CERT
 function goS13(){setBG('cert');sfx('tr');if(navigator.vibrate)navigator.vibrate([60,30,60,30,120]);const t=document.getElementById('s13');if(t){t.classList.add('active');setTimeout(()=>confetti(),600);}if(!bonusUnlocked){bonusUnlocked=true;localStorage.setItem('nbu','1');}const i=STAGES.indexOf('s13');if(i>=0)setTimeout(()=>updProg(i),800);}
@@ -2456,7 +2550,7 @@ function goS13(){setBG('cert');sfx('tr');if(navigator.vibrate)navigator.vibrate(
 function confetti(){const c=document.getElementById('cconf');if(!c)return;c.style.display='block';c.width=window.innerWidth;c.height=window.innerHeight;const ctx=c.getContext('2d'),cols=['#c97b84','#e8a8b0','#c9974a','#e8c87a','#7a9e7e','#b8d4bb','#8fa8c8','#faf6f0'],ps=[];for(let i=0;i<160;i++)ps.push({x:Math.random()*c.width,y:-20-Math.random()*200,w:Math.random()*8+4,h:Math.random()*5+2.5,col:cols[Math.floor(Math.random()*cols.length)],vy:Math.random()*3.5+1.5,vx:Math.random()*2.5-1.25,rot:Math.random()*Math.PI*2,rs:(Math.random()-.5)*.12,al:1});let fr=0;function cl(){ctx.clearRect(0,0,c.width,c.height);fr++;ps.forEach(p=>{p.y+=p.vy;p.x+=p.vx+Math.sin(fr*.01+p.rot)*.4;p.rot+=p.rs;if(fr>100)p.al-=.007;if(p.y>c.height){p.y=-20;p.al=1;}ctx.save();ctx.globalAlpha=Math.max(0,p.al);ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.col;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();});if(fr<200)requestAnimationFrame(cl);else{ctx.clearRect(0,0,c.width,c.height);c.style.display='none';}}cl();}
 
 // SAVE PNG
-function savePNG(){sfx('ok');const z=document.getElementById('pzone');if(!z){alert('Sertifikat belum siap.');return;}if(typeof html2canvas!=='undefined'){html2canvas(z,{backgroundColor:'#0f0c09',scale:2,useCORS:false,logging:false}).then(cv=>{const a=document.createElement('a');a.download='Sertifikat_Naffa_20th.png';a.href=cv.toDataURL('image/png');a.click();}).catch(()=>window.print());}else window.print();}
+function savePNG(){sfx('ok');const z=document.getElementById('pzone');if(!z){showAlert('Sertifikat belum siap.');return;}if(typeof html2canvas!=='undefined'){html2canvas(z,{backgroundColor:'#0f0c09',scale:2,useCORS:false,logging:false}).then(cv=>{const a=document.createElement('a');a.download='Sertifikat_Naffa_20th.png';a.href=cv.toDataURL('image/png');a.click();}).catch(()=>window.print());}else window.print();}
 
 // RESET
 function resetAll(){
@@ -2520,6 +2614,10 @@ function resetAll(){
   try{document.getElementById('entbtn').style.display='none';}catch(e){}
   try{const mpanel=document.getElementById('music-panel');if(mpanel)mpanel.style.display='none';}catch(e){}
   try{const micgate=document.getElementById('mic-gate');if(micgate){micgate.style.display='flex';const mb=micgate.querySelector('button');if(mb){mb.textContent='✦ izinkan mikrofon untuk tiup lilin';mb.disabled=false;}}}catch(e){}
+  // Reset stage history & UI tambahan
+  try{if(typeof _stageHistory!=='undefined')_stageHistory=[];}catch(e){}
+  try{var bb=document.getElementById('back-btn');if(bb)bb.style.display='none';}catch(e){}
+  try{var sb=document.getElementById('skip-letter-btn');if(sb)sb.style.display='none';}catch(e){}
   // Reset all screens cleanly — lakukan SEBELUM pzReinit agar observer tidak race
   document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.opacity='';s.style.transform='';s.style.filter='';s.style.pointerEvents='';});
   document.getElementById('s1').classList.add('active');
@@ -2538,7 +2636,7 @@ document.addEventListener('click',e=>{if(e.clientX<60&&e.clientY<60){ck++;clearT
 // devSkip defined below with full features
 
 // KEYBOARD
-document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(e.target&&e.target.tagName==='TEXTAREA')return;const a=document.querySelector('.screen.active');if(!a)return;const id=a.id;if(id==='s1'){const b=document.getElementById('entbtn');if(b&&b.style.display!=='none'){e.preventDefault();b.click();}}else if(id==='s2'){e.preventDefault();verify1();}else if(id==='s2b'){e.preventDefault();verify2();}else if(id==='s12'){const v=document.getElementById('a1');if(v&&v.value.trim()){e.preventDefault();submitCap();}}});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(document.documentElement.classList.contains('nm-locked'))return;if(e.target&&e.target.tagName==='TEXTAREA')return;const a=document.querySelector('.screen.active');if(!a)return;const id=a.id;if(id==='s1'){const b=document.getElementById('entbtn');if(b&&b.style.display!=='none'){e.preventDefault();b.click();}}else if(id==='s2'){e.preventDefault();verify1();}else if(id==='s2b'){e.preventDefault();verify2();}else if(id==='s12'){const v=document.getElementById('a1');if(v&&v.value.trim()){e.preventDefault();submitCap();}}});
 
 // SPLASH — preload audio utama di background
 (function(){
@@ -2560,7 +2658,7 @@ document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(e.target&&e
     if(typeof _termRan !== 'undefined') _termRan=false;
     var tbox=document.getElementById('tbox'); if(tbox) tbox.innerHTML='';
     var entbtn=document.getElementById('entbtn'); if(entbtn) entbtn.style.display='none';
-    const iv=setInterval(()=>{p+=Math.random()*16+7;if(p>100)p=100;bar.style.width=p+'%';st.textContent=msgs[Math.min(3,Math.floor(p/25))];if(p>=100){clearInterval(iv);setTimeout(()=>{sp.style.opacity='0';setTimeout(()=>{sp.style.display='none';initProg();},800);},400);}},85);
+    const iv=setInterval(()=>{p+=Math.random()*16+7;if(p>100)p=100;bar.style.width=p+'%';st.textContent=msgs[Math.min(3,Math.floor(p/25))];if(p>=100){clearInterval(iv);setTimeout(()=>{sp.style.opacity='0';setTimeout(()=>{sp.style.display='none';initProg();window.dispatchEvent(new Event('nm:splashDone'));},800);},400);}},85);
   }
   // Jika gerbang kunci masih aktif, tunda splash sampai gerbang benar-benar terbuka
   if(typeof window._nmIsLocked === 'function' && window._nmIsLocked()){
@@ -2573,14 +2671,20 @@ document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(e.target&&e
 // INIT
 window.onload=function(){runTerm();const stored=localStorage.getItem('nm20');if(stored){maniWish=stored;document.getElementById('cwish').textContent='"'+stored+'"';const pts=stored.split(',').map(s=>s.trim());if(pts[0]&&document.getElementById('a1'))document.getElementById('a1').value=pts[0];if(pts[1]&&document.getElementById('a2'))document.getElementById('a2').value=pts[1];if(pts[2]&&document.getElementById('a3'))document.getElementById('a3').value=pts[2];}};
 
-// patch: intercept transitions to set BG
+// patch: intercept transitions to set BG & catat history
 const _origGo = go;
 window.go = function(f, t) {
   if(f==='s3b'&&t==='sci') setBG('moon');
   if(f==='sfl'&&t==='s9') setBG('forest');
   if(f==='s9'&&t==='s9b') { /* handled in go9b */ }
   if(f==='s11'&&t==='s12') setBG('forest');
+  // Catat history untuk tombol kembali
+  if(typeof _stageHistory!=='undefined'){
+    _stageHistory.push(f);
+    if(_stageHistory.length>10) _stageHistory.shift();
+  }
   _origGo(f, t);
+  setTimeout(function(){ if(typeof _updateBackBtn==='function') _updateBackBtn(); }, 700);
 };
 
 
@@ -3155,7 +3259,7 @@ function s11Burst(color) {
 // ===== RUANG HUJAN =====
 function startRain() {
   const txt = (document.getElementById('rh-input').value || '').trim();
-  if (!txt) { alert('Tuliskan dulu apa yang ingin kamu lepaskan 🌧️'); return; }
+  if (!txt) { showAlert('Tuliskan dulu apa yang ingin kamu lepaskan 🌧️'); return; }
 
   // Setup rain canvas
   const canvas = document.getElementById('rain-canvas');
@@ -3422,16 +3526,252 @@ function _doResetWithTrack() {
   resetAll();
 }
 
+// ===== TOMBOL SKIP SURAT =====
+function skipLetter(){
+  // Hentikan typewriter, langsung tampilkan surat lengkap dan tombol lanjut
+  var lp=document.getElementById('lparas');
+  var lb=document.getElementById('lbox');
+  var sig=document.getElementById('lsig');
+  var sh=document.getElementById('scroll-hint');
+  var nfl=document.getElementById('nfl');
+  var sb=document.getElementById('skip-letter-btn');
+  if(lp) lp.innerHTML=''; // bersihkan dulu
+  // Isi ulang semua paragraf sekaligus tanpa animasi
+  var paras=window._letterParas||[];
+  paras.forEach(function(p){ var d=document.createElement('div'); d.className='lpara'; d.innerHTML=p; if(lp) lp.appendChild(d); });
+  if(sig){ sig.style.opacity='1'; sig.style.transition='none'; }
+  if(sh) sh.style.opacity='0';
+  if(nfl) nfl.style.display='inline-flex';
+  if(sb) sb.style.display='none';
+  if(lb) setTimeout(function(){ lb.scrollTop=lb.scrollHeight; },50);
+  window._letterSkipped=true;
+}
+
+// ===== PAUSE AUDIO SAAT MIC AKTIF =====
+var _audioBeforeMic=null;
+function pauseForMic(){
+  TRACKS.forEach(function(t){
+    var e=document.getElementById(t.id);
+    if(e&&!e.paused){ e._muteForMic=true; e.volume=0; }
+  });
+  if(am&&!am.paused){ am._muteForMic=true; am.volume=0; }
+}
+function resumeAfterMic(){
+  TRACKS.forEach(function(t){
+    var e=document.getElementById(t.id);
+    if(e&&e._muteForMic){ e._muteForMic=false; var iv=setInterval(function(){ e.volume=Math.min(1,e.volume+.05); if(e.volume>=1)clearInterval(iv); },50); }
+  });
+  if(am&&am._muteForMic){ am._muteForMic=false; var iv2=setInterval(function(){ am.volume=Math.min(1,am.volume+.05); if(am.volume>=1)clearInterval(iv2); },50); }
+}
+
+// ===== TRANSISI LOCK GATE SINEMATIK =====
+function lockGateOpen(){
+  var lg=document.getElementById('lockgate');
+  if(!lg) return;
+  lg.style.transition='opacity .9s ease, transform .9s ease, filter .9s ease';
+  lg.style.opacity='0';
+  lg.style.transform='scale(1.04)';
+  lg.style.filter='blur(8px)';
+  setTimeout(function(){
+    document.documentElement.classList.remove('nm-locked');
+    lg.style.display='none';
+    lg.style.transform='';
+    lg.style.filter='';
+    lg.style.opacity='';
+    lg.style.transition='';
+    window.dispatchEvent(new Event('nm:unlocked'));
+  },900);
+}
+
+// ===== KEYBOARD NAVIGATION =====
+document.addEventListener('keydown',function(e){
+  // Enter pada tombol yang difokus
+  if(e.key==='Enter'){
+    var el=document.activeElement;
+    if(el&&(el.tagName==='BUTTON')&&el.onclick) return; // biarkan default
+  }
+  // Hindari konflik Enter dengan input teks
+  if(e.key==='Enter'&&document.activeElement&&['INPUT','TEXTAREA'].indexOf(document.activeElement.tagName)>=0) return;
+  // Escape: tutup modal/fullscreen
+  if(e.key==='Escape'){
+    var modal=document.getElementById('reset-confirm-modal');
+    if(modal&&modal.style.display==='flex'){ modal.style.display='none'; return; }
+  }
+  // Tab: pastikan fokus tidak keluar dari elemen interaktif yang terlihat saja
+});
+// Sembunyikan focus ring kecuali pakai keyboard
+document.addEventListener('mousedown',function(){ document.body.classList.add('no-focus-ring'); });
+document.addEventListener('keydown',function(e){ if(e.key==='Tab') document.body.classList.remove('no-focus-ring'); });
+(function(){
+  function tryFullscreen(){
+    if(document.fullscreenElement) return;
+    var el=document.documentElement;
+    if(el.requestFullscreen) el.requestFullscreen().catch(function(){});
+    else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  }
+  ['click','touchstart','keydown'].forEach(function(ev){
+    document.addEventListener(ev,function handler(){
+      tryFullscreen();
+      document.removeEventListener(ev,handler);
+    },{once:true,passive:true});
+  });
+})();
+
+// ===== JAM & SAPAAN WAKTU di stage s1 =====
+(function(){
+  function getGreeting(){
+    var h=new Date().getHours();
+    if(h>=4&&h<11) return 'Selamat pagi, Naffa ☀';
+    if(h>=11&&h<15) return 'Selamat siang, Naffa 🌤';
+    if(h>=15&&h<18) return 'Selamat sore, Naffa 🌅';
+    if(h>=18&&h<21) return 'Selamat malam, Naffa 🌙';
+    return 'Malam sudah larut, Naffa ✦';
+  }
+  function tick(){
+    var now=new Date();
+    var hh=String(now.getHours()).padStart(2,'0');
+    var mm=String(now.getMinutes()).padStart(2,'0');
+    var ss=String(now.getSeconds()).padStart(2,'0');
+    var cl=document.getElementById('s1-clock');
+    if(cl) cl.textContent=hh+' : '+mm+' : '+ss;
+  }
+  var grSet=false;
+  function setGreet(){
+    if(grSet) return; grSet=true;
+    var gr=document.getElementById('s1-greet');
+    if(gr) gr.textContent=getGreeting();
+  }
+  tick(); setGreet();
+  setInterval(function(){ tick(); setGreet(); },1000);
+})();
+
+// ===== TOMBOL KEMBALI antar stage =====
+var _stageHistory=[];
+var _backAllowed=['s2','s2b','scd','str','sph','s3','s3b','sci','spz','svg-screen','srh','s8','sfl','s9','s9b'];
+function _updateBackBtn(){
+  var b=document.getElementById('back-btn'); if(!b) return;
+  var cur=document.querySelector('.screen.active');
+  var show=_stageHistory.length>0 && _backAllowed.indexOf(cur?cur.id:'')>=0;
+  b.style.display=show?'block':'none';
+}
+function goBack(){
+  if(!_stageHistory.length) return;
+  var prev=_stageHistory.pop();
+  var cur=document.querySelector('.screen.active');
+  if(cur&&cur.id!==prev){
+    cur.classList.remove('active');
+    var pe=document.getElementById(prev);
+    if(pe){pe.style.opacity='0';pe.classList.add('active');requestAnimationFrame(function(){requestAnimationFrame(function(){pe.style.opacity='';});});}
+  }
+  _updateBackBtn();
+}
+
+// ===== CONFETTI RINGAN saat puzzle benar =====
+function miniConfetti(){
+  var c=document.getElementById('cconf'); if(!c) return;
+  c.style.display='block'; c.width=window.innerWidth; c.height=window.innerHeight;
+  var ctx=c.getContext('2d');
+  var cols=['#c97b84','#e8c87a','#7a9e7e','#8fa8c8','#faf6f0'];
+  var ps=[];
+  for(var i=0;i<55;i++) ps.push({x:Math.random()*c.width,y:-10-Math.random()*60,w:Math.random()*6+3,h:Math.random()*4+2,col:cols[i%cols.length],vy:Math.random()*2.5+1,vx:Math.random()*2-1,rot:Math.random()*Math.PI*2,rs:(Math.random()-.5)*.1,al:1});
+  var fr=0;
+  (function cl(){
+    ctx.clearRect(0,0,c.width,c.height); fr++;
+    ps.forEach(function(p){p.y+=p.vy;p.x+=p.vx;p.rot+=p.rs;if(fr>60)p.al-=.018;if(p.y>c.height){p.y=-10;p.al=1;}ctx.save();ctx.globalAlpha=Math.max(0,p.al);ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.col;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();});
+    if(fr<120) requestAnimationFrame(cl);
+    else{ctx.clearRect(0,0,c.width,c.height);c.style.display='none';}
+  })();
+}
+
+// ===== FIREBASE OFFLINE FALLBACK =====
+(function(){
+  var ready=setInterval(function(){
+    if(!window._db){return;}
+    clearInterval(ready);
+    var origCol=window._db.collection.bind(window._db);
+    window._db.collection=function(name){
+      var col=origCol(name);
+      var origAdd=col.add.bind(col);
+      col.add=function(data){
+        return origAdd(data).catch(function(){
+          try{localStorage.setItem('nm_fb_'+name+'_'+Date.now(),JSON.stringify(data));}catch(e){}
+          return {id:'lokal-'+Date.now()};
+        });
+      };
+      return col;
+    };
+  },200);
+})();
+
+// ===== LOADING INDICATOR audio non-utama =====
+(function(){
+  var el=document.getElementById('audio-loading'),t=null;
+  window._showAudioLoading=function(){if(el){el.style.display='block';clearTimeout(t);}};
+  window._hideAudioLoading=function(){if(el){t=setTimeout(function(){el.style.display='none';},300);}};
+})();
+
+// ===== FULLSCREEN TOGGLE manual =====
+function toggleFS(){
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();
+    var b=document.getElementById('fs-btn');if(b){b.textContent='✕';b.title='Keluar layar penuh';}
+  }else{
+    document.exitFullscreen&&document.exitFullscreen();
+    var b=document.getElementById('fs-btn');if(b){b.textContent='⛶';b.title='Layar penuh';}
+  }
+}
+document.addEventListener('fullscreenchange',function(){
+  if(!document.fullscreenElement){var b=document.getElementById('fs-btn');if(b){b.textContent='⛶';b.title='Layar penuh';}}
+});
+
+// ===== AUDIO TAP HINT untuk mobile =====
+(function(){
+  // Tampilkan hint hanya di perangkat touch dan kalau audio belum unlock
+  var isMobile = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+  if(!isMobile) return;
+  var hint = document.getElementById('audio-tap-hint');
+  var shown = false;
+  function showHint(){
+    if(shown || _au) return;
+    shown = true;
+    hint.classList.add('show');
+    // Sembunyikan otomatis setelah audio unlock atau 6 detik
+    var hideTimer = setTimeout(function(){ hint.classList.remove('show'); }, 6000);
+    document.addEventListener('click', function hide(){
+      clearTimeout(hideTimer);
+      hint.classList.remove('show');
+      document.removeEventListener('click', hide);
+    }, { once: true });
+  }
+  // Tampilkan hint 1.5 detik setelah halaman siap (setelah splash)
+  document.addEventListener('nm:splashDone', function(){ setTimeout(showHint, 1500); }, { once: true });
+})();
+
+// ===== AUDIO ERROR HANDLER =====
+(function(){
+  var audioEls = ['am','a2','a3','a4'];
+  var errShown = false;
+  audioEls.forEach(function(id){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.addEventListener('error', function(){
+      if(errShown) return;
+      errShown = true;
+      var err = document.getElementById('audio-err');
+      if(err){ err.style.display='block'; setTimeout(function(){ err.style.display='none'; errShown=false; }, 5000); }
+    });
+  });
+})();
+
 // ===== LOCK GATE COUNTDOWN & AUTO-UNLOCK =====
 (function(){
   if(typeof window._nmUnlockAt === 'undefined') return;
   function paint(){
     var diff = window._nmUnlockAt - Date.now();
     if(diff <= 0){
-      // Waktunya tiba — buka gerbang tanpa perlu reload manual
-      document.documentElement.classList.remove('nm-locked');
-      window.dispatchEvent(new Event('nm:unlocked'));
       clearInterval(lkIv);
+      if(typeof lockGateOpen==='function') lockGateOpen();
+      else { document.documentElement.classList.remove('nm-locked'); window.dispatchEvent(new Event('nm:unlocked')); }
       return;
     }
     var d = Math.floor(diff/864e5);
@@ -3502,9 +3842,9 @@ function _doResetWithTrack() {
   function tryUnlock(){
     if(!pwinput) return;
     if(pwinput.value === SECRET_PW){
-      document.documentElement.classList.remove('nm-locked');
-      window.dispatchEvent(new Event('nm:unlocked'));
       clearInterval(lkIv);
+      if(typeof lockGateOpen==='function') lockGateOpen();
+      else { document.documentElement.classList.remove('nm-locked'); window.dispatchEvent(new Event('nm:unlocked')); }
     } else {
       pwerr.classList.add('lk-show');
       pwinput.classList.add('lk-shake');
@@ -3517,7 +3857,7 @@ function _doResetWithTrack() {
     letter.addEventListener('keydown', function(e){ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); togglePw(); } });
   }
   if(pwinput){
-    pwinput.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); tryUnlock(); } });
+    pwinput.addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); e.stopPropagation(); tryUnlock(); } });
     pwinput.addEventListener('input', function(){ pwerr.classList.remove('lk-show'); });
   }
 })();
