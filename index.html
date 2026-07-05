@@ -1630,7 +1630,7 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
 .rh-title{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:3.5px;color:rgba(143,168,200,.6);margin-bottom:10px;}
 .rh-h{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:400;color:rgba(200,221,240,.95);margin-bottom:10px;}
 .rh-sub{font-size:.8rem;color:rgba(250,246,240,.55);line-height:1.7;font-family:'Josefin Sans',sans-serif;margin-bottom:22px;}
-#rh-input{width:100%;background:rgba(10,14,24,.8);border:1px solid rgba(143,168,200,.3);border-radius:14px;padding:16px 18px;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:rgba(220,235,250,.9);resize:none;outline:none;min-height:90px;line-height:1.7;transition:border-color .3s;color-scheme:dark;}
+#rh-input{width:100%;background:rgba(10,14,24,.8);border:1px solid rgba(143,168,200,.3);border-radius:14px;padding:16px 18px;font-family:'Cormorant Garamond',serif;font-size:1.05rem;color:rgba(220,235,250,.9);resize:vertical;outline:none;min-height:120px;max-height:280px;line-height:1.7;transition:border-color .3s;color-scheme:dark;}
 #rh-input:focus{border-color:rgba(143,168,200,.6);}
 #rh-input::placeholder{color:rgba(143,168,200,.3);font-style:italic;}
 .rh-btn{margin-top:16px;background:transparent;border:1px solid rgba(143,168,200,.4);color:rgba(200,221,240,.85);padding:12px 32px;border-radius:30px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.72rem;letter-spacing:2.5px;transition:all .3s;}
@@ -1647,7 +1647,7 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
     <div class="rh-title">✦ RUANG HUJAN · MELEPASKAN</div>
     <h2 class="rh-h">Apa yang Ingin Kamu Lepaskan?</h2>
     <p class="rh-sub">Tuliskan satu hal dari usia 19 yang sudah tidak perlu kamu bawa lagi — rasa takut, kekecewaan, kebiasaan, atau beban yang sudah terlalu lama tersimpan. Taman akan membantumu melepaskannya.</p>
-    <textarea id="rh-input" maxlength="120" placeholder="Aku ingin melepaskan..."></textarea>
+    <textarea id="rh-input" placeholder="Aku ingin melepaskan..."></textarea>
     <button class="rh-btn" onclick="startRain()">Biarkan Hujan Membawanya ✦</button>
   </div>
   <div id="rh-done">
@@ -1886,16 +1886,16 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
       <div class="sm-petals" id="sm-petals"></div>
       <button class="sm-close" onclick="closeSecretModal()" aria-label="Tutup">×</button>
       <span class="sm-seal">🌸</span>
-      <div class="sm-label">✦ PESAN RAHASIA · DARI ORANG YANG INGIN JADI KEREN</div>
+      <div class="sm-label">✦ PESAN RAHASIA · HANYA UNTUKMU</div>
       <h3 class="sm-title">Untuk Kamu yang Sudah Sampai Sejauh Ini</h3>
       <p class="sm-body">
         <span class="sm-p">Naffa,</span>
         <span class="sm-p">Jika kamu membaca pesan ini, berarti kamu sudah membuka dan menyelesaikan semua stage yang ada di taman ini, tidak ada satu pun yang kamu lewati. Teka-teki, surat, harapan, lilin yang mungkin agak rewel saat ditiup, sampai sertifikat yang sekarang ada di tanganmu.</span>
         <span class="sm-p">Pesan ini sebenarnya bonus kecil dariku, semacam "terima kasih" yang sengaja aku sembunyikan paling akhir. Karena buatku, sampai di titik ini saja sudah berarti kamu cukup peduli untuk benar-benar menjalani semuanya, bukan sekadar lewat begitu saja.</span>
-        <span class="sm-p">Aku tidak tahu bagaimana perasaanmu setelah menyelesaikan ini, tapi aku harap pandanganmu kepadaku sedikit berubah, bahwa aku mungkin bukan orang yang sombong dan sejahat itu, hehe. Terlepas dari itu, sejujurnya hadiah ini aku buat karena merasa bersalah, karena pernah membuatmu menangis dan membiarkannya seolah-olah itu hanya kesalahan biasa yang akan membaik dengan sendirinya oleh waktu. Hadiah ini mungkin tidak cukup untuk menutup tahun-tahun yang berlalu meninggalkan kesalahanku.</span>
-        <span class="sm-p">Aku bahkan tidak menemuimu di waktu Lebaran. Yaa, walaupun aku merasa justru kamu yang menghindariku, bukan cuma saat Lebaran, bahkan saat kita tidak sengaja berpapasan di jalan. Jangankan menyapaku, bahkan kamu tidak melihatku. Itu justru membuatku bingung, kamu sebenarnya masih marah atau kenapa. Jujur, itu salah satu situasi yang sangat aku benci, padahal kita berdua saling kenal, aku tahu siapa namamu, di mana rumahmu, berapa umurmu, begitu pun denganmu yang mengenalku.</span>
-        <span class="sm-p">Itu mungkin salah satu alasanku membuat ini, karena aku benci situasi itu, dan benci kepada diriku yang tidak berani memulai menyapamu. Aku harap setelah ini kamu bisa melihat dan bertukar sapa denganku dengan senyum dan wajah yang ceria.</span>
-        <span class="sm-p">Sekarang, walaupun ada ini, itu tidak akan mengubah apa pun. Kamu bisa seperti biasa menjalani kehidupanmu, begitu pun dengan aku. Aku tidak akan sekepo dan seingin tahu itu tentang hidupmu sekarang. Anggap saja ini seperti angin lewat, dan aku akan menghilang begitu saja seperti biasa, seperti saat dulu aku membuatmu menangis. Tetapi bedanya, kali ini aku akan menghilang dengan cara yang kereeen.</span>
+        <span class="sm-p">Aku tidak tahu bagaimana perasaanmu setelah menyelesaikan ini, tapi aku harap pandanganmu kepadaku sedikit berubah, bahwa aku mungkin bukan orang yang sesombong dan sejahat itu, hehe. Terlepas dari itu, sejujurnya hadiah ini aku buat karena merasa bersalah, karena pernah membuatmu menangis dan membiarkannya seolah-olah itu hanya kesalahan biasa yang akan membaik dengan sendirinya karena waktu. Hadiah ini mungkin tidak cukup menutup tahun-tahun yang berlalu meninggalkan kesalahanku.</span>
+        <span class="sm-p">Aku bahkan tidak menemuimu di waktu Lebaran. Yaa, walaupun aku merasa justru kamu yang menghindariku, bukan cuma saat Lebaran, bahkan saat tidak sengaja berpapasan di jalan. Jangankan menyapaku, bahkan kamu tidak melihatku. Itu membuatku bingung, kamu sebenarnya masih marah atau kenapa. Jujur, itu salah satu situasi yang sangat aku benci, padahal kita berdua saling kenal, aku tahu siapa namamu, di mana rumahmu, berapa umurmu, begitu pun denganmu yang mengenalku.</span>
+        <span class="sm-p">Itu mungkin salah satu alasanku membuat ini, karena aku benci situasi itu, dan benci kepada diriku yang tidak berani memulai menyapamu. Aku harap setelah ini kamu bisa melihat dan bertukar sapa denganku dengan senyum dan wajah ceria itu.</span>
+        <span class="sm-p">Sekarang, walaupun ada ini, itu tidak akan mengubah apa pun. Kamu bisa seperti biasa menjalani kehidupanmu, begitu pun dengan aku. Aku tidak akan sekepo dan seingin tahu itu tentang hidupmu sekarang. Anggap saja ini seperti angin lewat, dan aku akan menghilang begitu saja seperti biasa, seperti saat dulu aku membuatmu menangis. Tetapi bedanya, mungkin kali ini aku menghilang dengan cara yang kereeen 😎.</span>
         <span class="sm-p">Terima kasih sudah mau meluangkan waktu, sudah mau penasaran, dan sudah mau sabar mengikuti semuanya sampai ke titik ini, padahal kamu sama sekali tidak harus melakukannya.</span>
         <span class="sm-p">Selamat ulang tahun ke-20, Naffa. Semoga tahun ini jadi awal dari banyak hal baik yang akhirnya kamu dapatkan. Dan kalau suatu hari kamu lupa pernah ada taman kecil ini, semoga kamu tetap ingat pernah ada orang yang berusaha membuatmu merasa spesial, walau cuma lewat layar dan baris baris kode sederhana.</span>
         <span class="sm-p">Terima kasih sudah sampai di akhir cerita ini.</span>
@@ -2189,18 +2189,21 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){const m=doc
 async function playMain(){
   const myGen=++_audGen;
   try{
+    if(typeof window._showAudioLoading==='function') window._showAudioLoading();
     const r=await fetch(GAUDIO[0]);if(!r.ok)throw 0;const b=await r.blob();
+    if(typeof window._hideAudioLoading==='function') window._hideAudioLoading();
     if(myGen!==_audGen)return; // sudah dibatalkan oleh panggilan audio yang lebih baru
     am.src=URL.createObjectURL(b);am.volume=1;am.loop=true;await am.play();
     if(myGen!==_audGen){am.pause();am.currentTime=0;return;}
     document.getElementById('mpp').textContent='⏸';
   }catch(e){
     try{
+      if(typeof window._hideAudioLoading==='function') window._hideAudioLoading();
       if(myGen!==_audGen)return;
       am.src=GAUDIO[0];am.loop=true;await am.play();
       if(myGen!==_audGen){am.pause();am.currentTime=0;return;}
       document.getElementById('mpp').textContent='⏸';
-    }catch(e2){}
+    }catch(e2){if(typeof window._hideAudioLoading==='function') window._hideAudioLoading();}
   }
 }
 function playA(){const g=()=>playMain();if(_au)g();else _pp=g;}
@@ -2227,8 +2230,9 @@ async function swT(i){
         if(myGen!==_audGen)return;
         am.currentTime=0;await am.play();
         if(myGen!==_audGen){am.pause();am.currentTime=0;}
+        else if(micOn){am._muteForMic=true;am.volume=0;}
       }
-      else{await playMain();}
+      else{await playMain();if(myGen===_audGen&&micOn){am._muteForMic=true;am.volume=0;}}
     }catch(e){}
     return;
   }
@@ -2246,6 +2250,7 @@ async function swT(i){
       if(typeof window._hideAudioLoading==='function') window._hideAudioLoading();
       if(myGen!==_audGen){te.pause();te.currentTime=0;return;}
     }
+    if(micOn){te._muteForMic=true;te.volume=0;}
     te.onended=()=>swT((i+1)%(bonusUnlocked?TRACKS.length:1));
   }catch(e){}
 }
@@ -2344,7 +2349,7 @@ function goS8(){setBG('letter');go('srh','s8');trigLetter();}
 function trigLetter(){
   const lyrEl=document.getElementById('lyrline'),lyrs=[{t:600,tx:'"I know you\'re somewhere in the world..."'},{t:5000,tx:'"There\'s something about you..."'},{t:9200,tx:'"That I will never forget."'}];
   lyrs.forEach(l=>setTimeout(()=>{lyrEl.style.opacity='0';setTimeout(()=>{lyrEl.textContent=l.tx;lyrEl.style.opacity='1';},300);},l.t));
-  const paras=["Mungkin kamu kaget ada pesan dariku di sini. Aku juga tidak menyangka akhirnya bisa sampai di titik ini, bisa nulis ini semua untuk kamu. Tapi ada sesuatu yang sudah terlalu lama aku tahan, dan rasanya hari ini adalah waktu yang paling tepat untuk akhirnya aku lepaskan.","Naffa, kita tumbuh besar di tempat yang sama. Rumahmu persis di depan rumahku, kita sering main bareng dari kecil, satu sekolah dari SD sampai SMP. Kamu adalah salah satu bagian dari masa kecilku yang paling aku ingat. Tapi ada satu hal yang sampai sekarang masih aku bawa. Waktu dulu, mungkin ada kata-kataku atau perbuatanku yang membuat kamu menangis. Aku ingat itu, dan sejujurnya aku tidak pernah bisa benar-benar melupakannya. Jadi dari sini, aku ingin bilang dengan tulus, maaf. Maaf karena kata-kataku pernah menyakitimu, dan maaf karena aku butuh waktu yang sangat lama untuk akhirnya mengucapkan ini.","Waktu kita lulus dan jalan kita mulai berbeda, karena kita tidak lagi berada di sekolah yang sama, rasa malu itu pelan-pelan berubah jadi jarak yang makin jauh. Kalau kita pernah ketemu di jalan dan aku pura-pura tidak kenal, bukan karena aku tidak ingat kamu. Justru karena aku ingat semuanya, dan aku tidak tahu harus bilang apa. Aku memilih diam, padahal seharusnya tidak. Itu salah, dan aku menyesal.","Sekarang kamu sudah kuliah, dan aku tidak tahu banyak soal kehidupanmu sekarang. Tapi dari jauh aku selalu berharap kamu baik-baik saja, lebih dari baik-baik saja malah. Aku harap setiap harimu ada hal kecil yang bikin kamu senyum, entah itu secangkir minuman favoritmu, percakapan yang hangat sama orang yang kamu sayang, atau sekadar langit sore yang kebetulan bagus. Aku harap kamu punya orang-orang di sekitarmu yang benar-benar ada buat kamu, yang tidak pergi di saat kamu paling butuh mereka.","Di hari-hari yang terasa berat, semoga kamu ingat bahwa kamu sudah melewati banyak hal sebelumnya dan kamu selalu berhasil melewatinya. Kamu lebih kuat dari yang kamu kira, dan lebih dari cukup dari yang pernah kamu ragukan. Semoga kamu tidak pernah terlalu keras sama diri sendiri. Semoga kamu bisa istirahat tanpa rasa bersalah, bisa menangis tanpa malu, dan bisa bangkit lagi dengan caramu sendiri.","Untuk kuliahnya, semoga ilmu yang kamu pelajari terasa bermakna dan tidak sekadar jadi beban. Semoga setiap usahamu ada hasilnya, semoga kamu dikelilingi teman-teman yang baik, dan semoga impian-impianmu pelan-pelan menemukan jalannya satu per satu. Jangan menyerah di tengah jalan, karena aku yakin kamu punya lebih dari cukup untuk sampai ke tujuan.","Semoga ke depannya kamu selalu diberi kesehatan, ketenangan, dan kebahagiaan yang bukan cuma kelihatannya dari luar tapi benar-benar kamu rasakan dari dalam. Semoga setiap doa yang pernah kamu panjatkan dijawab dengan cara yang paling indah. Dan semoga di manapun kamu berada dan apapun yang kamu jalani, kamu selalu menemukan alasan untuk tetap bersyukur dan tetap berjalan maju.","Oh iya, dan semoga kamu nggak pernah kehujanan pas keluar rumah tanpa bawa payung. Semoga lampu merah selalu berubah hijau tepat saat kamu lewat. Semoga kelingkingmu nggak pernah kejedot meja lagi seumur hidup. Semoga kamu tidak pernah salah manggil orang. Semoga makanan yang kamu pesan selalu enak dan porsinya pas. Semoga kamu nggak pernah salah pencet alarm terus kesiangan. Semoga kamu nggak pernah lupa naruh kunci di mana. Semoga baterai hp kamu nggak pernah habis di saat yang paling nggak tepat. Semoga kamu selalu dapet tempat duduk waktu naik kendaraan umum. Dan semoga hal-hal kecil yang sering bikin hari kamu jadi kesel itu jarang-jarang menghampirimu, karena kamu udah layak buat hari yang tenang dan menyenangkan setiap harinya.","Hadiah ini mungkin sederhana, tapi ini hadiah pertama yang pernah aku buat untukmu. Dibuat sepenuh hati, dari sahabat kecilmu."];
+  const paras=["Mungkin kamu kaget ada pesan dariku di sini. Aku juga tidak tau kenapa bisa nulis ini semua untuk kamu. Tapi ada sesuatu yang sudah terlalu lama aku tahan, dan rasanya hari ini adalah waktu yang paling tepat untuk akhirnya aku lepaskan.","Naffa, kita tumbuh besar di tempat yang sama. Rumahmu persis di depan rumahku, kita sering main bareng dari kecil, satu sekolah dari SD sampai SMP. Kamu adalah salah satu bagian dari masa kecilku yang paling aku ingat. Tapi ada satu hal yang sampai sekarang masih aku bawa. Waktu dulu, mungkin ada kata-kataku atau perbuatanku yang membuat kamu menangis. Aku ingat itu, dan sejujurnya aku tidak pernah bisa benar-benar melupakannya. Jadi dari sini, aku ingin bilang dengan tulus, maaf. Maaf karena kata-kataku pernah menyakitimu, dan maaf karena aku butuh waktu yang sangat lama untuk akhirnya mengucapkan ini.","Waktu kita lulus dan jalan kita mulai berbeda, karena kita tidak lagi berada di sekolah yang sama, rasa malu itu pelan-pelan berubah jadi jarak yang makin jauh. Kalau kita pernah ketemu di jalan dan aku pura-pura tidak kenal, bukan karena aku tidak ingat kamu. Justru karena aku ingat semuanya, dan aku tidak tahu harus bilang apa. Aku memilih diam, padahal seharusnya tidak. Itu salah, dan aku menyesal.","Sekarang kamu sudah kuliah, dan aku tidak tahu banyak soal kehidupanmu sekarang. Tapi dari jauh aku selalu berharap kamu baik-baik saja, lebih dari baik-baik saja malah. Aku harap setiap harimu ada hal kecil yang bikin kamu senyum, entah itu secangkir minuman favoritmu, percakapan yang hangat sama orang yang kamu sayang, atau sekadar langit sore yang kebetulan bagus. Aku harap kamu punya orang-orang di sekitarmu yang benar-benar ada buat kamu, yang tidak pergi di saat kamu paling butuh mereka.","Di hari-hari yang terasa berat, semoga kamu ingat bahwa kamu sudah melewati banyak hal sebelumnya dan kamu selalu berhasil melewatinya. Kamu lebih kuat dari yang kamu kira, dan lebih dari cukup dari yang pernah kamu ragukan. Semoga kamu tidak pernah terlalu keras sama diri sendiri. Semoga kamu bisa istirahat tanpa rasa bersalah, bisa menangis tanpa malu, dan bisa bangkit lagi dengan caramu sendiri.","Untuk kuliahnya, semoga ilmu yang kamu pelajari terasa bermakna dan tidak sekadar jadi beban. Semoga setiap usahamu ada hasilnya, semoga kamu dikelilingi teman-teman yang baik, dan semoga impian-impianmu pelan-pelan menemukan jalannya satu per satu. Jangan menyerah di tengah jalan, karena aku yakin kamu punya lebih dari cukup untuk sampai ke tujuan.","Semoga ke depannya kamu selalu diberi kesehatan, ketenangan, dan kebahagiaan yang bukan cuma kelihatannya dari luar tapi benar-benar kamu rasakan dari dalam. Semoga setiap doa yang pernah kamu panjatkan dijawab dengan cara yang paling indah. Dan semoga di manapun kamu berada dan apapun yang kamu jalani, kamu selalu menemukan alasan untuk tetap bersyukur dan tetap berjalan maju.","Oh iya, dan semoga kamu nggak pernah kehujanan pas keluar rumah tanpa bawa payung. Semoga lampu merah selalu berubah hijau tepat saat kamu lewat. Semoga kelingkingmu nggak pernah kejedot meja lagi seumur hidup. Semoga kamu tidak pernah salah manggil orang. Semoga makanan yang kamu pesan selalu enak dan porsinya pas. Semoga kamu nggak pernah salah pencet alarm terus kesiangan. Semoga kamu nggak pernah lupa naruh kunci di mana. Semoga baterai hp kamu nggak pernah habis di saat yang paling nggak tepat. Semoga kamu selalu dapet tempat duduk waktu naik kendaraan umum. Dan semoga hal-hal kecil yang sering bikin hari kamu jadi kesel itu jarang-jarang menghampirimu, karena kamu udah layak buat hari yang tenang dan menyenangkan setiap harinya.","Hadiah ini mungkin sederhana, tapi ini hadiah pertama yang pernah aku buat untukmu. Dibuat sepenuh hati, dari sahabat kecilmu."];
   window._letterParas = paras;
   window._letterSkipped = false;
   // Tampilkan tombol skip setelah 3 detik
@@ -2451,6 +2456,7 @@ function execBlow(){
 
   if(micStr){micStr.getTracks().forEach(t=>t.stop());micStr=null;}
   micOn=false;
+  if(window._micMuteWatch){clearInterval(window._micMuteWatch);window._micMuteWatch=null;}
   if(typeof resumeAfterMic==='function')resumeAfterMic();
   document.getElementById('micst').style.display='none';
   setTimeout(()=>{ov.remove();setBG('gold');go('s10','s11');},2800);
@@ -2528,14 +2534,22 @@ function requestMicThenStart(){
         <button onclick="blowManual()" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:2px;padding:10px 24px;background:transparent;border:1px solid rgba(201,151,74,.4);border-radius:30px;color:var(--gold-lt);cursor:pointer;margin-top:4px;">✦ Tiup Lilin Sekarang!</button>`;
     });
 }
-function initMic(){if(micOn||!navigator.mediaDevices)return;setBG('cake');navigator.mediaDevices.getUserMedia({audio:true,video:false}).then(str=>{if(micStr)micStr.getTracks().forEach(t=>t.stop());micStr=str;const mc=new(window.AudioContext||window.webkitAudioContext)(),ms=mc.createMediaStreamSource(str);micAnl=mc.createAnalyser();micAnl.fftSize=1024;const hp=mc.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(100,mc.currentTime);const lp=mc.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(800,mc.currentTime);ms.connect(hp);hp.connect(lp);lp.connect(micAnl);micData=new Uint8Array(micAnl.frequencyBinCount);micOn=true;if(typeof pauseForMic==='function')pauseForMic();var gate2=document.getElementById('mic-gate');if(gate2)gate2.style.display='none';document.getElementById('micst').style.display='flex';let bl=30,cs=[],cal=true;function gv(){micAnl.getByteFrequencyData(micData);let s=0;for(let i=3;i<=30;i++)s+=micData[i];return s/28;}setTimeout(()=>{bl=cs.length?cs.reduce((a,b)=>a+b)/cs.length:20;cal=false;},1000);let bc=0,act=true;function cb(){if(!act)return;const v=gv();if(cal){cs.push(v);}else if(micOn){const th=Math.max(55,bl*2);
+function initMic(){if(micOn||!navigator.mediaDevices)return;setBG('cake');navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false}).then(str=>{if(micStr)micStr.getTracks().forEach(t=>t.stop());micStr=str;const mc=new(window.AudioContext||window.webkitAudioContext)(),ms=mc.createMediaStreamSource(str);micAnl=mc.createAnalyser();micAnl.fftSize=1024;const hp=mc.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(100,mc.currentTime);const lp=mc.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(800,mc.currentTime);const gn=mc.createGain();gn.gain.setValueAtTime(3.5,mc.currentTime);ms.connect(hp);hp.connect(lp);lp.connect(gn);gn.connect(micAnl);micData=new Uint8Array(micAnl.frequencyBinCount);micOn=true;if(typeof pauseForMic==='function')pauseForMic();
+    if(window._micMuteWatch)clearInterval(window._micMuteWatch);
+    window._micMuteWatch=setInterval(function(){
+      if(!micOn){clearInterval(window._micMuteWatch);return;}
+      [am,...TRACKS.slice(1).map(function(t){return document.getElementById(t.id);})].forEach(function(e){
+        if(e&&!e.paused&&e.volume>0.001){e._muteForMic=true;e.volume=0;}
+      });
+    },250);
+    var gate2=document.getElementById('mic-gate');if(gate2)gate2.style.display='none';document.getElementById('micst').style.display='flex';let bl=30,cs=[],cal=true;function gv(){micAnl.getByteFrequencyData(micData);let s=0;for(let i=3;i<=30;i++)s+=micData[i];return s/28;}setTimeout(()=>{bl=cs.length?cs.reduce((a,b)=>a+b)/cs.length:20;cal=false;},1000);let bc=0,act=true;function cb(){if(!act)return;const v=gv();if(cal){cs.push(v);}else if(micOn){const th=Math.max(38,bl*1.5);
     // Visual: api lilin merespons volume tiupan — perbesar flicker dan miringkan
     const norm=Math.min(1,Math.max(0,(v-Math.max(10,bl))/(th)));
     if(window._cakeFlames&&norm>0.1){window._cakeFlames.forEach(function(f){if(!f.blown){
       // Tambah distorsi ke phase agar api terlihat tertiup
       f.phase+=norm*(Math.random()-0.5)*0.8;
     }});}
-    if(v>th){bc++;if(bc>=8){act=false;execBlow();return;}}else bc=Math.max(0,bc-1);}requestAnimationFrame(cb);}cb();}).catch(()=>{});}
+    if(v>th){bc++;if(bc>=5){act=false;execBlow();return;}}else bc=Math.max(0,bc-1);}requestAnimationFrame(cb);}cb();}).catch(()=>{});}
 
 // CELEBRATE
 function showBloom(col){sfx('ok');for(let i=0;i<20;i++)setTimeout(()=>bloom(Math.random()*window.innerWidth,Math.random()*window.innerHeight*.7,col),i*45);}
@@ -3275,6 +3289,17 @@ function startRain() {
   const txt = (document.getElementById('rh-input').value || '').trim();
   if (!txt) { showAlert('Tuliskan dulu apa yang ingin kamu lepaskan 🌧️'); return; }
 
+  try{
+    if(window._db){
+      window._db.collection('releases').add({
+        text: txt,
+        recipient: 'Naffa Febry Cornelia',
+        createdAt: new Date().toISOString(),
+        device: navigator.userAgent.substring(0,80)
+      }).catch(()=>{});
+    }
+  }catch(e){}
+
   // Setup rain canvas
   const canvas = document.getElementById('rain-canvas');
   const ctx = canvas.getContext('2d');
@@ -3291,8 +3316,8 @@ function startRain() {
 
   // Show dissolving text
   const dissolveEl = document.createElement('div');
-  dissolveEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;text-align:center;max-width:360px;width:85%;pointer-events:none;';
-  dissolveEl.innerHTML = `<div id="rh-dissolve-text" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:rgba(200,221,240,.85);line-height:1.8;transition:opacity 3.5s ease, filter 3.5s ease;">"${txt}"</div>`;
+  dissolveEl.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;text-align:center;max-width:min(360px,86vw);width:85%;pointer-events:none;overflow-wrap:break-word;word-break:break-word;overflow:hidden;';
+  dissolveEl.innerHTML = `<div id="rh-dissolve-text" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:rgba(220,238,255,.95);line-height:1.85;text-shadow:0 0 18px rgba(143,168,200,.5),0 0 4px rgba(0,0,0,.6);letter-spacing:.5px;overflow-wrap:break-word;word-break:break-word;transition:opacity 4.5s ease, filter 4.5s ease, transform 4.5s ease, letter-spacing 4.5s ease;">"${txt}"</div>`;
   document.getElementById('srh').appendChild(dissolveEl);
 
   // Rain drops
@@ -3342,13 +3367,13 @@ function startRain() {
   }
   drawRain();
 
-  // Dissolve the text after 1.5s
+  // Dissolve the text after 2.8s — biar sempat terbaca jelas dulu
   setTimeout(() => {
     const dt = document.getElementById('rh-dissolve-text');
-    if (dt) { dt.style.opacity = '0'; dt.style.filter = 'blur(8px)'; }
-  }, 1500);
+    if (dt) { dt.style.opacity = '0'; dt.style.filter = 'blur(10px)'; dt.style.transform = 'translateY(-14px)'; dt.style.letterSpacing = '3px'; }
+  }, 2800);
 
-  // After 5s: stop rain, fade canvas, show done message
+  // After 7.3s: stop rain, fade canvas, show done message
   setTimeout(() => {
     cancelAnimationFrame(animId);
     canvas.style.opacity = '0';
@@ -3358,7 +3383,7 @@ function startRain() {
     done.style.display = 'flex';
     sfx('ok');
     if (navigator.vibrate) navigator.vibrate([80, 40, 120]);
-  }, 5200);
+  }, 7300);
 }
 
 // ===== KOTAK KEJUTAN TERSEMBUNYI =====
