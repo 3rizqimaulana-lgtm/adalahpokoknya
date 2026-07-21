@@ -99,13 +99,6 @@ window._db=null;
 #lockgate .lk-pwinput.lk-shake{animation:lkShake .4s ease;}
 @keyframes lkShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
 @media(max-width:420px){#lockgate .lk-card{padding:38px 24px;}#lockgate .lk-block{min-width:54px;padding:12px 6px;}#lockgate .lk-val{font-size:1.5rem;}#lockgate .lk-corner{width:16px;height:16px;}}
-#lockgate .lk-whisper{display:block;width:100%;max-width:360px;margin:22px auto 0;background:rgba(201,151,74,.06);border:1px solid rgba(201,151,74,.22);border-radius:16px;padding:12px 18px;cursor:pointer;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:rgba(250,246,240,.7);line-height:1.5;transition:border-color .3s,background .3s,transform .2s;}
-#lockgate .lk-whisper:hover{border-color:rgba(201,151,74,.45);background:rgba(201,151,74,.1);transform:translateY(-2px);}
-#lockgate .lk-whisper:active{transform:translateY(0) scale(.98);}
-#lockgate .lk-whisper-txt{display:inline-block;transition:opacity .35s ease;}
-#lockgate .lk-whisper-txt.lk-wfade{opacity:0;}
-#lockgate .lk-whisper::before{content:'';}
-#lockgate .lk-whisper::after{content:' — ketuk untuk bisikan lain';display:block;font-family:'Space Mono',monospace;font-style:normal;font-size:.52rem;letter-spacing:1.5px;color:rgba(201,151,74,.4);margin-top:6px;text-transform:uppercase;}
 
 /* Progres bulan menuju dekade kedua — perjalanan setahun sebelum tanggal mekar */
 #lockgate .lk-progress{margin:18px auto 2px;max-width:300px;}
@@ -460,7 +453,7 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
     <div class="lk-em" id="lk-emletter" tabindex="0" role="button" aria-label="Buka dengan kata sandi">N</div>
     <div class="lk-sub">Taman Bulan · Naffa</div>
     <div class="lk-divider"></div>
-    <p class="lk-msg">Taman ini masih tertutup rapat, menunggu hari yang sudah ditentukan untuk mekar.</p>
+    <p class="lk-msg">Taman ini masih tertutup rapat, menunggu hari yang sudah ditentukan untuk terbuka.</p>
     <div class="lk-progress" aria-hidden="true">
       <div class="lk-progress-track"><div class="lk-progress-fill" id="lk-progress-fill"></div><div class="lk-progress-moon" id="lk-progress-moon">🌙</div></div>
       <div class="lk-progress-label" id="lk-progress-label">Menuju Dekade Kedua</div>
@@ -474,9 +467,6 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
       <div class="lk-sep">:</div>
       <div class="lk-block"><span class="lk-val" id="lk-s">00</span><span class="lk-lbl">DETIK</span></div>
     </div>
-    <button type="button" class="lk-whisper" id="lk-whisper" aria-label="Ketuk untuk bisikan taman">
-      <span class="lk-whisper-txt" id="lk-whisper-txt">Setiap detik yang berlalu adalah satu langkah lebih dekat.</span>
-    </button>
     <div class="lk-pwwrap" id="lk-pwwrap">
       <input type="password" id="lk-pwinput" class="lk-pwinput" placeholder="• • • • • • • •" inputmode="numeric" autocomplete="off">
       <div class="lk-pwerr" id="lk-pwerr">Kata sandi salah.</div>
@@ -4052,77 +4042,6 @@ document.addEventListener('fullscreenchange',function(){
   }
   paint();
   var lkIv = setInterval(paint, 1000);
-
-  // ===== BISIKAN TAMAN — teks berputar + interaktif, supaya tidak monoton dilihat berkali-kali =====
-  (function(){
-    var WHISPERS = [
-      'Setiap detik yang berlalu adalah satu langkah lebih dekat.',
-      'Bunga-bunga di taman ini sedang diam-diam disiapkan untukmu.',
-      'Sabar sedikit lagi — yang ditunggu selalu terasa lebih indah.',
-      'Ada beberapa kejutan kecil menanti di setiap sudut taman ini.',
-      'Waktu berjalan pelan, tapi taman ini terus tumbuh diam-diam.',
-      'Terima kasih sudah singgah lagi — taman ini senang ditunggu olehmu.',
-      'Tidak lama lagi, pintu ini akan terbuka sepenuhnya.',
-      'Cahaya rembulan sedang menghitung mundur bersamamu.'
-    ];
-    var btn = document.getElementById('lk-whisper');
-    var txt = document.getElementById('lk-whisper-txt');
-    if(!btn || !txt) return;
-    var idx = Math.floor(Math.random()*WHISPERS.length);
-    txt.textContent = WHISPERS[idx];
-    function nextWhisper(){
-      idx = (idx + 1 + Math.floor(Math.random()*(WHISPERS.length-1))) % WHISPERS.length;
-      txt.classList.add('lk-wfade');
-      setTimeout(function(){ txt.textContent = WHISPERS[idx]; txt.classList.remove('lk-wfade'); }, 350);
-    }
-    var autoIv = setInterval(nextWhisper, 9000);
-    btn.addEventListener('click', function(e){
-      nextWhisper();
-      clearInterval(autoIv);
-      autoIv = setInterval(nextWhisper, 9000);
-      try{
-        var r = btn.getBoundingClientRect();
-        if(typeof bloom === 'function') bloom(r.left + r.width/2, r.top + r.height/2, '#e8c87a');
-        if(typeof sfx === 'function') sfx('tr');
-      }catch(err){}
-    });
-  })();
-
-  // ===== PARALLAX KARTU — miring halus mengikuti mouse, supaya terasa "hidup" =====
-  (function(){
-    var gate = document.getElementById('lockgate');
-    var card = gate ? gate.querySelector('.lk-card') : null;
-    if(!gate || !card) return;
-    var tiltReady = false;
-    // Tunggu animasi masuk kartu (lkIn) selesai dulu sebelum kartu boleh ikut mouse,
-    // supaya tidak bentrok dengan animasi CSS-nya.
-    card.addEventListener('animationend', function onEnd(e){
-      if(e.animationName !== 'lkIn') return;
-      card.style.animation = 'none';
-      tiltReady = true;
-      card.removeEventListener('animationend', onEnd);
-    });
-    var raf = null, rx = 0, ry = 0;
-    function apply(){
-      card.style.transform = 'perspective(1000px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg)';
-      raf = null;
-    }
-    function onMove(e){
-      if(!tiltReady) return;
-      var r = card.getBoundingClientRect();
-      var px = (e.clientX - r.left) / r.width;
-      var py = (e.clientY - r.top) / r.height;
-      rx = (py - .5) * -5;
-      ry = (px - .5) * 5;
-      if(!raf) raf = requestAnimationFrame(apply);
-    }
-    function reset(){
-      rx = 0; ry = 0;
-      if(tiltReady){ card.style.transition = 'transform .5s ease'; apply(); setTimeout(function(){ if(card) card.style.transition=''; },500); }
-    }
-    gate.addEventListener('mousemove', onMove);
-    gate.addEventListener('mouseleave', reset);
-  })();
 
   // ===== BANTUAN TESTING (aman, tidak memengaruhi pengunjung asli) =====
   // Buka console browser (F12), lalu panggil salah satu dari:
