@@ -500,7 +500,7 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
     <p style="font-family:'Josefin Sans',sans-serif;font-size:.78rem;color:rgba(250,246,240,.6);line-height:1.7;margin-bottom:24px;">Semua perjalananmu — pilihan bunga, hewan jiwa, kapsul waktu, dan harapan — akan direset. Apakah kamu yakin?</p>
     <div style="display:flex;gap:12px;justify-content:center;">
       <button onclick="document.getElementById('reset-confirm-modal').style.display='none';" style="background:transparent;border:1px solid rgba(250,246,240,.2);color:rgba(250,246,240,.6);padding:11px 24px;border-radius:30px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.72rem;letter-spacing:2px;">Batal</button>
-      <button onclick="document.getElementById('reset-confirm-modal').style.display='none';_doResetWithTrack();" style="background:linear-gradient(135deg,var(--rose),var(--gold));border:none;color:#fff;padding:11px 24px;border-radius:30px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.72rem;letter-spacing:2px;font-weight:600;">Ya, Ulangi ✦</button>
+      <button onclick="document.getElementById('reset-confirm-modal').style.display='none';resetAll();" style="background:linear-gradient(135deg,var(--rose),var(--gold));border:none;color:#fff;padding:11px 24px;border-radius:30px;cursor:pointer;font-family:'Josefin Sans',sans-serif;font-size:.72rem;letter-spacing:2px;font-weight:600;">Ya, Ulangi ✦</button>
     </div>
   </div>
 </div>
@@ -518,24 +518,25 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
 <div id="skipmenu">
   <h4 style="font-family:'Space Mono',monospace;font-size:.65rem;color:var(--gold);margin-bottom:8px;letter-spacing:2px;">[ DEV NAVIGATION ]</h4>
   <button class="skbtn" onclick="devSkip('s1')">01 · Pintu Taman</button>
-  <button class="skbtn" onclick="devSkip('s2')">02 · Teka-Teki Bunga</button>
-  <button class="skbtn" onclick="devSkip('s2b')">03 · Rahasia Tahun Lahir</button>
-  <button class="skbtn" onclick="devSkip('scd')">04 · Dua Dekade Hidup</button>
-  <button class="skbtn" onclick="devSkip('str')">05 · Kartu Ramalan Bulan</button>
-  <button class="skbtn" onclick="devSkip('sph')">06 · Esensi Bunga & Hewan</button>
-  <button class="skbtn" onclick="devSkip('s3')">07 · Otentikasi Jiwa</button>
-  <button class="skbtn" onclick="devSkip('s3b')">08 · Mahkota Takdir</button>
-  <button class="skbtn" onclick="devSkip('sci')">09 · Animasi Filosofis</button>
-  <button class="skbtn" onclick="devSkip('spz')">10 · Puzzle Bunga</button>
-  <button class="skbtn" onclick="devSkip('svg-screen')">11 · Virtual Garden</button>
-  <button class="skbtn" onclick="devSkip('srh')">12 · Ruang Hujan</button>
-  <button class="skbtn" onclick="devSkip('s8')">13 · Surat Nostalgia</button>
-  <button class="skbtn" onclick="devSkip('sfl')">14 · Surat ke 2030</button>
-  <button class="skbtn" onclick="devSkip('s9')">15 · Tiga Restu</button>
-  <button class="skbtn" onclick="devSkip('s9b')">16 · Partikel & Harapan</button>
-  <button class="skbtn" onclick="devSkip('s10')">17 · Tiup Lilin</button>
-  <button class="skbtn" onclick="devSkip('s11')">18 · Selamat Ulang Tahun!</button>
-  <button class="skbtn" onclick="devSkip('s13')">19 · Sertifikat</button>
+  <button class="skbtn" onclick="devSkip('smusic')">02 · Pilih Lagu</button>
+  <button class="skbtn" onclick="devSkip('s2')">03 · Teka-Teki Bunga</button>
+  <button class="skbtn" onclick="devSkip('s2b')">04 · Rahasia Tahun Lahir</button>
+  <button class="skbtn" onclick="devSkip('scd')">05 · Dua Dekade Hidup</button>
+  <button class="skbtn" onclick="devSkip('str')">06 · Kartu Ramalan Bulan</button>
+  <button class="skbtn" onclick="devSkip('sph')">07 · Esensi Bunga & Hewan</button>
+  <button class="skbtn" onclick="devSkip('s3')">08 · Otentikasi Jiwa</button>
+  <button class="skbtn" onclick="devSkip('s3b')">09 · Mahkota Takdir</button>
+  <button class="skbtn" onclick="devSkip('sci')">10 · Animasi Filosofis</button>
+  <button class="skbtn" onclick="devSkip('spz')">11 · Puzzle Bunga</button>
+  <button class="skbtn" onclick="devSkip('svg-screen')">12 · Virtual Garden</button>
+  <button class="skbtn" onclick="devSkip('srh')">13 · Ruang Hujan</button>
+  <button class="skbtn" onclick="devSkip('s8')">14 · Surat Nostalgia</button>
+  <button class="skbtn" onclick="devSkip('sfl')">15 · Surat ke 2030</button>
+  <button class="skbtn" onclick="devSkip('s9')">16 · Tiga Restu</button>
+  <button class="skbtn" onclick="devSkip('s9b')">17 · Partikel & Harapan</button>
+  <button class="skbtn" onclick="devSkip('s10')">18 · Tiup Lilin</button>
+  <button class="skbtn" onclick="devSkip('s11')">19 · Selamat Ulang Tahun!</button>
+  <button class="skbtn" onclick="devSkip('s13')">20 · Sertifikat</button>
 </div>
 
 <!-- AUDIO — satu elemen tunggal dipakai bergantian untuk semua lagu di playlist (tanpa loop, supaya event 'ended' aktif untuk auto-lanjut) -->
@@ -562,6 +563,22 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
   </div>
   <div class="pterm" id="tbox"></div>
   <span class="s1-cta"><button class="btn" id="entbtn" onclick="goS2()" style="display:none;"><span aria-hidden="true">✦</span> Masuki Taman</button></span>
+</div>
+
+<!-- SMUSIC — PEMILIHAN LAGU (muncul setelah pintu taman terbuka, sebelum perjalanan dimulai) -->
+<div class="screen" id="smusic">
+  <div style="max-width:480px;width:100%;">
+    <div style="font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:4px;color:rgba(201,151,74,.65);margin-bottom:12px;">SEBELUM.MELANGKAH</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4.6vw,2.1rem);font-weight:400;color:rgba(250,246,240,.92);letter-spacing:1px;line-height:1.35;margin-bottom:10px;">Pilih Lagu yang Menemani Perjalananmu ✦</h2>
+    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(250,246,240,.6);line-height:1.7;margin-bottom:26px;">Taman ini akan terasa lebih hidup dengan musik. Pilih satu, atau biarkan pilihan pertama menemanimu.</p>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:30px;" id="entry-track-selector">
+      <button class="trk-btn entry-trk active" id="etrk-0" onclick="selectEntryTrack(0)" data-idx="0" style="padding:14px 18px;font-size:.72rem;">About You — The 1975</button>
+      <button class="trk-btn entry-trk" id="etrk-1" onclick="selectEntryTrack(1)" data-idx="1" style="padding:14px 18px;font-size:.72rem;">her — JVKE</button>
+      <button class="trk-btn entry-trk" id="etrk-2" onclick="selectEntryTrack(2)" data-idx="2" style="padding:14px 18px;font-size:.72rem;">Soldier, Poet, King — The Oh Hellos</button>
+      <button class="trk-btn entry-trk" id="etrk-3" onclick="selectEntryTrack(3)" data-idx="3" style="padding:14px 18px;font-size:.72rem;">Kingdom Dance — Tangled Soundtrack</button>
+    </div>
+    <button class="btn" id="entergardenbtn" onclick="enterGarden()" style="padding:14px 40px;font-size:.75rem;"><span aria-hidden="true">✦</span> Mulai Perjalanan</button>
+  </div>
 </div>
 
 <!-- S2 PUZZLE 1 -->
@@ -2062,57 +2079,22 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
   </div>
 </div>
 
-<!-- FLOATING MUSIC PANEL — muncul di semua stage setelah s11 -->
-<div id="music-panel" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:200;background:rgba(15,12,8,.92);border:1px solid rgba(201,151,74,.25);border-radius:20px;padding:12px 18px;backdrop-filter:blur(16px);min-width:280px;max-width:92vw;">
-  <div style="font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:3px;color:rgba(201,151,74,.45);text-align:center;margin-bottom:8px;">✦ PILIH LAGU</div>
-  <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;" id="track-selector">
-    <button class="trk-btn active" id="trk-0" onclick="selectTrackReplay(0)" data-idx="0">About You — The 1975</button>
-    <button class="trk-btn" id="trk-1" onclick="selectTrackReplay(1)" data-idx="1">Guilty As Sin? × About You</button>
-    <button class="trk-btn" id="trk-2" onclick="selectTrackReplay(2)" data-idx="2">Iris — Goo Goo Dolls</button>
-    <button class="trk-btn" id="trk-3" onclick="selectTrackReplay(3)" data-idx="3">Line Without a Hook — Ricky Montgomery</button>
-  </div>
-  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px;">
-    <span style="font-family:'Space Mono',monospace;font-size:.48rem;letter-spacing:1px;color:rgba(250,246,240,.3);">↻ auto-lanjut aktif</span>
-    <button id="repeat-toggle" onclick="toggleRepeatUI()" title="Ulangi lagu yang sedang diputar terus-menerus" style="background:transparent;border:1px solid rgba(201,151,74,.25);border-radius:20px;padding:4px 12px;color:rgba(201,151,74,.6);font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:1px;cursor:pointer;transition:all .3s ease;">ulangi 1 lagu: OFF</button>
-  </div>
-  <button onclick="document.getElementById('music-panel').style.display='none'" style="display:block;margin:8px auto 0;background:transparent;border:none;color:rgba(250,246,240,.2);font-family:'Space Mono',monospace;font-size:.5rem;cursor:pointer;letter-spacing:1px;">tutup ×</button>
-</div>
-
-<script>
-(function(){
-  // Show music panel when s13 becomes active
-  var mp=document.getElementById('music-panel');
-  if(!mp)return;
-  var obs=new MutationObserver(function(){
-    var s13=document.getElementById('s13');
-    if(s13&&s13.classList.contains('active')){
-      setTimeout(function(){mp.style.display='block';},1200);
-    } else {
-      mp.style.display='none';
-    }
-  });
-  function startObs(){var s13=document.getElementById('s13');if(s13)obs.observe(s13,{attributes:true,attributeFilter:['class']});}
-  document.addEventListener('DOMContentLoaded',startObs);
-  window.addEventListener('load',startObs);
-})();
-</script>
-
 <script>
 // ===== PLAYLIST — satu sumber kebenaran untuk semua lagu & metadatanya =====
 // Urutan array = urutan playlist. Tambah/hapus lagu cukup edit array ini saja,
 // tidak perlu sentuh elemen <audio> atau logika pemutaran di bawah.
 const TRACKS=[
-  {title:'ABOUT YOU',            artist:'THE 1975',                 color:'#c97b84', main:true,
+  {title:'ABOUT YOU',            artist:'THE 1975',            color:'#c97b84', main:true,
    url:"https://3rizqimaulana-lgtm.github.io/naffa-audio/The 1975 - About You Official.mp3"},
-  {title:'GUILTY AS SIN? x ABOUT YOU', artist:'TAYLOR SWIFT x THE 1975', color:'#8fa8c8',
-   url:"https://3rizqimaulana-lgtm.github.io/naffa-audio/Guilty as sin x About you Taylor Swift x The 1975 Full Version.mp3"},
-  {title:'IRIS',                  artist:'GOO GOO DOLLS',            color:'#c9974a',
-   url:"https://3rizqimaulana-lgtm.github.io/naffa-audio/Goo Goo Dolls - Iris (Lyrics).mp3"},
-  {title:'LINE WITHOUT A HOOK',   artist:'RICKY MONTGOMERY',         color:'#7a9e7e',
-   url:"https://3rizqimaulana-lgtm.github.io/naffa-audio/Ricky Montgomery - Line Without a Hook (Official Lyric Video).mp3"}
+  {title:'HER',                  artist:'JVKE',                 color:'#8fa8c8',
+   url:"https://3rizqimaulana-lgtm.github.io/naffa-audio/JVKE - her.mp3"},
+  {title:'SOLDIER, POET, KING',  artist:'THE OH HELLOS',         color:'#c9974a',
+   url:"https://3rizqimaulana-lgtm.github.io/naffa-audio/The Oh Hellos - Soldier, Poet, King.mp3"},
+  {title:'KINGDOM DANCE',        artist:'TANGLED SOUNDTRACK',    color:'#7a9e7e',
+   url:"https://3rizqimaulana-lgtm.github.io/naffa-audio/TANGLED - Kingdom Dance.mp3"}
 ];
 const am=document.getElementById('am');
-let cti=0,_au=false,_pp=null,bonusUnlocked=(localStorage.getItem('nbu')==='1');
+let cti=0,_au=false,_pp=null,bonusUnlocked=true; // semua lagu terbuka sejak awal — dipilih di stage SMUSIC sebelum taman dimulai
 let aCtx,anl,aData,micStr,micAnl,micData,micOn=false;
 let openedG=0,cdInt,ptmr=null,panim=null,figAnim=null,uAnim=null,figDone=false;
 let selF='',selA='',selD='The Wildflower Sovereign',maniWish='';
@@ -2362,7 +2344,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'){const m=doc
 let _blobCache={};   // cache blob URL per index track, supaya tidak fetch berulang tiap ganti lagu
 let repeatOne=false; // mode "ulangi 1 lagu" (toggle manual lewat panel musik)
 
-function trackCount(){ return bonusUnlocked ? TRACKS.length : 1; } // track bonus (1-3) baru terbuka setelah sampai sertifikat
+function trackCount(){ return bonusUnlocked ? TRACKS.length : 1; } // semua lagu sudah terbuka sejak dipilih di stage SMUSIC
 
 async function loadTrackURL(i){
   if(_blobCache[i]) return _blobCache[i]; // sudah pernah di-fetch, pakai cache
@@ -2375,10 +2357,10 @@ async function loadTrackURL(i){
 }
 
 // ===== PRELOAD LAGU DI LATAR BELAKANG =====
-// Lagu ke-0 sudah otomatis dimuat saat taman dibuka (lewat swT(0) di goS2).
-// Sisanya diunduh diam-diam satu per satu setiap kali pengunjung berpindah stage,
-// supaya begitu track bonus terbuka (setelah sertifikat) dan pengunjung ganti lagu,
-// filenya sudah ada di cache dan tidak perlu loading lagi.
+// Lagu yang dipilih pengunjung di stage SMUSIC dimuat lewat swT() saat "Mulai Perjalanan" diklik.
+// Sisa lagu lain diunduh diam-diam satu per satu setiap kali pengunjung berpindah stage,
+// supaya begitu pengunjung mengganti lagu lewat HUD musik, filenya sudah ada di cache
+// dan tidak perlu loading lagi.
 let _preloadIdx=1;
 let _preloadBusy=false;
 function preloadNextTrack(){
@@ -2460,7 +2442,7 @@ am.addEventListener('ended', function(){
 function sfx(t){try{const c=new(window.AudioContext||window.webkitAudioContext)();c.resume().then(()=>{if(t==='ok'){[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(f,c.currentTime+i*.06);g.gain.setValueAtTime(.06,c.currentTime+i*.06);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.06+.25);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.06);o.stop(c.currentTime+i*.06+.25);});}else if(t==='err'){const o=c.createOscillator(),g=c.createGain();o.type='sawtooth';o.frequency.setValueAtTime(220,c.currentTime);o.frequency.linearRampToValueAtTime(110,c.currentTime+.15);o.frequency.linearRampToValueAtTime(165,c.currentTime+.3);g.gain.setValueAtTime(.12,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.35);o.connect(g);g.connect(c.destination);o.start(c.currentTime);o.stop(c.currentTime+.35);}else if(t==='win'){[523.25,659.25,783.99,880,1046.5].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(f,c.currentTime+i*.08);g.gain.setValueAtTime(.07,c.currentTime+i*.08);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.08+.4);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.08);o.stop(c.currentTime+i*.08+.4);});}else{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(300,c.currentTime);o.frequency.exponentialRampToValueAtTime(600,c.currentTime+.5);g.gain.setValueAtTime(.04,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.5);o.connect(g);g.connect(c.destination);o.start(c.currentTime);o.stop(c.currentTime+.5);}});}catch(e){}}
 
 // STAGES
-const STAGES=['s1','s2','s2b','scd','str','sph','s3','s3b','sci','spz','svg-screen','srh','s8','sfl','s9','s9b','s10','s11','s13'];
+const STAGES=['s1','smusic','s2','s2b','scd','str','sph','s3','s3b','sci','spz','svg-screen','srh','s8','sfl','s9','s9b','s10','s11','s13'];
 function go(f,t){
   const fe=document.getElementById(f);
   fe.style.transform='scale(1.02) translateY(-10px)';
@@ -2503,7 +2485,7 @@ function runTerm(){if(_termRan)return;_termRan=true;
   pl();
 }
 
-// S1→S2
+// S1→SMUSIC — pintu taman terbuka, lanjut ke stage pemilihan lagu (belum memutar apa pun)
 function goS2(){
   // Fullscreen HARUS dipicu sinkron di awal handler klik (bukan setelah await),
   // kalau tidak beberapa browser akan menolak permintaannya.
@@ -2516,14 +2498,24 @@ function goS2(){
   }catch(e){}
 
   unlkA();
-  const targetTrack = _pendingTrackAfterReset >= 0 ? _pendingTrackAfterReset : 0;
-  if(_pendingTrackAfterReset >= 0){
-    bonusUnlocked = true;
-    _pendingTrackAfterReset = -1;
-  }
+  go('s1','smusic');
+}
+
+// Menandai lagu yang dipilih di stage SMUSIC (belum memutar, hanya menyimpan pilihan)
+let _entryTrack=0;
+function selectEntryTrack(i){
+  _entryTrack=i;
+  document.querySelectorAll('#entry-track-selector .entry-trk').forEach(function(b){
+    b.classList.toggle('active', parseInt(b.dataset.idx,10)===i);
+  });
+}
+
+// SMUSIC→S2 — lagu yang dipilih mulai dimuat & diputar, lalu taman sesungguhnya dibuka
+function enterGarden(){
+  const targetTrack=_entryTrack;
 
   // Kunci tombol & tampilkan status memuat musik — taman baru dibuka setelah lagu siap.
-  const btn=document.getElementById('entbtn');
+  const btn=document.getElementById('entergardenbtn');
   if(btn){btn.disabled=true;btn.innerHTML='<span class="s1-loadspin" aria-hidden="true"></span> Memuat lagu...';}
 
   // Timeout jaga-jaga 7 detik: kalau audio gagal/lambat dimuat (koneksi buruk dsb),
@@ -2534,10 +2526,10 @@ function goS2(){
   ]);
 
   ready.then(function(){
-    go('s1','s2');
+    go('smusic','s2');
     setTimeout(()=>{initViz();document.getElementById('ahud').style.opacity='1';updNP(targetTrack);},200);
   }).catch(function(){
-    go('s1','s2');
+    go('smusic','s2');
     setTimeout(()=>{initViz();document.getElementById('ahud').style.opacity='1';updNP(targetTrack);},200);
   });
 }
@@ -2854,7 +2846,8 @@ function resetAll(){
   try{document.getElementById('cflval').textContent='Esensi Bunga: —';}catch(e){}
   try{document.getElementById('canval').textContent='Esensi Hewan: —';}catch(e){}
   try{const eb=document.getElementById('entbtn');if(eb){eb.style.display='none';eb.disabled=false;eb.innerHTML='<span aria-hidden="true">✦</span> Masuki Taman';}}catch(e){}
-  try{const mpanel=document.getElementById('music-panel');if(mpanel)mpanel.style.display='none';}catch(e){}
+  try{if(typeof selectEntryTrack==='function')selectEntryTrack(0);}catch(e){}
+  try{const egb=document.getElementById('entergardenbtn');if(egb){egb.disabled=false;egb.innerHTML='<span aria-hidden="true">✦</span> Mulai Perjalanan';}}catch(e){}
   try{const micgate=document.getElementById('mic-gate');if(micgate){micgate.style.display='flex';const mb=micgate.querySelector('button');if(mb){mb.textContent='✦ izinkan mikrofon untuk tiup lilin';mb.disabled=false;}}}catch(e){}
   // Reset stage history & UI tambahan
   try{if(typeof _stageHistory!=='undefined')_stageHistory=[];}catch(e){}
@@ -2888,7 +2881,7 @@ document.addEventListener('click',e=>{if(e.clientX<60&&e.clientY<60){ck++;clearT
   }
   cards.forEach(c=>grid.appendChild(c));
 })();
-document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(document.documentElement.classList.contains('nm-locked'))return;if(e.target&&e.target.tagName==='TEXTAREA')return;const a=document.querySelector('.screen.active');if(!a)return;const id=a.id;if(id==='s1'){const b=document.getElementById('entbtn');if(b&&b.style.display!=='none'){e.preventDefault();b.click();}}else if(id==='s2'){e.preventDefault();verify1();}else if(id==='s2b'){e.preventDefault();verify2();}else if(id==='s12'){const v=document.getElementById('a1');if(v&&v.value.trim()){e.preventDefault();submitCap();}}});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(document.documentElement.classList.contains('nm-locked'))return;if(e.target&&e.target.tagName==='TEXTAREA')return;const a=document.querySelector('.screen.active');if(!a)return;const id=a.id;if(id==='s1'){const b=document.getElementById('entbtn');if(b&&b.style.display!=='none'){e.preventDefault();b.click();}}else if(id==='smusic'){const b=document.getElementById('entergardenbtn');if(b&&!b.disabled){e.preventDefault();b.click();}}else if(id==='s2'){e.preventDefault();verify1();}else if(id==='s2b'){e.preventDefault();verify2();}else if(id==='s12'){const v=document.getElementById('a1');if(v&&v.value.trim()){e.preventDefault();submitCap();}}});
 
 // SPLASH — preload audio utama di background
 (function(){
@@ -3764,26 +3757,13 @@ document.addEventListener('visibilitychange', function() {
   });
 })();
 
-// ===== TRACK REPLAY SELECTOR =====
-let selectedReplayTrack = 0;
-let _pendingTrackAfterReset = -1; // track yang dipakai sebagai lagu pembuka kalau taman di-reset & dijalani ulang dari awal
-
-function selectTrackReplay(idx) {
-  if(idx>0 && !bonusUnlocked) return; // track bonus belum terbuka
-  selectedReplayTrack = idx;
-  document.querySelectorAll('.trk-btn').forEach(function(b) {
-    b.classList.toggle('active', parseInt(b.dataset.idx) === idx);
-  });
-}
-
+// ===== ULANGI TAMAN =====
+// Pemilihan lagu tidak lagi dilakukan di sini — begitu taman direset, alurnya kembali
+// ke s1 lalu otomatis singgah lagi di stage SMUSIC agar pengunjung memilih lagu baru.
 function resetAllWithTrack() {
   /* Konfirmasi sebelum reset agar tidak kepencet tidak sengaja */
   var modal = document.getElementById('reset-confirm-modal');
   if (modal) { modal.style.display = 'flex'; return; }
-  _doResetWithTrack();
-}
-function _doResetWithTrack() {
-  _pendingTrackAfterReset = selectedReplayTrack;
   resetAll();
 }
 
