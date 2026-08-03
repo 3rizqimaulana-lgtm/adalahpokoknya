@@ -476,6 +476,15 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
 #ntitle{font-family:'Space Mono',monospace;font-size:.58rem;color:var(--gold-lt);letter-spacing:1px;max-width:150px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:opacity .3s;}
 .mctl{font-size:.75rem;color:rgba(250,246,240,.5);cursor:pointer;transition:color .3s;padding:2px 4px;}
 .mctl:hover{color:var(--cream);}
+#playlist-btn.active{color:var(--gold-lt);}
+.playlist-menu{position:fixed;top:64px;right:18px;z-index:99;background:rgba(15,12,8,.95);border:1px solid rgba(201,151,74,.25);border-radius:16px;padding:8px;backdrop-filter:blur(20px);box-shadow:0 15px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;gap:3px;min-width:220px;max-width:min(80vw,280px);opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .22s ease,transform .22s ease;}
+.playlist-menu.show{opacity:1;transform:translateY(0);pointer-events:auto;}
+.playlist-item{display:flex;flex-direction:column;align-items:flex-start;gap:1px;background:transparent;border:none;border-radius:10px;padding:8px 12px;cursor:pointer;text-align:left;transition:background .2s;width:100%;}
+.playlist-item:hover{background:rgba(255,255,255,.06);}
+.playlist-item.playing{background:rgba(201,151,74,.15);}
+.playlist-item .pl-title{font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:.5px;color:var(--cream);}
+.playlist-item .pl-artist{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.72rem;color:rgba(250,246,240,.5);}
+.playlist-item.playing .pl-title::before{content:'♪ ';color:var(--gold-lt);}
 
 /* DEV SKIP */
 #skipmenu{display:none;position:fixed;top:10px;left:10px;z-index:9998;background:rgba(10,8,6,.97);border:1px solid rgba(201,151,74,.3);border-radius:16px;padding:16px;max-width:360px;max-height:85vh;overflow-y:auto;}
@@ -520,9 +529,23 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
   }
   window._nmIsLocked = isLocked;
   window._nmUnlockAt = UNLOCK_AT;
+
+  // Deteksi dini "kunjungan ulang": kalau gerbang sudah kebuka (lewat hari-H) DAN
+  // pengunjung sebelumnya sudah pernah menyelesaikan seluruh perjalanan (ditandai
+  // localStorage 'nbu' yang di-set begitu sampai ke stage Sertifikat), tampilkan
+  // layar "Selamat Datang Kembali" alih-alih mengulang seluruh perjalanan dari nol.
+  // Dicek sesinkron mungkin (sebelum body dirender) supaya tidak ada kedipan layar s1.
+  var isRevisit = false;
+  if(!isLocked()){
+    try{ isRevisit = !!localStorage.getItem('nbu'); }catch(e){}
+  }
+  window._nmIsRevisit = isRevisit;
+  if(isRevisit) document.documentElement.classList.add('nm-revisit');
 })();
 </script>
-<style>html.nm-locked body>*:not(#lockgate){display:none!important;}html.nm-locked #lockgate{display:flex!important;}</style>
+<style>html.nm-locked body>*:not(#lockgate){display:none!important;}html.nm-locked #lockgate{display:flex!important;}
+html.nm-revisit #s1{opacity:0!important;pointer-events:none!important;}
+html.nm-revisit #welcomeback{opacity:1!important;pointer-events:auto!important;transform:none!important;filter:none!important;}</style>
 <body>
 <!-- LOCK GATE -->
 <div id="lockgate">
@@ -599,24 +622,24 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
 <div id="skipmenu">
   <h4 style="font-family:'Space Mono',monospace;font-size:.65rem;color:var(--gold);margin-bottom:8px;letter-spacing:2px;">[ DEV NAVIGATION ]</h4>
   <button class="skbtn" onclick="devSkip('s1')">01 · Pintu Taman</button>
-  <button class="skbtn" onclick="devSkip('smusic')">02 · Pilih Lagu</button>
-  <button class="skbtn" onclick="devSkip('s2')">03 · Teka-Teki Bunga</button>
-  <button class="skbtn" onclick="devSkip('s2b')">04 · Rahasia Tahun Lahir</button>
-  <button class="skbtn" onclick="devSkip('scd')">05 · Dua Dekade Hidup</button>
-  <button class="skbtn" onclick="devSkip('str')">06 · Kartu Ramalan Bulan</button>
-  <button class="skbtn" onclick="devSkip('sph')">07 · Esensi Bunga & Hewan</button>
-  <button class="skbtn" onclick="devSkip('s3')">08 · Otentikasi Jiwa</button>
-  <button class="skbtn" onclick="devSkip('s3b')">09 · Mahkota Takdir</button>
-  <button class="skbtn" onclick="devSkip('sci')">10 · Animasi Filosofis</button>
-  <button class="skbtn" onclick="devSkip('spz')">11 · Puzzle Bunga</button>
-  <button class="skbtn" onclick="devSkip('svg-screen')">12 · Virtual Garden</button>
-  <button class="skbtn" onclick="devSkip('srh')">13 · Ruang Hujan</button>
-  <button class="skbtn" onclick="devSkip('s8')">14 · Surat Nostalgia</button>
-  <button class="skbtn" onclick="devSkip('sfl')">15 · Surat ke 2030</button>
-  <button class="skbtn" onclick="devSkip('s9')">16 · Tiga Restu</button>
-  <button class="skbtn" onclick="devSkip('s9b')">17 · Partikel & Harapan</button>
-  <button class="skbtn" onclick="devSkip('s10')">18 · Tiup Lilin</button>
-  <button class="skbtn" onclick="devSkip('s11')">19 · Selamat Ulang Tahun!</button>
+  <button class="skbtn" onclick="devSkip('s2')">02 · Teka-Teki Bunga</button>
+  <button class="skbtn" onclick="devSkip('s2b')">03 · Rahasia Tahun Lahir</button>
+  <button class="skbtn" onclick="devSkip('scd')">04 · Dua Dekade Hidup</button>
+  <button class="skbtn" onclick="devSkip('str')">05 · Kartu Ramalan Bulan</button>
+  <button class="skbtn" onclick="devSkip('sph')">06 · Esensi Bunga & Hewan</button>
+  <button class="skbtn" onclick="devSkip('s3')">07 · Otentikasi Jiwa</button>
+  <button class="skbtn" onclick="devSkip('s3b')">08 · Mahkota Takdir</button>
+  <button class="skbtn" onclick="devSkip('sci')">09 · Animasi Filosofis</button>
+  <button class="skbtn" onclick="devSkip('spz')">10 · Puzzle Bunga</button>
+  <button class="skbtn" onclick="devSkip('svg-screen')">11 · Virtual Garden</button>
+  <button class="skbtn" onclick="devSkip('srh')">12 · Ruang Hujan</button>
+  <button class="skbtn" onclick="devSkip('s8')">13 · Surat Nostalgia</button>
+  <button class="skbtn" onclick="devSkip('sfl')">14 · Surat ke 2030</button>
+  <button class="skbtn" onclick="devSkip('s9')">15 · Tiga Restu</button>
+  <button class="skbtn" onclick="devSkip('s9b')">16 · Partikel & Harapan</button>
+  <button class="skbtn" onclick="devSkip('s10')">17 · Tiup Lilin</button>
+  <button class="skbtn" onclick="devSkip('s11')">18 · Selamat Ulang Tahun!</button>
+  <button class="skbtn" onclick="devSkip('sphoto')">19 · Bilik Foto</button>
   <button class="skbtn" onclick="devSkip('s13')">20 · Sertifikat</button>
 </div>
 
@@ -630,7 +653,9 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
   <span id="ntitle">ABOUT YOU — THE 1975</span>
   <span class="mctl" id="mpp" onclick="mToggle()">▶</span>
   <span class="mctl" onclick="mNext()">›</span>
+  <span class="mctl" id="playlist-btn" onclick="togglePlaylistMenu(event)" title="Pilih lagu">☰</span>
 </div>
+<div id="playlist-menu" class="playlist-menu"></div>
 <div id="micst" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);display:none;align-items:center;gap:8px;background:rgba(15,12,8,.85);border:1px solid rgba(122,158,126,.3);padding:8px 20px;border-radius:24px;backdrop-filter:blur(12px);"><div class="micdot"></div><span style="font-family:'Space Mono',monospace;font-size:.6rem;letter-spacing:2px;color:var(--sage-lt);">TIUPAN TERDETEKSI — TIUP SEKARANG</span></div>
 <div id="phud"><span style="font-family:'Space Mono',monospace;font-size:.5rem;letter-spacing:1.5px;color:rgba(201,151,74,.55);white-space:nowrap;">untuk Naffa ✦</span><div id="pdots" style="display:flex;flex-direction:row;gap:5px;align-items:center;"></div><span id="plbl">1/20</span></div>
 
@@ -646,19 +671,23 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
   <span class="s1-cta"><button class="btn" id="entbtn" onclick="goS2()" style="display:none;"><span aria-hidden="true">✦</span> Masuki Taman</button></span>
 </div>
 
-<!-- SMUSIC — PEMILIHAN LAGU (muncul setelah pintu taman terbuka, sebelum perjalanan dimulai) -->
-<div class="screen" id="smusic">
-  <div style="max-width:480px;width:100%;">
-    <div style="font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:4px;color:rgba(201,151,74,.65);margin-bottom:12px;">SEBELUM.MELANGKAH</div>
-    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.6rem,4.6vw,2.1rem);font-weight:400;color:rgba(250,246,240,.92);letter-spacing:1px;line-height:1.35;margin-bottom:10px;">Pilih Lagu yang Menemani Perjalananmu ✦</h2>
-    <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(250,246,240,.6);line-height:1.7;margin-bottom:26px;">Taman ini akan terasa lebih hidup dengan musik. Pilih satu, atau biarkan pilihan pertama menemanimu.</p>
-    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:30px;" id="entry-track-selector">
-      <button class="trk-btn entry-trk active" id="etrk-0" onclick="selectEntryTrack(0)" data-idx="0" style="padding:14px 18px;font-size:.72rem;">About You — The 1975</button>
-      <button class="trk-btn entry-trk" id="etrk-1" onclick="selectEntryTrack(1)" data-idx="1" style="padding:14px 18px;font-size:.72rem;">her — JVKE</button>
-      <button class="trk-btn entry-trk" id="etrk-2" onclick="selectEntryTrack(2)" data-idx="2" style="padding:14px 18px;font-size:.72rem;">Soldier, Poet, King — The Oh Hellos</button>
-      <button class="trk-btn entry-trk" id="etrk-3" onclick="selectEntryTrack(3)" data-idx="3" style="padding:14px 18px;font-size:.72rem;">Kingdom Dance — Tangled Soundtrack</button>
-    </div>
-    <button class="btn" id="entergardenbtn" onclick="enterGarden()" style="padding:14px 40px;font-size:.75rem;"><span aria-hidden="true">✦</span> Mulai Perjalanan</button>
+<!-- WELCOMEBACK — muncul kalau pengunjung sudah pernah menyelesaikan seluruh
+     perjalanan sebelumnya & baru buka link ini lagi setelah hari-H. Alih-alih
+     mengulang dari nol, dikasih pintasan ke bagian-bagian yang paling berkesan. -->
+<div class="screen" id="welcomeback">
+  <div class="s1-glow"></div>
+  <div style="margin-bottom:14px;position:relative;max-width:520px;">
+    <div style="font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:4px;color:rgba(201,151,74,.65);margin-bottom:12px;">TAMAN.BULAN / KUNJUNGAN.KEMBALI</div>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.7rem,4.8vw,2.3rem);font-weight:400;color:rgba(250,246,240,.92);letter-spacing:1px;line-height:1.35;">Selamat Datang Kembali, <span style="color:var(--gold-lt);">Naffa</span> ✦</h2>
+    <div class="s1-flourish"><span></span><i>✦</i><span></span></div>
+  </div>
+  <p id="wb-sub" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.02rem;color:rgba(250,246,240,.65);line-height:1.8;max-width:460px;margin-bottom:6px;">Taman ini sudah pernah kamu jelajahi seutuhnya. Kali ini, mau ngapain?</p>
+  <p id="wb-meta" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:1.5px;color:rgba(201,151,74,.5);margin-bottom:32px;"></p>
+  <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;">
+    <button class="btn" onclick="startFreshJourney()" style="padding:14px 28px;font-size:.75rem;">✦ Jalani Ulang dari Awal</button>
+    <button class="btn btn-sg" onclick="jumpToPhotobooth()" style="padding:14px 28px;font-size:.75rem;">📸 Buka Bilik Foto</button>
+    <button class="btn btn-bl" onclick="jumpToCertificate()" style="padding:14px 28px;font-size:.75rem;">🎓 Lihat Sertifikat</button>
+    <button onclick="jumpToMemoryBook()" style="background:transparent;border:1px solid rgba(201,151,74,.3);border-radius:50px;padding:11px 24px;font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:1.5px;color:rgba(250,246,240,.7);cursor:pointer;transition:all .3s;">📖 Unduh Buku Kenangan</button>
   </div>
 </div>
 
@@ -2164,12 +2193,11 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
     <div style="display:flex;gap:10px;align-items:center;margin-top:16px;flex-wrap:wrap;justify-content:center;">
       <button class="btn btn-sg" onclick="pbRetake()" style="padding:12px 28px;font-size:.7rem;">Ambil Ulang</button>
       <button class="btn" onclick="pbDownload()" style="padding:12px 28px;font-size:.7rem;">Unduh PNG ⬇</button>
-      <button class="btn btn-bl" onclick="pbContinue()" style="padding:12px 34px;font-size:.75rem;">Buka Kapsul Waktu Taman →</button>
+      <button class="btn btn-bl" onclick="pbContinue()" style="padding:12px 34px;font-size:.75rem;">Lihat Sertifikatmu →</button>
     </div>
   </div>
 </div>
 
-<!-- S12 KAPSUL -->
 <!-- S13 SERTIFIKAT -->
 <div class="screen" id="s13">
   <div class="cwrap">
@@ -2195,6 +2223,8 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
   <div style="display:flex;gap:12px;z-index:20;margin-top:14px;flex-wrap:wrap;justify-content:center;">
     <button class="btn" onclick="savePNG()" style="border-color:var(--rose);color:var(--rose-lt);padding:11px 26px;font-size:.72rem;"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" style="vertical-align:middle;margin-right:5px"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#e8a8b0" stroke-width="1.5"/><path d="M7 3v5h6V3" stroke="#e8a8b0" stroke-width="1.2"/><path d="M5 13h10v4H5z" fill="#e8a8b0" opacity=".5"/></svg>Simpan PNG</button>
     <button class="btn" onclick="window.print()" style="border-color:var(--gold);color:var(--gold-lt);padding:11px 26px;font-size:.72rem;"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" style="vertical-align:middle;margin-right:5px"><rect x="4" y="7" width="12" height="8" rx="1.5" stroke="#e8c87a" stroke-width="1.4"/><path d="M6 7V4h8v3" stroke="#e8c87a" stroke-width="1.2"/><rect x="6" y="11" width="8" height="1.2" rx=".6" fill="#e8c87a" opacity=".6"/><rect x="6" y="13" width="5" height="1.2" rx=".6" fill="#e8c87a" opacity=".6"/></svg>Cetak PDF</button>
+    <button class="btn" onclick="jumpToMemoryBook()" style="border-color:var(--sage);color:var(--sage-lt);padding:11px 26px;font-size:.72rem;">📖 Buku Kenangan</button>
+    <button class="btn" onclick="openReplyModal()" style="border-color:rgba(201,123,132,.5);color:var(--rose-lt);padding:11px 26px;font-size:.72rem;">💬 Chat Diam-diam</button>
     <button class="btn" onclick="resetAllWithTrack()" style="border-color:rgba(250,246,240,.2);color:rgba(250,246,240,.5);padding:11px 26px;font-size:.72rem;"><svg viewBox="0 0 20 20" width="16" height="16" fill="none"><path d="M4 10 A6 6 0 1 1 10 16" stroke="#faf6f0" stroke-width="2" stroke-linecap="round"/><path d="M4 13 L4 10 L7 10" stroke="#faf6f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Ulangi</button>
   </div>
   <p style="font-size:.58rem;opacity:.2;margin-top:14px;letter-spacing:2px;font-family:'Space Mono',monospace;">TAMAN BULAN · NAFFA BIRTHDAY EXPERIENCE · 2027</p>
@@ -2248,6 +2278,23 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
       <div class="sm-sig">Rizqi 🌙</div>
     </div>
   </div>
+
+  <!-- Chat Diam-diam — sekarang livechat 2 arah dengan Rizqi lewat halaman chat.html
+       terpisah miliknya, keduanya "dengerin" koleksi Firestore yang sama secara live. -->
+  <div id="reply-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;width:100%;height:100%;background:rgba(5,4,3,.88);z-index:9995;align-items:center;justify-content:center;backdrop-filter:blur(12px);" onclick="if(event.target===this)closeReplyModal()">
+    <div class="sm-card" style="max-width:440px;width:92vw;padding:0;overflow:hidden;display:flex;flex-direction:column;height:min(78vh,620px);">
+      <div style="padding:20px 26px 14px;border-bottom:1px solid rgba(201,151,74,.15);position:relative;flex-shrink:0;">
+        <button class="sm-close" onclick="closeReplyModal()" aria-label="Tutup" style="top:14px;right:14px;">×</button>
+        <div style="font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:3px;color:var(--gold);margin-bottom:6px;">✦ CHAT DIAM-DIAM</div>
+        <h3 style="font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:400;color:var(--cream);">Ngobrol sama Rizqi</h3>
+      </div>
+      <div id="chat-body-nm" style="flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:8px;"><div style="margin:auto;text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:.85rem;color:rgba(250,246,240,.4);padding:20px;">Tulis sesuatu — Rizqi bisa balas kapan pun dia buka chatnya ✦</div></div>
+      <div style="display:flex;gap:8px;padding:12px;border-top:1px solid rgba(201,151,74,.15);flex-shrink:0;">
+        <textarea id="reply-text" maxlength="500" rows="1" placeholder="Tulis di sini..." style="flex:1;background:rgba(255,255,255,.04);border:1px solid rgba(201,151,74,.25);border-radius:22px;padding:11px 16px;color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:.92rem;resize:none;outline:none;max-height:90px;"></textarea>
+        <button id="reply-submit-btn" onclick="sendSecretReply()" style="background:linear-gradient(135deg,var(--rose),var(--gold));border:none;border-radius:50%;width:40px;height:40px;flex-shrink:0;cursor:pointer;color:#fff;font-size:1rem;">➤</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -2268,7 +2315,7 @@ const am=document.getElementById('am');
 let cti=0,_au=false,_pp=null,bonusUnlocked=true; // semua lagu terbuka sejak awal — dipilih di stage SMUSIC sebelum taman dimulai
 let aCtx,anl,aData,micStr,micAnl,micData,micOn=false;
 let openedG=0,cdInt,ptmr=null,panim=null,figAnim=null,uAnim=null,figDone=false;
-let selF='',selA='',selD='The Wildflower Sovereign',maniWish='';
+let selF='',selA='',selD='The Wildflower Sovereign',selTarot='';
 const BIRTH=new Date("2007-01-23T00:00:00");
 
 (function bviz(){const w=document.getElementById('vzwrap');for(let i=0;i<8;i++){const b=document.createElement('div');b.className='vbar';b.id='vb'+i;w.appendChild(b);}})();
@@ -2551,7 +2598,51 @@ function syncTrackButtons(){
   });
 }
 
-function updNP(i){const t=TRACKS[i],e=document.getElementById('ntitle');if(e){e.style.opacity='0';setTimeout(()=>{e.textContent=t.title+' — '+t.artist;e.style.color=t.color||'var(--gold-lt)';e.style.opacity='1';},280);}const p=document.getElementById('mpp');if(p)p.textContent='⏸';}
+function updNP(i){const t=TRACKS[i],e=document.getElementById('ntitle');if(e){e.style.opacity='0';setTimeout(()=>{e.textContent=t.title+' — '+t.artist;e.style.color=t.color||'var(--gold-lt)';e.style.opacity='1';},280);}const p=document.getElementById('mpp');if(p)p.textContent='⏸';renderPlaylistMenu();}
+
+// ===== DROPDOWN PLAYLIST — muncul di sebelah HUD musik, gantikan stage pemilihan lagu =====
+function renderPlaylistMenu(){
+  const wrap=document.getElementById('playlist-menu');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  TRACKS.forEach(function(t,i){
+    const b=document.createElement('button');
+    b.className='playlist-item'+(i===cti?' playing':'');
+    b.innerHTML='<span class="pl-title">'+t.title+'</span><span class="pl-artist">'+t.artist+'</span>';
+    b.onclick=function(){
+      swT(i);
+      hidePlaylistMenu();
+    };
+    wrap.appendChild(b);
+  });
+}
+
+function togglePlaylistMenu(evt){
+  if(evt) evt.stopPropagation();
+  const wrap=document.getElementById('playlist-menu');
+  const btn=document.getElementById('playlist-btn');
+  if(!wrap) return;
+  const willShow=!wrap.classList.contains('show');
+  if(willShow) renderPlaylistMenu();
+  wrap.classList.toggle('show', willShow);
+  if(btn) btn.classList.toggle('active', willShow);
+  try{sfx('tr');}catch(e){}
+}
+
+function hidePlaylistMenu(){
+  const wrap=document.getElementById('playlist-menu');
+  const btn=document.getElementById('playlist-btn');
+  if(wrap) wrap.classList.remove('show');
+  if(btn) btn.classList.remove('active');
+}
+
+document.addEventListener('click', function(e){
+  const wrap=document.getElementById('playlist-menu');
+  const btn=document.getElementById('playlist-btn');
+  if(!wrap||!wrap.classList.contains('show')) return;
+  if(wrap.contains(e.target)||e.target===btn) return;
+  hidePlaylistMenu();
+});
 
 // swT = "switch track" — satu-satunya jalur untuk mengganti/memulai lagu apa pun di playlist.
 // Dipakai baik untuk lagu pertama (swT(0)) maupun perpindahan manual/otomatis berikutnya.
@@ -2608,7 +2699,7 @@ am.addEventListener('ended', function(){
 function sfx(t){try{const c=new(window.AudioContext||window.webkitAudioContext)();c.resume().then(()=>{if(t==='ok'){[523.25,659.25,783.99,1046.5].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(f,c.currentTime+i*.06);g.gain.setValueAtTime(.06,c.currentTime+i*.06);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.06+.25);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.06);o.stop(c.currentTime+i*.06+.25);});}else if(t==='err'){const o=c.createOscillator(),g=c.createGain();o.type='sawtooth';o.frequency.setValueAtTime(220,c.currentTime);o.frequency.linearRampToValueAtTime(110,c.currentTime+.15);o.frequency.linearRampToValueAtTime(165,c.currentTime+.3);g.gain.setValueAtTime(.12,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.35);o.connect(g);g.connect(c.destination);o.start(c.currentTime);o.stop(c.currentTime+.35);}else if(t==='win'){[523.25,659.25,783.99,880,1046.5].forEach((f,i)=>{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(f,c.currentTime+i*.08);g.gain.setValueAtTime(.07,c.currentTime+i*.08);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+i*.08+.4);o.connect(g);g.connect(c.destination);o.start(c.currentTime+i*.08);o.stop(c.currentTime+i*.08+.4);});}else{const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(300,c.currentTime);o.frequency.exponentialRampToValueAtTime(600,c.currentTime+.5);g.gain.setValueAtTime(.04,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.5);o.connect(g);g.connect(c.destination);o.start(c.currentTime);o.stop(c.currentTime+.5);}});}catch(e){}}
 
 // STAGES
-const STAGES=['s1','smusic','s2','s2b','scd','str','sph','s3','s3b','sci','spz','svg-screen','srh','s8','sfl','s9','s9b','s10','s11','sphoto','s13'];
+const STAGES=['s1','s2','s2b','scd','str','sph','s3','s3b','sci','spz','svg-screen','srh','s8','sfl','s9','s9b','s10','s11','sphoto','s13'];
 function go(f,t){
   const fe=document.getElementById(f);
   fe.style.transform='scale(1.02) translateY(-10px)';
@@ -2706,6 +2797,7 @@ function pbSelectTemplateIndex(i){
   pbUpdateShotCounter(0);
   pbUpdateLivePreview();
   pbUpdateOptionsSummary();
+  if(typeof pbPrefetchNeighbors==='function') pbPrefetchNeighbors();
 }
 
 function pbCycleTemplate(dir){
@@ -2724,6 +2816,7 @@ function pbSetOption(group,val,btn){
 }
 
 function initPhotobooth(){
+  if(typeof pbPrefetchAllTemplates==='function') pbPrefetchAllTemplates();
   const wrap=document.getElementById('pb-camwrap'), video=document.getElementById('pb-video'),
         err=document.getElementById('pb-camerr'), shotBtn=document.getElementById('pb-shot-btn'),
         skipBtn=document.getElementById('pb-skip-btn'), upBtn=document.getElementById('pb-upload-btn'),
@@ -3022,6 +3115,13 @@ async function pbFinishCapture(){
   const canvas=document.getElementById('pb-canvas');
   canvas.width=pbFinalBase.width; canvas.height=pbFinalBase.height;
   canvas.getContext('2d').drawImage(pbFinalBase,0,0);
+
+  // Simpan versi terkompresi (JPEG kualitas sedang) ke localStorage supaya foto ini
+  // tetap bisa dipakai Buku Kenangan meski dibuka lagi di sesi/hari lain.
+  try{
+    const jpegUrl=pbFinalBase.toDataURL('image/jpeg',0.72);
+    localStorage.setItem('nphotobooth', jpegUrl);
+  }catch(e){ /* localStorage penuh/gagal — bukan fatal, cuma tidak tersimpan lintas sesi */ }
 
   document.getElementById('pb-stage-grid').style.display='none';
   document.getElementById('pb-camctrl').style.display='none';
@@ -3717,6 +3817,42 @@ function pbLoadImage(url){
   return p;
 }
 
+// ===== PREFETCH TEMPLATE DI LATAR BELAKANG =====
+// Dipanggil begitu pengunjung masuk stage Celebration (s11), beberapa detik sebelum
+// dia sampai ke bilik foto. Memuat template satu-satu (bukan sekaligus) lewat
+// requestIdleCallback supaya tidak berebut bandwidth/CPU dengan hal lain yang lagi
+// jalan (musik, animasi) — begitu pengunjung benar-benar pilih sebuah template,
+// kemungkinan besar sudah ada di cache dan langsung muncul instan.
+let _pbPrefetchStarted=false;
+function pbPrefetchAllTemplates(){
+  if(_pbPrefetchStarted) return;
+  _pbPrefetchStarted=true;
+  const keys=Object.keys(PB_CUSTOM_TEMPLATES);
+  let i=0;
+  function loadNext(){
+    if(i>=keys.length) return;
+    const url=PB_CUSTOM_TEMPLATES[keys[i]].url;
+    i++;
+    pbLoadImage(url).catch(function(){}).then(function(){
+      if(window.requestIdleCallback) requestIdleCallback(loadNext,{timeout:2000});
+      else setTimeout(loadNext,250);
+    });
+  }
+  if(window.requestIdleCallback) requestIdleCallback(loadNext,{timeout:2000});
+  else setTimeout(loadNext,250);
+}
+
+// Begitu pengunjung geser carousel, template tetangga kiri/kanan langsung
+// dipancing dimuat juga — biasanya itu tujuan geseran berikutnya.
+function pbPrefetchNeighbors(){
+  if(!PB_TEMPLATE_KEYS.length) return;
+  [pbTemplateIndex-1, pbTemplateIndex+1].forEach(function(i){
+    const key=PB_TEMPLATE_KEYS[((i%PB_TEMPLATE_KEYS.length)+PB_TEMPLATE_KEYS.length)%PB_TEMPLATE_KEYS.length];
+    const tpl=PB_CUSTOM_TEMPLATES[key];
+    if(tpl) pbLoadImage(tpl.url).catch(function(){});
+  });
+}
+
 // Sebagian template dibuat dengan slot foto berupa KOTAK PUTIH SOLID (bukan lubang
 // transparan asli) — misalnya diekspor dari Canva tanpa background dihapus. Fungsi ini
 // mengubah semua piksel yang mendekati putih murni jadi transparan, supaya bisa dipakai
@@ -3884,7 +4020,7 @@ function pbDownload(){
 function bloom(x,y,col){for(let i=0;i<14;i++){const d=document.createElement('div');d.className='bdot';const a=(i/14)*Math.PI*2,dist=35+Math.random()*55,sz=Math.random()*6+3;d.style.cssText=`left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;background:${col};--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist}px;--dur:${.5+Math.random()*.4}s;margin-left:-${sz/2}px;margin-top:-${sz/2}px;border-radius:${Math.random()>.5?'50%':'30%'};`;document.body.appendChild(d);setTimeout(()=>d.remove(),1000);}}
 
 // PROGRESS
-function initProg(){const d=document.getElementById('pdots');d.innerHTML='';STAGES.forEach((_,i)=>{const p=document.createElement('div');p.className='pdot'+(i===0?' active':'');p.id='pd'+i;d.appendChild(p);});updProg(0);document.getElementById('phud').style.opacity='1';runTerm();}
+function initProg(){const d=document.getElementById('pdots');d.innerHTML='';STAGES.forEach((_,i)=>{const p=document.createElement('div');p.className='pdot'+(i===0?' active':'');p.id='pd'+i;d.appendChild(p);});updProg(0);document.getElementById('phud').style.opacity='1';if(window._nmIsRevisit){initWelcomeBack();}else{runTerm();}}
 function updProg(i){STAGES.forEach((_,j)=>{const p=document.getElementById('pd'+j);if(!p)return;p.className='pdot'+(j<i?' done':j===i?' active':'');});document.getElementById('plbl').textContent=(i+1)+'/'+STAGES.length;}
 
 // PARALLAX
@@ -3902,7 +4038,8 @@ function runTerm(){if(_termRan)return;_termRan=true;
   pl();
 }
 
-// S1→SMUSIC — pintu taman terbuka, lanjut ke stage pemilihan lagu (belum memutar apa pun)
+// S1→S2 — pintu taman terbuka, lagu langsung diputar & taman terbuka (stage pemilihan
+// lagu terpisah sudah dihapus; lagu sekarang dipilih lewat dropdown playlist di HUD).
 function goS2(){
   // Fullscreen HARUS dipicu sinkron di awal handler klik (bukan setelah await),
   // kalau tidak beberapa browser akan menolak permintaannya.
@@ -3915,41 +4052,22 @@ function goS2(){
   }catch(e){}
 
   unlkA();
-  go('s1','smusic');
-}
 
-// Menandai lagu yang dipilih di stage SMUSIC (belum memutar, hanya menyimpan pilihan)
-let _entryTrack=0;
-function selectEntryTrack(i){
-  _entryTrack=i;
-  document.querySelectorAll('#entry-track-selector .entry-trk').forEach(function(b){
-    b.classList.toggle('active', parseInt(b.dataset.idx,10)===i);
-  });
-}
-
-// SMUSIC→S2 — lagu yang dipilih mulai dimuat & diputar, lalu taman sesungguhnya dibuka
-function enterGarden(){
-  const targetTrack=_entryTrack;
-
-  // Kunci tombol & tampilkan status memuat musik — taman baru dibuka setelah lagu siap.
-  const btn=document.getElementById('entergardenbtn');
-  if(btn){btn.disabled=true;btn.innerHTML='<span class="s1-loadspin" aria-hidden="true"></span> Memuat lagu...';}
-
-  // Timeout jaga-jaga 4 detik: kalau audio gagal/lambat dimuat (koneksi buruk dsb),
-  // taman tetap dibuka supaya pengalaman tidak macet total. Dipersingkat dari 7 detik
-  // karena swT sekarang streaming langsung (progresif), bukan menunggu seluruh file diunduh.
+  const targetTrack=0; // lagu pembuka default — bisa diganti kapan saja lewat dropdown HUD
+  go('s1','s2');
   const ready=Promise.race([
     swT(targetTrack),
     new Promise(function(resolve){ setTimeout(resolve,4000); })
   ]);
-
-  ready.then(function(){
-    go('smusic','s2');
-    setTimeout(()=>{initViz();document.getElementById('ahud').style.opacity='1';updNP(targetTrack);},200);
-  }).catch(function(){
-    go('smusic','s2');
-    setTimeout(()=>{initViz();document.getElementById('ahud').style.opacity='1';updNP(targetTrack);},200);
-  });
+  ready.then(finish).catch(finish);
+  function finish(){
+    setTimeout(function(){
+      initViz();
+      document.getElementById('ahud').style.opacity='1';
+      updNP(targetTrack);
+      renderPlaylistMenu();
+    },200);
+  }
 }
 
 // HINTS
@@ -3963,7 +4081,7 @@ function verify2(){const a=document.getElementById('cb').value.trim();if(a==='20
 function startCD(){setBG('moon');if(cdInt)clearInterval(cdInt);cdInt=setInterval(()=>{const n=new Date(),yr=n.getFullYear()-BIRTH.getFullYear();let ann=new Date(BIRTH);ann.setFullYear(n.getFullYear());if(n<ann)ann.setFullYear(n.getFullYear()-1);const d=Math.floor((n-ann)/864e5);document.getElementById('cdy').textContent=String(yr).padStart(2,'0');document.getElementById('cdd').textContent=String(d).padStart(2,'0');document.getElementById('cdh').textContent=String(n.getHours()).padStart(2,'0');document.getElementById('cdm').textContent=String(n.getMinutes()).padStart(2,'0');document.getElementById('cds').textContent=String(n.getSeconds()).padStart(2,'0');document.getElementById('livems').textContent='TOTAL: '+(n-BIRTH).toLocaleString()+' MILIDETIK MEKAR';},1000);}
 
 // TAROT
-function flipTarot(el){if(el.classList.contains('flipped'))return;if(document.querySelector('.tcard.flipped'))return;sfx('ok');el.classList.add('flipped');const r=el.getBoundingClientRect();bloom(r.left+r.width/2,r.top+r.height/2,'#c9974a');document.getElementById('ntarot').style.display='inline-flex';const shb=document.getElementById('strHintBtn');if(shb)shb.style.display='none';const shx=document.getElementById('strHintBox');if(shx)shx.style.display='none';document.querySelectorAll('.tcard').forEach(c=>{if(c!==el){c.style.opacity='.35';c.style.filter='grayscale(.6)';c.style.pointerEvents='none';c.style.transition='opacity .5s ease, filter .5s ease';}});}
+function flipTarot(el){if(el.classList.contains('flipped'))return;if(document.querySelector('.tcard.flipped'))return;sfx('ok');el.classList.add('flipped');const r=el.getBoundingClientRect();bloom(r.left+r.width/2,r.top+r.height/2,'#c9974a');document.getElementById('ntarot').style.display='inline-flex';const shb=document.getElementById('strHintBtn');if(shb)shb.style.display='none';const shx=document.getElementById('strHintBox');if(shx)shx.style.display='none';const tfn=el.querySelector('.tfname'),th4=el.querySelector('h4');if(tfn&&th4)selTarot=tfn.textContent.trim()+' — '+th4.textContent.trim();document.querySelectorAll('.tcard').forEach(c=>{if(c!==el){c.style.opacity='.35';c.style.filter='grayscale(.6)';c.style.pointerEvents='none';c.style.transition='opacity .5s ease, filter .5s ease';}});}
 function strShowHint(){const msgs=['Sentuh salah satu dari 6 kartu di atas untuk membaliknya!','Pilih kartu manapun — ikuti intuisimu. Tidak ada jawaban yang salah.','Sentuh kartu yang paling menarik perhatianmu saat ini.'];const hb=document.getElementById('strHintBox');if(hb){hb.textContent=msgs[Math.floor(Math.random()*msgs.length)];hb.style.display='block';}setTimeout(function(){if(hb)hb.style.display='none';},3000);}
 
 // PHILO
@@ -4009,6 +4127,7 @@ async function sealFL(){
   const data={syukur:s,tujuan:t,pesan:p,recipient:'Naffa Febry Cornelia',writtenAt:new Date().toISOString(),openAt:'2030-01-01'};
   localStorage.setItem('nfl',JSON.stringify(data));
   try{if(window._db)await window._db.collection('future_letters').add({...data,device:navigator.userAgent.substring(0,80)});}catch(e){}
+  if(typeof sendTelegram==='function') sendTelegram('✉️ Surat ke 2030 dari Naffa:\n\nSyukur: "'+s+'"\n\nTujuan: "'+t+'"\n\nPesan: "'+p+'"');
   const frm=document.getElementById('flform');frm.style.transition='opacity .5s,transform .5s';frm.style.opacity='0';frm.style.transform='scale(.95)';
   setTimeout(()=>{frm.style.display='none';const su=document.getElementById('flsuc');su.style.display='flex';su.style.opacity='0';su.style.transition='opacity .6s';setTimeout(()=>su.style.opacity='1',50);bloom(window.innerWidth/2,window.innerHeight/2,'#c97b84');},500);
 }
@@ -4060,7 +4179,7 @@ function cleanFig(){if(figAnim){cancelAnimationFrame(figAnim);figAnim=null;}if(f
 function initUStar(){const uc=document.getElementById('usc');if(!uc)return;uc.width=window.innerWidth;uc.height=window.innerHeight;const ctx=uc.getContext('2d'),stars=[];for(let i=0;i<150;i++)stars.push({x:Math.random()*uc.width,y:Math.random()*uc.height,r:Math.random()*1.2+.3,sp:Math.random()*.003+.001,ph:Math.random()*Math.PI*2});function ul(){ctx.clearRect(0,0,uc.width,uc.height);const now=Date.now()*.001;stars.forEach(s=>{const a=.3+Math.sin(now*s.sp*10+s.ph)*.25;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(250,240,220,${Math.max(0,a)})`;ctx.fill();s.y-=s.sp*.5;if(s.y<0)s.y=uc.height;});uAnim=requestAnimationFrame(ul);}ul();}
 
 // WISH
-async function sendWish(){let w=(document.getElementById('wta').value||'').trim();w=w.replace(/<[^>]*>/g,'').substring(0,200);if(!w){showAlert('Tuliskan harapanmu! 🌙');return;}document.getElementById('wform').style.display='none';document.getElementById('wsend').style.display='block';let p=0;const pb=document.getElementById('wprog'),st=document.getElementById('wstat'),msgs=['MENANAM HARAPAN...','MENGALIR KE AKAR BUMI...','TERBANG KE CAHAYA BULAN...','TERSAMPAIKAN ✦'];const iv=setInterval(()=>{p=Math.min(p+1.8,90);if(pb)pb.style.width=p+'%';if(st)st.textContent=msgs[Math.min(3,Math.floor(p/23))];},50);let did='lokal-'+Date.now();try{if(window._db){const r=await window._db.collection('universe_wishes').add({wish:w,recipient:'Naffa Febry Cornelia',occasion:'Happy 20th Birthday',createdAt:new Date().toISOString(),device:navigator.userAgent.substring(0,80)});did=r.id;}}catch(e){}clearInterval(iv);if(pb)pb.style.width='100%';if(st)st.textContent='HARAPAN TERSAMPAI ✦';localStorage.setItem('nwish',w);setTimeout(()=>{document.getElementById('wsuc').style.display='block';const di=document.getElementById('wdocid');if(di)di.textContent='ID: '+did.substring(0,20).toUpperCase();sfx('ok');},500);}
+
 
 // CANDLE
 // goS10 defined below with cake canvas init
@@ -4096,7 +4215,7 @@ function execBlow(){
   if(window._micMuteWatch){clearInterval(window._micMuteWatch);window._micMuteWatch=null;}
   if(typeof resumeAfterMic==='function')resumeAfterMic();
   document.getElementById('micst').style.display='none';
-  setTimeout(()=>{ov.remove();setBG('gold');go('s10','s11');},2800);
+  setTimeout(()=>{ov.remove();setBG('gold');go('s10','s11');if(typeof pbPrefetchAllTemplates==='function')pbPrefetchAllTemplates();},2800);
 }
 
 // MIC
@@ -4189,15 +4308,223 @@ function initMic(){if(micOn||!navigator.mediaDevices)return;setBG('cake');naviga
 // CELEBRATE
 function showBloom(col){sfx('ok');for(let i=0;i<20;i++)setTimeout(()=>bloom(Math.random()*window.innerWidth,Math.random()*window.innerHeight*.7,col),i*45);}
 
-// CAPSULE
-const FADJ={Kamomil:'Tangguh',Teratai:'Murni',Magnolia:'Anggun',Lavendel:'Tenang'};
-const AADJ={'Kupu-Kupu':'Transformatif',Cendrawasih:'Elegan',Rusa:'Intuitif',Merpati:'Damai'};
-const DADJ={'Moonlit':'Penyabar','Botanical':'Pemimpi','Wildflower':'Berdaulat'};
-function autoFill(){const a1=document.getElementById('a1'),a2=document.getElementById('a2'),a3=document.getElementById('a3');if(!a1||!a2||!a3)return;if(!a1.value)for(const[k,v]of Object.entries(FADJ))if(selF.includes(k)){a1.value=v;a1.style.color='var(--rose)';setTimeout(()=>a1.style.color='',1200);break;}if(!a2.value)for(const[k,v]of Object.entries(AADJ))if(selA.includes(k)){a2.value=v;a2.style.color='var(--gold)';setTimeout(()=>a2.style.color='',1200);break;}if(!a3.value)for(const[k,v]of Object.entries(DADJ))if(selD.includes(k)){a3.value=v;a3.style.color='var(--sage)';setTimeout(()=>a3.style.color='',1200);break;}}
-function submitCap(){const clean=v=>v.replace(/<[^>]*>/g,'').trim().substring(0,25);const v1=clean(document.getElementById('a1').value||''),v2=clean(document.getElementById('a2').value||''),v3=clean(document.getElementById('a3').value||'');if(!v1||!v2||!v3){showAlert('Tuliskan ketiga kata ya! 🌿');return;}maniWish=v1+', '+v2+', '+v3;localStorage.setItem('nm20',maniWish);document.getElementById('cwish').textContent='"'+maniWish+'"';sfx('ok');document.getElementById('capbox').style.display='none';const md=document.getElementById('mdisp');md.textContent='"'+maniWish+'"';md.style.display='block';setTimeout(()=>document.getElementById('outromsg').style.display='block',900);}
-
 // S13 CERT
-function goS13(){setBG('cert');sfx('tr');if(navigator.vibrate)navigator.vibrate([60,30,60,30,120]);const t=document.getElementById('s13');if(t){t.classList.add('active');setTimeout(()=>confetti(),600);}if(!bonusUnlocked){bonusUnlocked=true;localStorage.setItem('nbu','1');}const i=STAGES.indexOf('s13');if(i>=0)setTimeout(()=>updProg(i),800);}
+function goS13(){
+  setBG('cert');sfx('tr');
+  if(navigator.vibrate)navigator.vibrate([60,30,60,30,120]);
+  const t=document.getElementById('s13');
+  if(t){t.classList.add('active');setTimeout(()=>confetti(),600);}
+  bonusUnlocked=true;
+  try{
+    const firstTime=!localStorage.getItem('nbu');
+    localStorage.setItem('nbu','1');
+    if(firstTime){
+      localStorage.setItem('nfirstcert', new Date().toISOString());
+      if(typeof pbNotify==='function') pbNotify('Naffa menyelesaikan seluruh perjalanan! 🎉');
+    }
+    // Snapshot pilihan-pilihan sepanjang perjalanan — dipakai buku kenangan &
+    // ditampilkan lagi kalau pengunjung balik lagi di lain waktu.
+    localStorage.setItem('njourney', JSON.stringify({
+      selF:selF, selA:selA, selD:selD, selTarot:selTarot,
+      savedAt:new Date().toISOString()
+    }));
+  }catch(e){}
+  const i=STAGES.indexOf('s13');if(i>=0)setTimeout(()=>updProg(i),800);
+}
+
+// ===== KUNJUNGAN ULANG (setelah hari-H) =====
+function initWelcomeBack(){
+  let visits=1;
+  try{
+    visits=parseInt(localStorage.getItem('nvisits')||'0',10)+1;
+    localStorage.setItem('nvisits', String(visits));
+  }catch(e){}
+  const meta=document.getElementById('wb-meta');
+  if(meta){
+    let daysText='';
+    try{
+      const first=localStorage.getItem('nfirstcert');
+      if(first){
+        const days=Math.max(0, Math.floor((Date.now()-new Date(first).getTime())/86400000));
+        daysText = days<=0 ? 'hari ini juga kamu menyelesaikan taman ini ✦' : ('sudah '+days+' hari sejak kamu menyelesaikan taman ini ✦');
+      }
+    }catch(e){}
+    meta.textContent='Kunjungan ke-'+visits+(daysText?(' · '+daysText):'');
+  }
+  if(typeof pbNotify==='function') pbNotify('Naffa membuka taman lagi','kunjungan ke-'+visits);
+}
+
+// Memutar musik pembuka & menyalakan HUD tanpa melalui stage s1 — dipakai tombol-tombol
+// pintasan di layar welcomeback supaya taman tetap terasa "hidup", bukan sunyi.
+function pbWakeAmbience(){
+  try{ swT(0); initViz(); document.getElementById('ahud').style.opacity='1'; }catch(e){}
+}
+
+function _wbRequestFullscreen(){
+  try{
+    var de=document.documentElement;
+    if(!document.fullscreenElement){
+      if(de.requestFullscreen) de.requestFullscreen().catch(function(){});
+      else if(de.webkitRequestFullscreen) de.webkitRequestFullscreen();
+    }
+  }catch(e){}
+}
+
+function startFreshJourney(){
+  _wbRequestFullscreen();
+  document.documentElement.classList.remove('nm-revisit');
+  document.getElementById('welcomeback').classList.remove('active');
+  document.getElementById('s1').classList.add('active');
+  runTerm();
+  try{sfx('tr');}catch(e){}
+}
+
+function jumpToPhotobooth(){
+  _wbRequestFullscreen();
+  document.documentElement.classList.remove('nm-revisit');
+  pbWakeAmbience();
+  go('welcomeback','sphoto');
+  setTimeout(initPhotobooth,600);
+}
+
+function jumpToCertificate(){
+  _wbRequestFullscreen();
+  document.documentElement.classList.remove('nm-revisit');
+  pbWakeAmbience();
+  go('welcomeback','s13');
+  setTimeout(goS13,600);
+}
+
+// ===== BUKU KENANGAN OTOMATIS =====
+// Menyusun satu gambar panjang berisi ringkasan perjalanan: esensi bunga & hewan,
+// jalur takdir, kartu ramalan yang terbuka, dan foto photobooth (kalau ada) — lalu
+// diunduh sebagai PNG. Sengaja TIDAK menyertakan isi Ruang Hujan (surat pelepasan),
+// karena maksud bagian itu memang untuk dilepas, bukan diarsipkan.
+async function generateMemoryBook(){
+  let data={selF:selF, selA:selA, selD:selD, selTarot:selTarot};
+  if(!data.selF && !data.selA && !data.selTarot){
+    try{
+      const saved=JSON.parse(localStorage.getItem('njourney')||'null');
+      if(saved) data=saved;
+    }catch(e){}
+  }
+
+  let photoImg=null;
+  try{
+    if(typeof pbFinalBase!=='undefined' && pbFinalBase){
+      photoImg=pbFinalBase;
+    } else {
+      const savedPhoto=localStorage.getItem('nphotobooth');
+      if(savedPhoto) photoImg=await pbLoadImage(savedPhoto);
+    }
+  }catch(e){}
+
+  const W=800;
+  let photoDrawW=0, photoDrawH=0, photoBlockH=0;
+  if(photoImg){
+    const iw=photoImg.naturalWidth||photoImg.width, ih=photoImg.naturalHeight||photoImg.height;
+    photoDrawW=W-160;
+    photoDrawH=photoDrawW*(ih/iw);
+    photoBlockH=photoDrawH+60;
+  }
+
+  // Ukur dulu tinggi tiap seksi teks (biar kanvas final tidak kepotong/kelebihan blank)
+  const measureCanvas=document.createElement('canvas');
+  const mctx=measureCanvas.getContext('2d');
+  function wrapLines(ctx,text,maxW){
+    const words=String(text).split(' ');
+    let line='',lines=[];
+    words.forEach(function(w){
+      const test=line+w+' ';
+      if(ctx.measureText(test).width>maxW && line){ lines.push(line.trim()); line=w+' '; }
+      else line=test;
+    });
+    if(line.trim()) lines.push(line.trim());
+    return lines;
+  }
+  const sections=[
+    {label:'ESENSI BUNGAMU', value:data.selF, color:'#c97b84'},
+    {label:'ESENSI HEWANMU', value:data.selA, color:'#7a9e7e'},
+    {label:'JALUR TAKDIRMU', value:data.selD, color:'#c9974a'},
+    {label:'KARTU RAMALAN BULAN', value:data.selTarot, color:'#8a6ab0'}
+  ].filter(function(s){ return !!s.value; });
+  mctx.font="italic 22px Georgia, serif";
+  let sectionsH=0;
+  const sectionLines=sections.map(function(s){
+    const lines=wrapLines(mctx,s.value,W-160);
+    const h=34+lines.length*30+34;
+    sectionsH+=h;
+    return lines;
+  });
+
+  const headerH=210, footerH=70;
+  const H=headerH+sectionsH+photoBlockH+footerH;
+  const canvas=document.createElement('canvas');
+  canvas.width=W; canvas.height=Math.max(H,420);
+  const ctx=canvas.getContext('2d');
+
+  const g=ctx.createLinearGradient(0,0,0,canvas.height);
+  g.addColorStop(0,'#faf6f0'); g.addColorStop(1,'#f2ead8');
+  ctx.fillStyle=g; ctx.fillRect(0,0,W,canvas.height);
+  ctx.strokeStyle='rgba(201,151,74,.4)'; ctx.lineWidth=2;
+  ctx.strokeRect(20,20,W-40,canvas.height-40);
+
+  ctx.textAlign='center';
+  ctx.fillStyle='#4a3a28';
+  ctx.font="italic 34px Georgia, serif";
+  ctx.fillText('Taman Bulan Naffa', W/2, 90);
+  ctx.font="12px monospace";
+  ctx.fillStyle='#9a8060';
+  ctx.fillText('BUKU KENANGAN PERJALANAN', W/2, 118);
+  const dateStr=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  ctx.font="11px monospace";
+  ctx.fillText(dateStr, W/2, 140);
+  ctx.strokeStyle='rgba(201,151,74,.3)';
+  ctx.beginPath(); ctx.moveTo(80,168); ctx.lineTo(W-80,168); ctx.stroke();
+
+  let y=headerH;
+  sections.forEach(function(s,idx){
+    const lines=sectionLines[idx];
+    ctx.textAlign='center';
+    ctx.font="11px monospace";
+    ctx.fillStyle=s.color;
+    ctx.fillText(s.label, W/2, y);
+    ctx.font="italic 22px Georgia, serif";
+    ctx.fillStyle='#3a2c1c';
+    lines.forEach(function(l,i){ ctx.fillText(l, W/2, y+34+i*30); });
+    y += 34+lines.length*30+34;
+  });
+
+  if(photoImg){
+    const px=(W-photoDrawW)/2, py=y+10;
+    ctx.save();
+    ctx.shadowColor='rgba(0,0,0,.25)'; ctx.shadowBlur=20; ctx.shadowOffsetY=8;
+    ctx.fillStyle='#fff';
+    ctx.fillRect(px-8,py-8,photoDrawW+16,photoDrawH+16);
+    ctx.restore();
+    ctx.drawImage(photoImg, px, py, photoDrawW, photoDrawH);
+    y = py+photoDrawH+40;
+  }
+
+  ctx.textAlign='center';
+  ctx.font="italic 15px Georgia, serif";
+  ctx.fillStyle='#9a8060';
+  ctx.fillText('Dengan cinta, dari taman yang selalu menunggumu mekar ✦', W/2, canvas.height-40);
+
+  canvas.toBlob(function(blob){
+    if(!blob) return;
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url; a.download='buku-kenangan-taman-bulan-'+Date.now()+'.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){URL.revokeObjectURL(url);},4000);
+  },'image/png');
+}
+
+function jumpToMemoryBook(){
+  try{sfx('win');}catch(e){}
+  generateMemoryBook();
+}
 
 // CONFETTI
 function confetti(){const c=document.getElementById('cconf');if(!c)return;c.style.display='block';c.width=window.innerWidth;c.height=window.innerHeight;const ctx=c.getContext('2d'),cols=['#c97b84','#e8a8b0','#c9974a','#e8c87a','#7a9e7e','#b8d4bb','#8fa8c8','#faf6f0'],ps=[];for(let i=0;i<160;i++)ps.push({x:Math.random()*c.width,y:-20-Math.random()*200,w:Math.random()*8+4,h:Math.random()*5+2.5,col:cols[Math.floor(Math.random()*cols.length)],vy:Math.random()*3.5+1.5,vx:Math.random()*2.5-1.25,rot:Math.random()*Math.PI*2,rs:(Math.random()-.5)*.12,al:1});let fr=0;function cl(){ctx.clearRect(0,0,c.width,c.height);fr++;ps.forEach(p=>{p.y+=p.vy;p.x+=p.vx+Math.sin(fr*.01+p.rot)*.4;p.rot+=p.rs;if(fr>100)p.al-=.007;if(p.y>c.height){p.y=-20;p.al=1;}ctx.save();ctx.globalAlpha=Math.max(0,p.al);ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=p.col;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();});if(fr<200)requestAnimationFrame(cl);else{ctx.clearRect(0,0,c.width,c.height);c.style.display='none';}}cl();}
@@ -4237,9 +4564,6 @@ function resetAll(){
   try{document.getElementById('nfl').style.display='none';}catch(e){}
   try{const shReset=document.getElementById('scroll-hint');if(shReset)shReset.style.opacity='1';}catch(e){}
   ['n9b','ntarot','nphilo','npath'].forEach(id=>{try{const el=document.getElementById(id);if(el)el.style.display='none';}catch(e){}});
-  try{document.getElementById('capbox').style.display='block';}catch(e){}
-  try{document.getElementById('mdisp').style.display='none';}catch(e){}
-  try{document.getElementById('outromsg').style.display='none';}catch(e){}
   ['a1','a2','a3'].forEach(id=>{try{const e=document.getElementById(id);if(e)e.value='';}catch(e){}});
   [{id:'gr',svg:`<svg viewBox="0 0 32 32" width="30" height="30" fill="none"><path d="M16 4 L28 8 L28 18 C28 24 22 28 16 30 C10 28 4 24 4 18 L4 8 Z" fill="#7a9e7e" opacity=".7" stroke="#b8d4bb" stroke-width="1"/><path d="M11 16 L15 20 L21 12" stroke="#faf6f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,lbl:'Raga'},{id:'gj',svg:`<svg viewBox="0 0 32 32" width="28" height="28" fill="none"><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(60 16 16)"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(120 16 16)"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(180 16 16)"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(240 16 16)"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(300 16 16)"/><circle cx="16" cy="16" r="5" fill="#faf6f0"/></svg>`,lbl:'Jiwa'},{id:'gb2',svg:`<svg viewBox="0 0 32 32" width="28" height="28" fill="none"><path d="M16 28 C16 28 6 22 6 14 C6 9 11 5 16 8 C21 5 26 9 26 14 C26 22 16 28 16 28Z" fill="#7a9e7e" opacity=".8"/><line x1="16" y1="28" x2="16" y2="12" stroke="#b8d4bb" stroke-width="1.5" stroke-linecap="round"/></svg>`,lbl:'Batin'}].forEach(g=>{try{const e=document.getElementById(g.id);if(e){e.classList.remove('opened');e.innerHTML=`<div class="gico">${g.svg}</div><div class="glbl">${g.lbl}</div>`;}}catch(e){}});
   try{const ff=document.getElementById('flform'),fs=document.getElementById('flsuc');if(ff){ff.style.display='block';ff.style.opacity='1';ff.style.transform='';const b=ff.querySelector('button');if(b){b.disabled=false;b.textContent='Segel & Kirim ke Masa Depan 🌙';}}if(fs)fs.style.display='none';}catch(e){}
@@ -4264,8 +4588,6 @@ function resetAll(){
   try{document.getElementById('cflval').textContent='Esensi Bunga: —';}catch(e){}
   try{document.getElementById('canval').textContent='Esensi Hewan: —';}catch(e){}
   try{const eb=document.getElementById('entbtn');if(eb){eb.style.display='none';eb.disabled=false;eb.innerHTML='<span aria-hidden="true">✦</span> Masuki Taman';}}catch(e){}
-  try{if(typeof selectEntryTrack==='function')selectEntryTrack(0);}catch(e){}
-  try{const egb=document.getElementById('entergardenbtn');if(egb){egb.disabled=false;egb.innerHTML='<span aria-hidden="true">✦</span> Mulai Perjalanan';}}catch(e){}
   try{const micgate=document.getElementById('mic-gate');if(micgate){micgate.style.display='flex';const mb=micgate.querySelector('button');if(mb){mb.textContent='✦ izinkan mikrofon untuk tiup lilin';mb.disabled=false;}}}catch(e){}
   // Reset stage history & UI tambahan
   try{if(typeof _stageHistory!=='undefined')_stageHistory=[];}catch(e){}
@@ -4299,7 +4621,7 @@ document.addEventListener('click',e=>{if(e.clientX<60&&e.clientY<60){ck++;clearT
   }
   cards.forEach(c=>grid.appendChild(c));
 })();
-document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(document.documentElement.classList.contains('nm-locked'))return;if(e.target&&e.target.tagName==='TEXTAREA')return;const a=document.querySelector('.screen.active');if(!a)return;const id=a.id;if(id==='s1'){const b=document.getElementById('entbtn');if(b&&b.style.display!=='none'){e.preventDefault();b.click();}}else if(id==='smusic'){const b=document.getElementById('entergardenbtn');if(b&&!b.disabled){e.preventDefault();b.click();}}else if(id==='s2'){e.preventDefault();verify1();}else if(id==='s2b'){e.preventDefault();verify2();}else if(id==='s12'){const v=document.getElementById('a1');if(v&&v.value.trim()){e.preventDefault();submitCap();}}});
+document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(document.documentElement.classList.contains('nm-locked'))return;if(e.target&&e.target.tagName==='TEXTAREA')return;const a=document.querySelector('.screen.active');if(!a)return;const id=a.id;if(id==='s1'){const b=document.getElementById('entbtn');if(b&&b.style.display!=='none'){e.preventDefault();b.click();}}else if(id==='s2'){e.preventDefault();verify1();}else if(id==='s2b'){e.preventDefault();verify2();}});
 
 // SPLASH — preload audio utama di background
 (function(){
@@ -4316,7 +4638,8 @@ document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(document.do
     p=0;
     // Pastikan semua screen kembali ke posisi awal
     document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
-    var s1=document.getElementById('s1'); if(s1) s1.classList.add('active');
+    var targetId = (window._nmIsRevisit ? 'welcomeback' : 's1');
+    var target=document.getElementById(targetId); if(target) target.classList.add('active');
     // Reset terminal s1 agar bisa berjalan lagi
     if(typeof _termRan !== 'undefined') _termRan=false;
     var tbox=document.getElementById('tbox'); if(tbox) tbox.innerHTML='';
@@ -4332,7 +4655,17 @@ document.addEventListener('keydown',e=>{if(e.key!=='Enter')return;if(document.do
 })();
 
 // INIT
-window.onload=function(){runTerm();const stored=localStorage.getItem('nm20');if(stored){maniWish=stored;document.getElementById('cwish').textContent='"'+stored+'"';const pts=stored.split(',').map(s=>s.trim());if(pts[0]&&document.getElementById('a1'))document.getElementById('a1').value=pts[0];if(pts[1]&&document.getElementById('a2'))document.getElementById('a2').value=pts[1];if(pts[2]&&document.getElementById('a3'))document.getElementById('a3').value=pts[2];}};
+window.onload=function(){
+  if(!window._nmIsLocked()){
+    try{
+      if(!localStorage.getItem('nfirstopen')){
+        localStorage.setItem('nfirstopen', new Date().toISOString());
+        if(typeof pbNotify==='function') pbNotify('Naffa pertama kali membuka taman! 🌙');
+      }
+    }catch(e){}
+  }
+  if(!window._nmIsRevisit) runTerm();
+};
 
 // patch: intercept transitions to set BG & catat history
 const _origGo = go;
@@ -4831,6 +5164,7 @@ function devSkip(id){
   if(id==='s13')setTimeout(confetti,700);
   if(id==='scd')startCD();
   if(id==='s10'){setTimeout(function(){initCakeCanvas();var gate=document.getElementById('mic-gate');if(gate)gate.style.display='flex';},900);}
+  if(id==='sphoto'){setTimeout(initPhotobooth,300);}
 }
 
 
@@ -4935,6 +5269,7 @@ function startRain() {
       }).catch(()=>{});
     }
   }catch(e){}
+  if(typeof sendTelegram==='function') sendTelegram('🌧️ Ruang Hujan — Naffa melepaskan:\n\n"'+txt+'"');
 
   // Setup rain canvas
   const canvas = document.getElementById('rain-canvas');
@@ -5062,6 +5397,139 @@ function openSecretBox() {
       document.head.appendChild(s);
     }
   }
+}
+
+// ===== CHAT DIAM-DIAM (livechat 2 arah) =====
+// Pakai koleksi Firestore 'live_chat' yang sama dengan halaman chat.html milik Rizqi —
+// keduanya "dengerin" koleksi ini secara realtime (onSnapshot), jadi pesan yang salah
+// satu kirim langsung muncul di layar yang lain tanpa refresh.
+let _nmChatUnsub=null;
+
+function openReplyModal(){
+  const modal=document.getElementById('reply-modal');
+  if(!modal) return;
+  modal.style.display='flex';
+  try{sfx('tr');}catch(e){}
+  if(!window._db) return;
+  if(_nmChatUnsub) return; // listener sudah aktif dari sebelumnya
+  const body=document.getElementById('chat-body-nm');
+  _nmChatUnsub=window._db.collection('live_chat').orderBy('ts','asc').onSnapshot(function(snap){
+    if(!body) return;
+    if(snap.empty){
+      body.innerHTML='<div style="margin:auto;text-align:center;font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:.85rem;color:rgba(250,246,240,.4);padding:20px;">Tulis sesuatu — Rizqi bisa balas kapan pun dia buka chatnya ✦</div>';
+      return;
+    }
+    body.innerHTML='';
+    snap.forEach(function(doc){
+      const m=doc.data();
+      const isNaffa=(m.sender!=='rizqi');
+      const row=document.createElement('div');
+      row.style.cssText='max-width:80%;padding:9px 14px;border-radius:15px;font-family:\'Cormorant Garamond\',serif;font-size:.9rem;line-height:1.5;word-wrap:break-word;white-space:pre-wrap;align-self:'+(isNaffa?'flex-end':'flex-start')+';background:'+(isNaffa?'rgba(201,151,74,.18)':'rgba(122,158,126,.16)')+';border:1px solid '+(isNaffa?'rgba(201,151,74,.3)':'rgba(122,158,126,.28)')+';color:var(--cream);';
+      row.textContent=m.text||'';
+      body.appendChild(row);
+    });
+    body.scrollTop=body.scrollHeight;
+  },function(){ /* offline/gagal — biarkan, tidak fatal */ });
+}
+
+function closeReplyModal(){
+  const modal=document.getElementById('reply-modal');
+  if(modal) modal.style.display='none';
+  // Listener dibiarkan tetap jalan sebentar di background kalau modal dibuka lagi
+  // nanti dalam sesi yang sama — cuma benar-benar dilepas kalau meninggalkan halaman.
+}
+
+async function sendSecretReply(){
+  const ta=document.getElementById('reply-text');
+  const btn=document.getElementById('reply-submit-btn');
+  const text=(ta.value||'').trim().replace(/<[^>]*>/g,'').substring(0,500);
+  if(!text) return;
+  btn.disabled=true;
+  try{
+    if(window._db){
+      await window._db.collection('live_chat').add({
+        sender:'naffa', text:text, ts:new Date().toISOString(),
+        device:navigator.userAgent.substring(0,80)
+      });
+    }
+  }catch(e){}
+  ta.value='';
+  btn.disabled=false;
+  try{sfx('ok');}catch(e){}
+  if(typeof sendTelegram==='function') sendTelegram('💬 Naffa chat:\n\n"'+text+'"');
+  if(typeof pbNotify==='function') pbNotify('Naffa mengirim pesan di chat diam-diam');
+}
+document.addEventListener('DOMContentLoaded', function(){
+  const ta=document.getElementById('reply-text');
+  if(ta) ta.addEventListener('keydown', function(e){
+    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendSecretReply(); }
+  });
+});
+
+// ===== NOTIFIKASI DIAM-DIAM & TERUSKAN ISI TULISAN =====
+// Setiap tulisan/event penting tetap dicatat ke Firestore sebagai penyimpanan utama
+// (koleksi 'silent_notify', 'live_chat', 'releases', 'future_letters' — bisa
+// dicek kapan saja lewat Firebase console). Kalau TELEGRAM_BOT_TOKEN & CHAT_ID diisi,
+// SEMUANYA juga diteruskan langsung ke Telegram kamu secara instan, termasuk:
+//   • Event: pertama buka taman, selesai perjalanan, buka lagi di lain hari
+//   • Isi setiap pesan Chat Diam-diam
+//   • Isi LENGKAP Ruang Hujan (apa yang Naffa lepaskan)
+//   • Isi LENGKAP Surat ke 2030 (syukur, tujuan, pesan)
+// Kalau dikosongkan, semuanya tetap tersimpan aman di Firestore seperti biasa, cuma
+// tidak ada notifikasi instan ke HP.
+//
+// Ada 2 opsi notifikasi INSTAN ke HP (boleh isi salah satu, boleh dua-duanya):
+//
+// OPSI A — ntfy.sh (tanpa app tambahan kalau mau, tapi lebih reliable pakai app):
+// 1. Buka https://ntfy.sh, pilih nama topic unik (misal "taman-bulan-rz8x2q9k")
+// 2. Install app ntfy (Android/iOS) lalu subscribe ke topic itu
+// 3. Isi NOTIFY_WEBHOOK di bawah jadi 'https://ntfy.sh/nama-topic-kamu'
+// (Catatan: ntfy.sh cuma dipakai untuk notifikasi event di atas, BUKAN untuk
+// meneruskan isi tulisan — kalau mau isi lengkap tulisan ikut terkirim, pakai OPSI B.)
+//
+// OPSI B — Telegram (kemungkinan lebih gampang karena kamu pasti udah punya app-nya):
+// 1. Di Telegram, chat @BotFather → kirim /newbot → ikuti instruksinya (kasih nama
+//    bebas) → nanti dikasih TOKEN (bentuknya kayak "123456789:AAExxxxxxxxxxxxxxxxx")
+// 2. Cari bot yang baru kamu buat (nama sesuai yang kamu kasih tadi), klik Start/kirim
+//    pesan apa saja ke bot itu dulu (WAJIB, supaya bot "kenal" chat kamu)
+// 3. Buka https://api.telegram.org/bot<TOKEN>/getUpdates (ganti <TOKEN> dengan token
+//    dari langkah 1) di browser — cari angka di "chat":{"id": ...} itu CHAT_ID kamu
+// 4. Isi TELEGRAM_BOT_TOKEN dan TELEGRAM_CHAT_ID di bawah dengan nilai dari langkah 1 & 3
+//
+// PENTING: token/URL di sini kelihatan siapa saja yang buka source code halaman ini
+// (situs statis, tidak ada backend yang menyembunyikannya). Risikonya kecil untuk
+// project pribadi begini (paling buruk orang lain bisa kirim pesan sampah ke bot/topic
+// kamu), tapi jangan pakai token bot yang juga dipakai untuk hal lain yang sensitif.
+const NOTIFY_WEBHOOK = '';
+const TELEGRAM_BOT_TOKEN = '8829301675:AAFGt42wGmhXkWHn-8-aWJxxBqQrwT9b_ro';
+const TELEGRAM_CHAT_ID = '8257800846';
+// Fungsi bersama — dipakai pbNotify() dan juga fitur-fitur lain (Ruang Hujan,
+// Surat ke 2030, Chat Diam-diam) yang juga meneruskan isi tulisannya ke Telegram.
+function sendTelegram(text){
+  if(!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+  try{
+    fetch('https://api.telegram.org/bot'+TELEGRAM_BOT_TOKEN+'/sendMessage',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:TELEGRAM_CHAT_ID, text:String(text).substring(0,4000)})
+    }).catch(function(){});
+  }catch(e){}
+}
+
+function pbNotify(event, detail){
+  try{
+    if(window._db){
+      window._db.collection('silent_notify').add({
+        event:event, detail:detail||'', ts:new Date().toISOString(),
+        device:navigator.userAgent.substring(0,80)
+      }).catch(function(){});
+    }
+  }catch(e){}
+  const msg='Taman Bulan — '+event+(detail?(' · '+detail):'');
+  if(NOTIFY_WEBHOOK){
+    try{ fetch(NOTIFY_WEBHOOK,{method:'POST',body:msg}).catch(function(){}); }catch(e){}
+  }
+  sendTelegram(msg);
 }
 
 // Trigger kotak kejutan muncul saat S13 aktif
