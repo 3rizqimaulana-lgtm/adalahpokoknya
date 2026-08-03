@@ -24,6 +24,7 @@
 <link rel="dns-prefetch" href="https://3rizqimaulana-lgtm.github.io">
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 window._db=null;
@@ -687,7 +688,7 @@ html.nm-revisit #welcomeback{opacity:1!important;pointer-events:auto!important;t
     <button class="btn" onclick="startFreshJourney()" style="padding:14px 28px;font-size:.75rem;">✦ Jalani Ulang dari Awal</button>
     <button class="btn btn-sg" onclick="jumpToPhotobooth()" style="padding:14px 28px;font-size:.75rem;">📸 Buka Bilik Foto</button>
     <button class="btn btn-bl" onclick="jumpToCertificate()" style="padding:14px 28px;font-size:.75rem;">🎓 Lihat Sertifikat</button>
-    <button onclick="jumpToMemoryBook()" style="background:transparent;border:1px solid rgba(201,151,74,.3);border-radius:50px;padding:11px 24px;font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:1.5px;color:rgba(250,246,240,.7);cursor:pointer;transition:all .3s;">📖 Unduh Buku Kenangan</button>
+    <button onclick="downloadSuratPDF()" style="background:transparent;border:1px solid rgba(201,151,74,.3);border-radius:50px;padding:11px 24px;font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:1.5px;color:rgba(250,246,240,.7);cursor:pointer;transition:all .3s;">📄 Unduh Surat 2030 (PDF)</button>
   </div>
 </div>
 
@@ -2223,8 +2224,8 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
   <div style="display:flex;gap:12px;z-index:20;margin-top:14px;flex-wrap:wrap;justify-content:center;">
     <button class="btn" onclick="savePNG()" style="border-color:var(--rose);color:var(--rose-lt);padding:11px 26px;font-size:.72rem;"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" style="vertical-align:middle;margin-right:5px"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#e8a8b0" stroke-width="1.5"/><path d="M7 3v5h6V3" stroke="#e8a8b0" stroke-width="1.2"/><path d="M5 13h10v4H5z" fill="#e8a8b0" opacity=".5"/></svg>Simpan PNG</button>
     <button class="btn" onclick="window.print()" style="border-color:var(--gold);color:var(--gold-lt);padding:11px 26px;font-size:.72rem;"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" style="vertical-align:middle;margin-right:5px"><rect x="4" y="7" width="12" height="8" rx="1.5" stroke="#e8c87a" stroke-width="1.4"/><path d="M6 7V4h8v3" stroke="#e8c87a" stroke-width="1.2"/><rect x="6" y="11" width="8" height="1.2" rx=".6" fill="#e8c87a" opacity=".6"/><rect x="6" y="13" width="5" height="1.2" rx=".6" fill="#e8c87a" opacity=".6"/></svg>Cetak PDF</button>
-    <button class="btn" onclick="jumpToMemoryBook()" style="border-color:var(--sage);color:var(--sage-lt);padding:11px 26px;font-size:.72rem;">📖 Buku Kenangan</button>
-    <button class="btn" onclick="openReplyModal()" style="border-color:rgba(201,123,132,.5);color:var(--rose-lt);padding:11px 26px;font-size:.72rem;">💬 Chat Diam-diam</button>
+    <button class="btn" onclick="downloadSuratPDF()" style="border-color:var(--sage);color:var(--sage-lt);padding:11px 26px;font-size:.72rem;">📄 Surat 2030 (PDF)</button>
+    <button class="btn" onclick="openReplyModal()" style="border-color:rgba(201,123,132,.5);color:var(--rose-lt);padding:11px 26px;font-size:.72rem;">💬 Chat</button>
     <button class="btn" onclick="resetAllWithTrack()" style="border-color:rgba(250,246,240,.2);color:rgba(250,246,240,.5);padding:11px 26px;font-size:.72rem;"><svg viewBox="0 0 20 20" width="16" height="16" fill="none"><path d="M4 10 A6 6 0 1 1 10 16" stroke="#faf6f0" stroke-width="2" stroke-linecap="round"/><path d="M4 13 L4 10 L7 10" stroke="#faf6f0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Ulangi</button>
   </div>
   <p style="font-size:.58rem;opacity:.2;margin-top:14px;letter-spacing:2px;font-family:'Space Mono',monospace;">TAMAN BULAN · NAFFA BIRTHDAY EXPERIENCE · 2027</p>
@@ -2722,7 +2723,7 @@ function go(f,t){
 
 // ===== PHOTOBOOTH — kamera dengan pilihan mode, filter, dan bingkai =====
 let pbStream=null, pbBusy=false, pbFrames=[], pbFinalBase=null, pbCaptionMeta=null;
-let pbOptions={mode:'strip', filter:'natural', frame:'aboutyou'};
+let pbOptions={mode:'strip', filter:'natural', frame:'creativeLab'};
 let pbMirror=true, pbFacingMode='user', pbFlashOn=false, pbIsoTimer=null;
 let pbOptionsCollapsed=true;
 
@@ -3659,42 +3660,55 @@ function pbDecorateFrame(ctx, frameName, geo, phase){
 // textColor/subColor = warna teks caption & label supaya kebaca di atas desainmu
 //
 const PB_CUSTOM_TEMPLATES = {
-  // Semua template lama sudah dihapus & diganti total dengan 10 template final ini.
+  // Label, url, dan koordinat slot di bawah sudah dicocokkan ULANG satu-satu
+  // dengan isi asli tiap file (bukan cuma tebak dari nomor filenya) supaya
+  // tidak ada lagi yang ketuker seperti kejadian sebelumnya.
 
-  balloonbday: {
-    label: '🎈 Balloon Birthday',
-    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/0.png',
-    slotsSingle: [{xPct:0.1403, yPct:0.2707, wPct:0.363, hPct:0.1547}],
-    slotsStrip: [
-      {xPct:0.1403, yPct:0.2707, wPct:0.363, hPct:0.1547},
-      {xPct:0.5501, yPct:0.2707, wPct:0.363, hPct:0.1547},
-      {xPct:0.1403, yPct:0.432, wPct:0.363, hPct:0.1547},
-      {xPct:0.5501, yPct:0.432, wPct:0.363, hPct:0.1547},
-      {xPct:0.1403, yPct:0.5947, wPct:0.363, hPct:0.1533},
-      {xPct:0.5501, yPct:0.5947, wPct:0.363, hPct:0.1533}
-    ],
-    captionPct: {xPct:0.5, yPct:0.975},
-    textColor: '#1a4a6b',
-    subColor: 'rgba(0,0,0,0)'
-  },
-
-  aboutyou: {
-    label: '🎵 About You',
+  creativeLab: {
+    label: '🐱 Creative Lab',
     url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/1.png',
-    slotsSingle: [{xPct:0.1542, yPct:0.114, wPct:0.7143, hPct:0.2265}],
+    slotsSingle: [{xPct:0.115, yPct:0.0828, wPct:0.755, hPct:0.2411}],
     slotsStrip: [
-      {xPct:0.1542, yPct:0.114, wPct:0.7143, hPct:0.2265},
-      {xPct:0.1485, yPct:0.3635, wPct:0.7157, hPct:0.2265},
-      {xPct:0.1485, yPct:0.6125, wPct:0.7157, hPct:0.2265}
+      {xPct:0.115, yPct:0.0828, wPct:0.755, hPct:0.2411},
+      {xPct:0.115, yPct:0.4306, wPct:0.755, hPct:0.2406}
     ],
-    captionPct: {xPct:0.5, yPct:0.85},
-    textColor: '#f0f0f0',
+    captionPct: {xPct:0.5, yPct:0.965},
+    textColor: '#7a1414',
     subColor: 'rgba(0,0,0,0)'
   },
 
-  kpop: {
-    label: '🎀 K-POP Cute',
+  hbdPurple: {
+    label: '🍦 HBD Naffa Ungu',
     url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/2.png',
+    slotsSingle: [{xPct:0.1386, yPct:0.2445, wPct:0.7214, hPct:0.151}],
+    slotsStrip: [
+      {xPct:0.1386, yPct:0.2445, wPct:0.7214, hPct:0.151},
+      {xPct:0.1386, yPct:0.407, wPct:0.7214, hPct:0.1505},
+      {xPct:0.1386, yPct:0.57, wPct:0.7214, hPct:0.1505},
+      {xPct:0.1386, yPct:0.732, wPct:0.7214, hPct:0.151}
+    ],
+    captionPct: {xPct:0.5, yPct:0.965},
+    textColor: '#3d2554',
+    subColor: 'rgba(0,0,0,0)'
+  },
+
+  thanksTodayStrip: {
+    label: '💙 Thanks for Today (Strip)',
+    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/3.png',
+    slotsSingle: [{xPct:0.1231, yPct:0.078, wPct:0.7553, hPct:0.2035}],
+    slotsStrip: [
+      {xPct:0.1231, yPct:0.078, wPct:0.7553, hPct:0.2035},
+      {xPct:0.1231, yPct:0.325, wPct:0.7553, hPct:0.2025},
+      {xPct:0.1231, yPct:0.571, wPct:0.7553, hPct:0.2025}
+    ],
+    captionPct: {xPct:0.5, yPct:0.965},
+    textColor: '#f5d94e',
+    subColor: 'rgba(0,0,0,0)'
+  },
+
+  pinkKawaii: {
+    label: '🩷 Pink Kawaii',
+    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/4.png',
     slotsSingle: [{xPct:0.1895, yPct:0.0755, wPct:0.6223, hPct:0.2725}],
     slotsStrip: [
       {xPct:0.1895, yPct:0.0755, wPct:0.6223, hPct:0.2725},
@@ -3702,79 +3716,56 @@ const PB_CUSTOM_TEMPLATES = {
       {xPct:0.1895, yPct:0.6515, wPct:0.6195, hPct:0.2725}
     ],
     captionPct: {xPct:0.5, yPct:0.965},
-    textColor: '#8a3a5a',
+    textColor: '#5a2a52',
     subColor: 'rgba(0,0,0,0)'
   },
 
-  // 5 slot: 1 layar kamera besar + 4 polaroid gantung kecil di bawahnya.
-  cameraclip: {
-    label: '📷 Kamera & Klip',
-    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/3.png',
-    slotsSingle: [{xPct:0.0519, yPct:0.1704, wPct:0.6167, hPct:0.3489}],
+  waxSealStripe: {
+    label: '📜 Wax Seal Stripe',
+    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/5.png',
+    slotsSingle: [{xPct:0.0917, yPct:0.0361, wPct:0.8167, hPct:0.1961}],
     slotsStrip: [
-      {xPct:0.0519, yPct:0.1704, wPct:0.6167, hPct:0.3489},
-      {xPct:0.0815, yPct:0.6193, wPct:0.1352, hPct:0.1237},
-      {xPct:0.2796, yPct:0.6607, wPct:0.1611, hPct:0.1407},
-      {xPct:0.5046, yPct:0.6637, wPct:0.1444, hPct:0.1296},
-      {xPct:0.712, yPct:0.6333, wPct:0.15, hPct:0.1333}
+      {xPct:0.0917, yPct:0.0361, wPct:0.8167, hPct:0.1961},
+      {xPct:0.0917, yPct:0.2511, wPct:0.8167, hPct:0.1967},
+      {xPct:0.0917, yPct:0.4667, wPct:0.8167, hPct:0.1967},
+      {xPct:0.0917, yPct:0.6828, wPct:0.8167, hPct:0.1961}
     ],
-    captionPct: {xPct:0.5, yPct:0.85},
+    captionPct: {xPct:0.5, yPct:0.965},
+    textColor: '#f5f0e0',
+    subColor: 'rgba(0,0,0,0)'
+  },
+
+  denimFilm: {
+    label: '🎞️ Caught on Film',
+    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/6.png',
+    slotsSingle: [{xPct:0.1183, yPct:0.0617, wPct:0.7633, hPct:0.1828}],
+    slotsStrip: [
+      {xPct:0.1183, yPct:0.0617, wPct:0.7633, hPct:0.1828},
+      {xPct:0.1183, yPct:0.2728, wPct:0.7633, hPct:0.1828},
+      {xPct:0.1183, yPct:0.4839, wPct:0.7633, hPct:0.1828},
+      {xPct:0.1183, yPct:0.695, wPct:0.7633, hPct:0.1828}
+    ],
+    captionPct: {xPct:0.5, yPct:0.965},
+    textColor: '#2b3a52',
+    subColor: 'rgba(0,0,0,0)'
+  },
+
+  scrapNotebook: {
+    label: '📎 Scrapbook Notebook',
+    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/7.png',
+    slotsSingle: [{xPct:0.245, yPct:0.0244, wPct:0.7383, hPct:0.2456}],
+    slotsStrip: [
+      {xPct:0.245, yPct:0.0244, wPct:0.7383, hPct:0.2456},
+      {xPct:0.245, yPct:0.2878, wPct:0.7383, hPct:0.2456},
+      {xPct:0.245, yPct:0.5511, wPct:0.7383, hPct:0.2456}
+    ],
+    captionPct: {xPct:0.5, yPct:0.965},
     textColor: '#2a2a2a',
     subColor: 'rgba(0,0,0,0)'
   },
 
-  instagram: {
-    label: '📱 Instagram Post',
-    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/4.png',
-    slotsSingle: [{xPct:0.2509, yPct:0.2778, wPct:0.4991, hPct:0.462}],
-    slotsStrip: [],
-    captionPct: {xPct:0.5, yPct:0.878},
-    textColor: '#1a1a1a',
-    subColor: 'rgba(0,0,0,0)'
-  },
-
-  birthdaygold: {
-    label: '🎉 Happy Birthday Gold',
-    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/5.png',
-    slotsSingle: [{xPct:0.0382, yPct:0.2245, wPct:0.9137, hPct:0.186}],
-    slotsStrip: [
-      {xPct:0.0382, yPct:0.2245, wPct:0.9137, hPct:0.186},
-      {xPct:0.0382, yPct:0.416, wPct:0.9137, hPct:0.186},
-      {xPct:0.0382, yPct:0.6075, wPct:0.9137, hPct:0.186},
-      {xPct:0.0382, yPct:0.799, wPct:0.9137, hPct:0.186}
-    ],
-    captionPct: {xPct:0.5, yPct:0.99},
-    textColor: '#ffffff',
-    subColor: 'rgba(0,0,0,0)'
-  },
-
-  polaroidstack: {
-    label: '🎂 Polaroid Stack',
-    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/6.png',
-    slotsSingle: [{xPct:0.1548, yPct:0.094, wPct:0.3121, hPct:0.1836}],
-    slotsStrip: [
-      {xPct:0.1548, yPct:0.094, wPct:0.3121, hPct:0.1836},
-      {xPct:0.1548, yPct:0.2961, wPct:0.3121, hPct:0.1836},
-      {xPct:0.1548, yPct:0.4987, wPct:0.3121, hPct:0.1836},
-      {xPct:0.1548, yPct:0.7009, wPct:0.3121, hPct:0.1821}
-    ],
-    captionPct: {xPct:0.5, yPct:0.975},
-    textColor: '#ffffff',
-    subColor: 'rgba(0,0,0,0)'
-  },
-
-  goodperson: {
-    label: '🖤 Good Person',
-    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/7.png',
-    slotsSingle: [{xPct:0.1981, yPct:0.1453, wPct:0.5917, hPct:0.4495}],
-    slotsStrip: [],
-    captionPct: {xPct:0.5, yPct:0.66},
-    textColor: '#333333',
-    subColor: 'rgba(0,0,0,0)'
-  },
-
-  capturemoment: {
-    label: '📸 Capture the Moment',
+  polaroidBday: {
+    label: '🖤 Polaroid Birthday',
     url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/8.png',
     slotsSingle: [{xPct:0.1306, yPct:0.0156, wPct:0.737, hPct:0.2854}],
     slotsStrip: [
@@ -3782,18 +3773,43 @@ const PB_CUSTOM_TEMPLATES = {
       {xPct:0.1296, yPct:0.3531, wPct:0.7398, hPct:0.2901},
       {xPct:0.1315, yPct:0.6943, wPct:0.7361, hPct:0.2859}
     ],
-    captionPct: {xPct:0.5, yPct:0.965},
-    textColor: '#1a3a6b',
+    captionPct: {xPct:0.5, yPct:0.335},
+    textColor: '#8a1a1a',
     subColor: 'rgba(0,0,0,0)'
   },
 
-  normal: {
-    label: '📄 Simple Note',
+  blankBday: {
+    label: '🤍 Simple Happy Birthday',
     url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/9.png',
     slotsSingle: [{xPct:0.0417, yPct:0.0859, wPct:0.9167, hPct:0.7444}],
     slotsStrip: [],
     captionPct: {xPct:0.5, yPct:0.965},
     textColor: '#1a1a1a',
+    subColor: 'rgba(0,0,0,0)'
+  },
+
+  igPost: {
+    label: '📱 Instagram Naffa',
+    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/10.png',
+    slotsSingle: [{xPct:0.2509, yPct:0.2778, wPct:0.4991, hPct:0.462}],
+    slotsStrip: [],
+    captionPct: {xPct:0.5, yPct:0.965},
+    textColor: '#ffffff',
+    subColor: 'rgba(0,0,0,0)'
+  },
+
+  cuteMeme: {
+    label: '😸 Cute Meme Collage',
+    url: 'https://3rizqimaulana-lgtm.github.io/naffa-audio/11.png',
+    slotsSingle: [{xPct:0.0783, yPct:0.0322, wPct:0.3433, hPct:0.2167}],
+    slotsStrip: [
+      {xPct:0.0783, yPct:0.0322, wPct:0.3433, hPct:0.2167},
+      {xPct:0.0783, yPct:0.2706, wPct:0.3433, hPct:0.2167},
+      {xPct:0.0783, yPct:0.5083, wPct:0.3433, hPct:0.2167},
+      {xPct:0.0783, yPct:0.7456, wPct:0.3433, hPct:0.2167}
+    ],
+    captionPct: {xPct:0.72, yPct:0.5},
+    textColor: '#5a3a10',
     subColor: 'rgba(0,0,0,0)'
   },
 };
@@ -4118,6 +4134,73 @@ function trigLetter(){
 }
 
 // FUTURE LETTER
+// ===== SURAT KE 2030 — UNDUH SEBAGAI PDF =====
+// Menggantikan fitur "Buku Kenangan" (dihapus). Ambil isi surat dari
+// localStorage ('nfl', diisi saat Naffa menyegel surat di sealFL()) lalu
+// susun jadi PDF satu halaman yang bisa disimpan.
+function downloadSuratPDF(){
+  let raw=null;
+  try{raw=localStorage.getItem('nfl');}catch(e){}
+  if(!raw){showAlert('Surat ke 2030 belum pernah diisi di perangkat ini 🌿');return;}
+  let data=null;
+  try{data=JSON.parse(raw);}catch(e){}
+  if(!data||!data.syukur){showAlert('Isi surat tidak ditemukan / rusak 🌿');return;}
+  if(typeof window.jspdf==='undefined'){showAlert('Gagal memuat pembuat PDF, coba lagi ✦');return;}
+  sfx('ok');
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'pt',format:'a4'});
+  const W=doc.internal.pageSize.getWidth();
+  const marginX=56;
+  let y=90;
+
+  doc.setFont('times','italic');
+  doc.setFontSize(11);
+  doc.setTextColor(150,120,60);
+  doc.text('✦ TAMAN BULAN', W/2, y, {align:'center'});
+  y+=28;
+
+  doc.setFont('times','normal');
+  doc.setFontSize(24);
+  doc.setTextColor(40,30,20);
+  doc.text('Surat ke 2030', W/2, y, {align:'center'});
+  y+=22;
+
+  doc.setFont('times','italic');
+  doc.setFontSize(11);
+  doc.setTextColor(120,110,100);
+  const writtenDate=data.writtenAt?new Date(data.writtenAt).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):'-';
+  doc.text('Ditulis '+writtenDate+'  ·  dibuka '+(data.openAt||'2030-01-01'), W/2, y, {align:'center'});
+  y+=14;
+  doc.setDrawColor(200,170,110);
+  doc.line(marginX, y, W-marginX, y);
+  y+=36;
+
+  const section=(label,text)=>{
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(10);
+    doc.setTextColor(160,90,90);
+    doc.text(label.toUpperCase(), marginX, y);
+    y+=18;
+    doc.setFont('times','normal');
+    doc.setFontSize(13);
+    doc.setTextColor(35,30,25);
+    const lines=doc.splitTextToSize(text||'-', W-marginX*2);
+    doc.text(lines, marginX, y);
+    y+=lines.length*18+26;
+  };
+
+  section('Aku bersyukur karena...', data.syukur);
+  section('Sebelum aku berusia 23, aku ingin...', data.tujuan);
+  section('Pesan untuk Naffa 2030...', data.pesan);
+
+  doc.setFont('times','italic');
+  doc.setFontSize(10);
+  doc.setTextColor(150,150,150);
+  doc.text('Taman Bulan · Naffa Birthday Experience', W/2, 800, {align:'center'});
+
+  doc.save('surat-ke-2030-naffa.pdf');
+}
+
 async function sealFL(){
   const clean=v=>v.replace(/<[^>]*>/g,'').substring(0,200);
   const s=clean((document.getElementById('fls').value||'').trim()),t=clean((document.getElementById('flt').value||'').trim()),p=clean((document.getElementById('flp').value||'').trim());
@@ -4127,7 +4210,9 @@ async function sealFL(){
   const data={syukur:s,tujuan:t,pesan:p,recipient:'Naffa Febry Cornelia',writtenAt:new Date().toISOString(),openAt:'2030-01-01'};
   localStorage.setItem('nfl',JSON.stringify(data));
   try{if(window._db)await window._db.collection('future_letters').add({...data,device:navigator.userAgent.substring(0,80)});}catch(e){}
-  if(typeof sendTelegram==='function') sendTelegram('✉️ Surat ke 2030 dari Naffa:\n\nSyukur: "'+s+'"\n\nTujuan: "'+t+'"\n\nPesan: "'+p+'"');
+  if(typeof pbNotify==='function') pbNotify('Naffa menyegel Surat ke 2030 ✦');
+  // Isi lengkap (syukur/tujuan/pesan) SENGAJA tidak lagi diteruskan ke
+  // Telegram — baca isinya lewat tab "Surat ke 2030" di chat.html.
   const frm=document.getElementById('flform');frm.style.transition='opacity .5s,transform .5s';frm.style.opacity='0';frm.style.transform='scale(.95)';
   setTimeout(()=>{frm.style.display='none';const su=document.getElementById('flsuc');su.style.display='flex';su.style.opacity='0';su.style.transition='opacity .6s';setTimeout(()=>su.style.opacity='1',50);bloom(window.innerWidth/2,window.innerHeight/2,'#c97b84');},500);
 }
@@ -5269,7 +5354,9 @@ function startRain() {
       }).catch(()=>{});
     }
   }catch(e){}
-  if(typeof sendTelegram==='function') sendTelegram('🌧️ Ruang Hujan — Naffa melepaskan:\n\n"'+txt+'"');
+  if(typeof pbNotify==='function') pbNotify('Naffa menulis di Ruang Hujan ✦');
+  // Isi lengkap SENGAJA tidak lagi diteruskan ke Telegram — baca isinya
+  // lewat tab "Ruang Hujan" di chat.html.
 
   // Setup rain canvas
   const canvas = document.getElementById('rain-canvas');
@@ -5404,19 +5491,16 @@ function openSecretBox() {
 // keduanya "dengerin" koleksi ini secara realtime (onSnapshot), jadi pesan yang salah
 // satu kirim langsung muncul di layar yang lain tanpa refresh.
 let _nmChatUnsub=null;
-let _chatOpenNotified=false;
 
 function openReplyModal(){
   const modal=document.getElementById('reply-modal');
   if(!modal) return;
   modal.style.display='flex';
   try{sfx('tr');}catch(e){}
-  // Notifikasi ke Rizqi cuma saat Naffa MEMBUKA sesi chat (sekali per kunjungan),
-  // bukan lagi setiap kali dia mengetik & mengirim pesan.
-  if(!_chatOpenNotified){
-    _chatOpenNotified=true;
-    if(typeof pbNotify==='function') pbNotify('Naffa membuka Chat Diam-diam ✦');
-  }
+  // Notifikasi ke Rizqi SETIAP KALI Naffa membuka sesi chat (buka-tutup
+  // berkali-kali = notif berkali-kali) — isi pesannya sendiri tetap tidak
+  // diteruskan ke Telegram, cuma event "membuka chat"-nya saja.
+  if(typeof pbNotify==='function') pbNotify('Naffa membuka Chat Diam-diam ✦');
   if(!window._db) return;
   if(_nmChatUnsub) return; // listener sudah aktif dari sebelumnya
   const body=document.getElementById('chat-body-nm');
@@ -5478,12 +5562,13 @@ document.addEventListener('DOMContentLoaded', function(){
 // Setiap tulisan/event penting tetap dicatat ke Firestore sebagai penyimpanan utama
 // (koleksi 'silent_notify', 'live_chat', 'releases', 'future_letters' — bisa
 // dicek kapan saja lewat Firebase console). Kalau TELEGRAM_BOT_TOKEN & CHAT_ID diisi,
-// SEMUANYA juga diteruskan langsung ke Telegram kamu secara instan, termasuk:
+// SEMUANYA juga diteruskan langsung ke Telegram kamu secara instan, tapi
+// SEKARANG SEMUANYA cuma berupa notifikasi EVENT (bukan isi lengkap tulisan
+// Naffa) — isi lengkapnya cukup dibaca lewat chat.html:
 //   • Event: pertama buka taman, selesai perjalanan, buka lagi di lain hari
-//   • Event: Naffa membuka sesi Chat Diam-diam (isi pesannya SENGAJA tidak
-//     diteruskan lagi — cek isi lengkapnya lewat chat.html)
-//   • Isi LENGKAP Ruang Hujan (apa yang Naffa lepaskan)
-//   • Isi LENGKAP Surat ke 2030 (syukur, tujuan, pesan)
+//   • Event: Naffa membuka sesi Chat Diam-diam (terkirim setiap kali dibuka)
+//   • Event: Naffa menulis di Ruang Hujan
+//   • Event: Naffa menyegel Surat ke 2030
 // Kalau dikosongkan, semuanya tetap tersimpan aman di Firestore seperti biasa, cuma
 // tidak ada notifikasi instan ke HP.
 //
