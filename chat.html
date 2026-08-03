@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat — Rizqi</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%231a1410'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='18' font-weight='700' fill='%23e8c87a'%3ER%3C/text%3E%3C/svg%3E">
+<meta name="robots" content="noindex, nofollow">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+:root{
+  --cream:#faf6f0;--sage:#7a9e7e;--rose:#c97b84;
+  --gold:#c9974a;--gold-lt:#e8c87a;--dark:#1a1410;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  font-family:'Cormorant Garamond',serif;
+  background:radial-gradient(ellipse at 20% 20%,rgba(122,158,126,.12) 0%,transparent 55%),
+              radial-gradient(ellipse at 80% 80%,rgba(201,123,132,.10) 0%,transparent 55%),
+              linear-gradient(160deg,#0d100c 0%,#150f0a 55%,#0a0806 100%);
+  color:var(--cream);
+  display:flex;flex-direction:column;
+  min-height:100vh;
+}
+
+/* ===== Gerbang akses ===== */
+#gate{position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;
+  background:linear-gradient(160deg,#0d100c 0%,#150f0a 55%,#0a0806 100%);}
+#gate .card{background:rgba(20,16,12,.75);border:1px solid rgba(201,151,74,.28);border-radius:24px;
+  padding:40px 32px;max-width:340px;width:100%;text-align:center;backdrop-filter:blur(18px);
+  box-shadow:0 20px 60px rgba(0,0,0,.5);}
+#gate .em{font-size:1.6rem;margin-bottom:10px;}
+#gate h1{font-weight:500;font-size:1.3rem;color:var(--gold-lt);letter-spacing:1px;margin-bottom:18px;}
+#gate input{width:100%;background:rgba(10,8,6,.7);border:1px solid rgba(201,151,74,.35);border-radius:12px;
+  padding:12px 16px;text-align:center;font-family:'Space Mono',monospace;letter-spacing:5px;font-size:1rem;
+  color:var(--gold-lt);outline:none;margin-bottom:14px;}
+#gate input:focus{border-color:rgba(201,151,74,.7);}
+#gate button{width:100%;background:rgba(201,151,74,.18);border:1px solid rgba(201,151,74,.45);color:var(--gold-lt);
+  border-radius:12px;padding:11px;font-family:'Space Mono',monospace;font-size:.72rem;letter-spacing:2px;
+  cursor:pointer;text-transform:uppercase;transition:background .3s;}
+#gate button:hover{background:rgba(201,151,74,.3);}
+#gate .err{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--rose);margin-top:10px;opacity:0;letter-spacing:1px;}
+#gate .err.show{opacity:1;}
+
+/* ===== Header ===== */
+header{padding:18px 20px;text-align:center;border-bottom:1px solid rgba(201,151,74,.18);}
+header .eyebrow{font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:3px;color:var(--gold);margin-bottom:4px;}
+header h1{font-weight:500;font-size:1.15rem;color:var(--cream);letter-spacing:.5px;}
+header .sub{font-size:.75rem;color:rgba(250,246,240,.45);font-style:italic;margin-top:2px;}
+
+/* ===== Chat body ===== */
+#chat-body{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:10px;max-width:640px;margin:0 auto;width:100%;}
+.bubble{max-width:78%;padding:10px 15px;border-radius:16px;font-size:.95rem;line-height:1.55;word-wrap:break-word;white-space:pre-wrap;position:relative;}
+.bubble .meta{display:block;font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:1px;color:rgba(250,246,240,.4);margin-top:5px;}
+.bubble.naffa{align-self:flex-start;background:rgba(122,158,126,.16);border:1px solid rgba(122,158,126,.28);}
+.bubble.rizqi{align-self:flex-end;background:rgba(201,151,74,.18);border:1px solid rgba(201,151,74,.3);}
+.empty{margin:auto;text-align:center;font-style:italic;font-size:.85rem;color:rgba(250,246,240,.4);padding:20px;}
+
+/* ===== Input bar ===== */
+#bar{border-top:1px solid rgba(201,151,74,.18);padding:14px 16px;display:flex;gap:10px;max-width:640px;margin:0 auto;width:100%;}
+#msg{flex:1;background:rgba(10,8,6,.55);border:1px solid rgba(201,151,74,.28);border-radius:14px;padding:11px 14px;
+  color:var(--cream);font-family:'Cormorant Garamond',serif;font-size:.95rem;resize:none;outline:none;max-height:120px;}
+#msg:focus{border-color:rgba(201,151,74,.6);}
+#send{background:rgba(201,151,74,.22);border:1px solid rgba(201,151,74,.5);color:var(--gold-lt);border-radius:14px;
+  padding:0 20px;font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:1px;cursor:pointer;transition:background .3s;}
+#send:hover{background:rgba(201,151,74,.35);}
+#send:disabled{opacity:.5;cursor:default;}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="card">
+    <div class="em">✦</div>
+    <h1>Akses Chat</h1>
+    <input id="gate-input" type="password" placeholder="• • • • • •" maxlength="20" autocomplete="off">
+    <button id="gate-btn">Masuk</button>
+    <div class="err" id="gate-err">Kode salah, coba lagi</div>
+  </div>
+</div>
+
+<header>
+  <div class="eyebrow">✦ CHAT DIAM-DIAM</div>
+  <h1>Balas Naffa</h1>
+  <div class="sub">tersambung langsung ke Taman Bulan</div>
+</header>
+
+<div id="chat-body"><div class="empty">Memuat percakapan…</div></div>
+
+<div id="bar">
+  <textarea id="msg" rows="1" placeholder="Tulis balasan…"></textarea>
+  <button id="send">Kirim</button>
+</div>
+
+<script>
+// ===================================================================
+// GANTI kode akses ini sebelum dipakai — ini hanya penghalang ringan
+// di sisi klien, bukan keamanan sesungguhnya (siapa pun yang membaca
+// kode sumber halaman ini bisa melihatnya). Cukup untuk mencegah orang
+// iseng yang menemukan link ini secara tidak sengaja.
+const ACCESS_CODE = '20052007';
+// ===================================================================
+
+const firebaseConfig = {
+  apiKey:"AIzaSyBHeicloB3jNsx0iiHyhaAZGkrEV0p2GZ8",
+  authDomain:"adalahpokoknya-6cabf.firebaseapp.com",
+  projectId:"adalahpokoknya-6cabf",
+  storageBucket:"adalahpokoknya-6cabf.firebasestorage.app",
+  messagingSenderId:"40678745638",
+  appId:"1:40678745638:web:8a5c0b3d4711e548c4e8e7"
+};
+if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ---------- Gerbang akses ----------
+const gate=document.getElementById('gate');
+const gateInput=document.getElementById('gate-input');
+const gateBtn=document.getElementById('gate-btn');
+const gateErr=document.getElementById('gate-err');
+function tryEnter(){
+  if(gateInput.value===ACCESS_CODE){
+    gate.style.display='none';
+    startChat();
+  }else{
+    gateErr.classList.add('show');
+    gateInput.value='';
+  }
+}
+gateBtn.addEventListener('click', tryEnter);
+gateInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); tryEnter(); } });
+gateInput.addEventListener('input', ()=> gateErr.classList.remove('show'));
+
+// ---------- Chat ----------
+let started=false;
+function startChat(){
+  if(started) return;
+  started=true;
+  const body=document.getElementById('chat-body');
+  db.collection('live_chat').orderBy('ts','asc').onSnapshot(function(snap){
+    if(snap.empty){
+      body.innerHTML='<div class="empty">Belum ada pesan. Tulis sesuatu untuk memulai ✦</div>';
+      return;
+    }
+    body.innerHTML='';
+    snap.forEach(function(doc){
+      const m=doc.data();
+      const isRizqi=(m.sender==='rizqi');
+      const row=document.createElement('div');
+      row.className='bubble '+(isRizqi?'rizqi':'naffa');
+      const textNode=document.createElement('span');
+      textNode.textContent=m.text||'';
+      row.appendChild(textNode);
+      if(m.ts){
+        const meta=document.createElement('span');
+        meta.className='meta';
+        const d=new Date(m.ts);
+        if(!isNaN(d)) meta.textContent=d.toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+        row.appendChild(meta);
+      }
+      body.appendChild(row);
+    });
+    body.scrollTop=body.scrollHeight;
+  }, function(err){
+    body.innerHTML='<div class="empty">Gagal memuat chat — periksa koneksi.</div>';
+    console.error(err);
+  });
+}
+
+// ---------- Kirim pesan ----------
+const msgInput=document.getElementById('msg');
+const sendBtn=document.getElementById('send');
+async function sendMsg(){
+  const text=msgInput.value.trim().substring(0,500);
+  if(!text) return;
+  sendBtn.disabled=true;
+  try{
+    await db.collection('live_chat').add({
+      sender:'rizqi', text:text, ts:new Date().toISOString()
+    });
+    msgInput.value='';
+  }catch(e){ console.error(e); }
+  sendBtn.disabled=false;
+  msgInput.focus();
+}
+sendBtn.addEventListener('click', sendMsg);
+msgInput.addEventListener('keydown', function(e){
+  if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMsg(); }
+});
+msgInput.addEventListener('input', function(){
+  msgInput.style.height='auto';
+  msgInput.style.height=Math.min(msgInput.scrollHeight,120)+'px';
+});
+</script>
+</body>
+</html>
