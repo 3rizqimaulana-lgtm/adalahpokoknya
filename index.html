@@ -5404,12 +5404,19 @@ function openSecretBox() {
 // keduanya "dengerin" koleksi ini secara realtime (onSnapshot), jadi pesan yang salah
 // satu kirim langsung muncul di layar yang lain tanpa refresh.
 let _nmChatUnsub=null;
+let _chatOpenNotified=false;
 
 function openReplyModal(){
   const modal=document.getElementById('reply-modal');
   if(!modal) return;
   modal.style.display='flex';
   try{sfx('tr');}catch(e){}
+  // Notifikasi ke Rizqi cuma saat Naffa MEMBUKA sesi chat (sekali per kunjungan),
+  // bukan lagi setiap kali dia mengetik & mengirim pesan.
+  if(!_chatOpenNotified){
+    _chatOpenNotified=true;
+    if(typeof pbNotify==='function') pbNotify('Naffa membuka Chat Diam-diam ✦');
+  }
   if(!window._db) return;
   if(_nmChatUnsub) return; // listener sudah aktif dari sebelumnya
   const body=document.getElementById('chat-body-nm');
@@ -5456,8 +5463,9 @@ async function sendSecretReply(){
   ta.value='';
   btn.disabled=false;
   try{sfx('ok');}catch(e){}
-  if(typeof sendTelegram==='function') sendTelegram('💬 Naffa chat:\n\n"'+text+'"');
-  if(typeof pbNotify==='function') pbNotify('Naffa mengirim pesan di chat diam-diam');
+  // Isi pesan sengaja TIDAK diteruskan ke Telegram lagi — notifikasi cukup
+  // sekali saat sesi chat dibuka (lihat openReplyModal). Pesan tetap tersimpan
+  // aman di Firestore ('live_chat') dan bisa dibaca lewat chat.html.
 }
 document.addEventListener('DOMContentLoaded', function(){
   const ta=document.getElementById('reply-text');
@@ -5472,7 +5480,8 @@ document.addEventListener('DOMContentLoaded', function(){
 // dicek kapan saja lewat Firebase console). Kalau TELEGRAM_BOT_TOKEN & CHAT_ID diisi,
 // SEMUANYA juga diteruskan langsung ke Telegram kamu secara instan, termasuk:
 //   • Event: pertama buka taman, selesai perjalanan, buka lagi di lain hari
-//   • Isi setiap pesan Chat Diam-diam
+//   • Event: Naffa membuka sesi Chat Diam-diam (isi pesannya SENGAJA tidak
+//     diteruskan lagi — cek isi lengkapnya lewat chat.html)
 //   • Isi LENGKAP Ruang Hujan (apa yang Naffa lepaskan)
 //   • Isi LENGKAP Surat ke 2030 (syukur, tujuan, pesan)
 // Kalau dikosongkan, semuanya tetap tersimpan aman di Firestore seperti biasa, cuma
