@@ -111,6 +111,7 @@ window._db=null;
 #lockgate .lk-progress-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,rgba(122,158,126,.55),rgba(201,151,74,.85));border-radius:4px;width:0%;transition:width 1.2s ease;}
 #lockgate .lk-progress-moon{position:absolute;top:50%;left:0%;transform:translate(-50%,-50%);font-size:.85rem;transition:left 1.2s ease;filter:drop-shadow(0 0 6px rgba(232,200,122,.6));}
 #lockgate .lk-progress-label{margin-top:9px;font-family:'Space Mono',monospace;font-size:.54rem;letter-spacing:2px;color:rgba(201,151,74,.5);text-align:center;text-transform:uppercase;}
+#lockgate .lk-cd-label{margin-top:24px;margin-bottom:2px;font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:2px;color:rgba(250,246,240,.5);text-align:center;text-transform:uppercase;}
 
 /* Ambient makin hidup saat mendekati hari-H */
 #lockgate.lk-phase-near::before{animation-duration:11s;}
@@ -279,7 +280,7 @@ h2{font-family:'Cormorant Garamond',serif;font-weight:500;}
 .lsig{opacity:0;transition:opacity .8s ease;margin-top:20px;border-top:1px solid rgba(201,151,74,.2);padding-top:16px;}
 .lsig-from{font-size:.68rem;letter-spacing:2px;color:rgba(250,246,240,.4);font-family:'Space Mono',monospace;}
 .lsig-name{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:var(--rose-lt);margin-top:4px;}
-.lyrline{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(201,123,132,.65);opacity:0;transition:opacity .5s ease;z-index:6;pointer-events:none;white-space:nowrap;}
+.lyrline{position:relative;margin-bottom:16px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(201,123,132,.65);opacity:0;transition:opacity .5s ease;z-index:6;pointer-events:none;white-space:normal;max-width:85%;}
 
 /* FUTURE LETTER */
 .fcard{position:relative;overflow:hidden;background:rgba(15,12,8,.9);border:1px solid rgba(201,123,132,.25);border-radius:24px;padding:32px 34px;max-width:580px;width:100%;box-shadow:0 20px 55px rgba(0,0,0,.35);}
@@ -563,6 +564,7 @@ html.nm-revisit #welcomeback{opacity:1!important;pointer-events:auto!important;t
       <div class="lk-progress-track"><div class="lk-progress-fill" id="lk-progress-fill"></div><div class="lk-progress-moon" id="lk-progress-moon">🌙</div></div>
       <div class="lk-progress-label" id="lk-progress-label">Menuju Dekade Kedua</div>
     </div>
+    <div class="lk-cd-label">✦ hitung mundur menuju hari taman ini terbuka ✦</div>
     <div class="lk-grid">
       <div class="lk-block"><span class="lk-val" id="lk-d">00</span><span class="lk-lbl">HARI</span></div>
       <div class="lk-sep">:</div>
@@ -1984,22 +1986,18 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
     <div class="gbox" id="gj" onclick="openG('gj','Kebahagiaan Jiwa','🌸')"><div class="gico"><svg viewBox="0 0 40 40" width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg"><ellipse cx="20" cy="11" rx="5" ry="9" fill="#e8a8b0" opacity=".8"/><ellipse cx="20" cy="11" rx="5" ry="9" fill="#e8a8b0" opacity=".8" transform="rotate(60 20 20)"/><ellipse cx="20" cy="11" rx="5" ry="9" fill="#e8a8b0" opacity=".8" transform="rotate(120 20 20)"/><ellipse cx="20" cy="11" rx="5" ry="9" fill="#e8a8b0" opacity=".8" transform="rotate(180 20 20)"/><ellipse cx="20" cy="11" rx="5" ry="9" fill="#e8a8b0" opacity=".8" transform="rotate(240 20 20)"/><ellipse cx="20" cy="11" rx="5" ry="9" fill="#e8a8b0" opacity=".8" transform="rotate(300 20 20)"/><circle cx="20" cy="20" r="5" fill="#faf6f0"/></svg></div><div class="glbl">Jiwa</div></div>
     <div class="gbox" id="gb2" onclick="openG('gb2','Kedamaian Batin','🌿')"><div class="gico"><svg viewBox="0 0 40 40" width="36" height="36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 34 C20 34 8 26 8 16 C8 10 14 6 20 10 C26 6 32 10 32 16 C32 26 20 34 20 34Z" fill="#8fa8c8" opacity=".8"/><line x1="20" y1="34" x2="20" y2="14" stroke="#c8ddf0" stroke-width="1.5" stroke-linecap="round"/><line x1="20" y1="26" x2="14" y2="20" stroke="#c8ddf0" stroke-width="1" stroke-linecap="round" opacity=".7"/><line x1="20" y1="22" x2="26" y2="18" stroke="#c8ddf0" stroke-width="1" stroke-linecap="round" opacity=".7"/></svg></div><div class="glbl">Batin</div></div>
   </div>
-  <button class="btn btn-sg" id="n9b" onclick="goS10()" style="display:none;">Lanjutkan ke Tiup Lilin →</button>
+  <button class="btn btn-sg" id="n9b" onclick="go9b()" style="display:none;">Lanjutkan →</button>
 </div>
 
 <!-- S9B PARTIKEL -->
 <div class="screen" id="s9b" style="justify-content:center;align-items:center;padding:20px;">
-  <div id="hud9b" style="position:absolute;top:0;left:0;width:100%;padding:24px 24px 0;display:flex;flex-direction:column;align-items:center;pointer-events:none;z-index:10;">
-    <div style="font-family:'Space Mono',monospace;color:var(--sage);font-size:.62rem;letter-spacing:3px;margin-bottom:6px;opacity:.7;">[ MERAJUT PARTIKEL TAMAN ]</div>
-    <h2 id="figtitle" style="font-family:'Cormorant Garamond',serif;font-weight:400;color:var(--cream);font-size:1.5rem;">Semesta sedang membentuk siluetmu...</h2>
-    <p id="figsub" style="font-size:.72rem;font-family:'Space Mono',monospace;color:var(--sage);letter-spacing:1px;opacity:.7;margin-top:5px;">Partikel botanikal sedang berkumpul</p>
-  </div>
   <canvas id="figc" style="position:absolute;top:0;left:0;width:100%;height:100%;"></canvas>
   <div id="asmwrap" style="position:absolute;bottom:70px;left:50%;transform:translateX(-50%);width:200px;z-index:10;">
-    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--sage);letter-spacing:2px;text-align:center;margin-bottom:6px;" id="asmpct">ASSEMBLING 0%</div>
+    <div style="font-family:'Space Mono',monospace;font-size:.6rem;color:var(--sage);letter-spacing:2px;text-align:center;margin-bottom:6px;" id="asmpct">TUMBUH 0%</div>
     <div style="width:100%;height:2px;background:rgba(122,158,126,.15);border-radius:2px;overflow:hidden;"><div id="asmbar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--sage),var(--gold));border-radius:2px;transition:width .3s ease;"></div></div>
   </div>
   <canvas id="usc" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:2;opacity:.25;"></canvas>
+  <button class="btn btn-sg" id="n9c" onclick="goS10()" style="display:none;position:absolute;bottom:70px;left:50%;transform:translateX(-50%);z-index:10;">Lanjutkan ke Tiup Lilin →</button>
 </div>
 
 <!-- S10 LILIN -->
@@ -2018,9 +2016,158 @@ window.pzState={locked:0,dragging:null,dragOffX:0,dragOffY:0};
     <p style="font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(250,246,240,.5);letter-spacing:1px;">atau ketuk kue untuk meniup tanpa mikrofon</p>
   </div>
 
-  <!-- ANIMATED BIRTHDAY CAKE -->
-  <div id="cake-wrap" onclick="blowManual()" style="cursor:pointer;position:relative;width:min(320px,85vw);margin:0 auto;opacity:0;transform:translateY(40px) scale(.95);transition:opacity 1.2s cubic-bezier(.2,.8,.3,1),transform 1.2s cubic-bezier(.2,.8,.3,1);">
-    <canvas id="cake-canvas" style="width:100%;display:block;border-radius:12px;"></canvas>
+  <!-- ANIMATED BIRTHDAY CAKE — SVG path-morph identik dengan referensi (direcolor ke tema Taman Bulan),
+       + canvas overlay untuk lilin/api/asap/kelopak yang tetap dikendalikan JS (mic-blow, flicker, dst) -->
+  <div id="cake-wrap" onclick="blowManual()" style="cursor:pointer;position:relative;width:min(320px,85vw);margin:0 auto;aspect-ratio:200/180;border-radius:12px;overflow:hidden;background:radial-gradient(ellipse at 50% 58%, rgba(201,151,74,.08), transparent 55%),linear-gradient(#0f0c09,#1a1410);opacity:0;transform:translateY(40px) scale(.95);transition:opacity 1.2s cubic-bezier(.2,.8,.3,1),transform 1.2s cubic-bezier(.2,.8,.3,1);">
+    <svg id="cake-svg" viewBox="0 330 200 180" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block;" xml:space="preserve">
+      <path fill="#c9974a" d="M173.667-13.94c-49.298,0-102.782,0-147.334,0c-3.999,0-4-16.002,0-16.002
+        c44.697,0,96.586,0,147.334,0C177.667-29.942,177.668-13.94,173.667-13.94z">
+        <animate id="bizcocho_3" attributeName="d" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1" begin="relleno_2.end" dur="0.3s" fill="freeze" values="
+                          M173.667-13.94c-49.298,0-102.782,0-147.334,0c-3.999,0-4-16.002,0-16.002
+        c44.697,0,96.586,0,147.334,0C177.667-29.942,177.668-13.94,173.667-13.94z
+                          ;
+                          M173.667,411.567c-47.995,12.408-102.955,12.561-147.334,0
+        c-3.848-1.089-0.189-16.089,3.661-15.002c44.836,12.66,90.519,12.753,139.427,0.07
+        C173.293,395.631,177.541,410.566,173.667,411.567z
+                          ;
+                          M173.667,427.569c-49.795,0-101.101,0-147.334,0c-3.999,0-4-16.002,0-16.002
+        c46.385,0,97.539,0,147.334,0C177.668,411.567,177.667,427.569,173.667,427.569z
+                          " />
+      </path>
+      <path fill="#a07030" d="M100-178.521c1.858,0,3.364,1.506,3.364,3.363c0,0,0,33.17,0,44.227
+        c0,19.144,0,57.431,0,76.574c0,10.152,0,40.607,0,40.607c0,1.858-1.506,3.364-3.364,3.364l0,0c-1.858,0-3.364-1.506-3.364-3.364c0,0,0-30.455,0-40.607c0-19.144,0-57.432,0-76.575c0-11.057,0-44.226,0-44.226C96.636-177.015,98.142-178.521,100-178.521
+        L100-178.521z">
+        <animate id="relleno_2" attributeName="d" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1; 0 0 0.58 1" begin="bizcocho_2.end" dur="0.5s" fill="freeze" values="
+                          M100-178.521c1.858,0,3.364,1.506,3.364,3.363c0,0,0,33.17,0,44.227
+        c0,19.144,0,57.431,0,76.574c0,10.152,0,40.607,0,40.607c0,1.858-1.506,3.364-3.364,3.364l0,0c-1.858,0-3.364-1.506-3.364-3.364c0,0,0-30.455,0-40.607c0-19.144,0-57.432,0-76.575c0-11.057,0-44.226,0-44.226C96.636-177.015,98.142-178.521,100-178.521
+        L100-178.521z
+                          ;
+                          M100,267.257c1.858,0,3.364,1.506,3.364,3.363c0,0,0,33.17,0,44.227
+        c0,19.143,0,57.43,0,76.574c0,10.151,0,40.606,0,40.606c0,1.858-1.506,3.364-3.364,3.364l0,0c-1.858,0-3.364-1.506-3.364-3.364
+        c0,0,0-30.455,0-40.606c0-19.145,0-57.432,0-76.576c0-11.057,0-44.225,0-44.225C96.636,268.763,98.142,267.257,100,267.257
+        L100,267.257z
+                          ;
+                          M93.928,405.433c-0.655,6.444-0.102,9.067,2.957,11.798c0,0,8.083,5.571,16.828,3.503
+        c18.629-4.406,43.813,6.194,50.792,7.791c14.75,3.375,9.162,6.867,9.162,6.867c-2.412,2.258-58.328,0-73.667,0l0,0
+        c-1.858,0-69.995,2.133-73.667,0c0,0-3.337-2.439,6.172-5.992c11.375-4.25,52.875,8.822,47.139-9.442
+        c-6.333-20.167,5.226-21.514,5.226-21.514c3.435-0.915,12.78-6.663,10.923-0.546L93.928,405.433z
+                          ;
+                          M102.242,427.569c5.348,0,14.079,0,17.462,0c0,0,17.026,0,27.504,0
+        c19.143,0,20.39-3.797,26.459,0c3,1.877,0,7.823,0,7.823c-2.412,2.258-58.328,0-73.667,0l0,0c-1.858,0-67.187,0-73.667,0
+        c0,0-4.125-4.983,0-7.823c5.201-3.58,16.085,0,23.725,0c8.841,0,20.762,0,20.762,0c3.686,0,8.597,0,19.511,0H102.242z
+                          " />
+      </path>
+      <path fill="#c9974a" d="M173.667-15.929c-46.512,0-105.486,0-147.334,0c-3.999,0-4-16.002,0-16.002
+        c43.566,0,97.96,0,147.334,0C177.667-31.931,177.666-15.929,173.667-15.929z">
+        <animate id="bizcocho_2" attributeName="d" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1; 0.25 0 0.58 1" begin="relleno_1.end" dur="0.5s" fill="freeze" values="
+                          M173.667-15.929c-46.512,0-105.486,0-147.334,0c-3.999,0-4-16.002,0-16.002
+        c43.566,0,97.96,0,147.334,0C177.667-31.931,177.666-15.929,173.667-15.929z
+                          ;
+                          M173.434,445.393c-47.269,8.001-105.245,8.001-147.334,0c-3.929-0.747-0.692-16.543,3.243-15.824
+        c43.828,8.001,92.165,8.001,140.739,0C174.029,428.918,177.377,444.726,173.434,445.393z
+                          ;
+                          M173.667,449.514c-47.576-5.454-102.799-5.744-147.333,0c-3.966,0.512-3.938-15.297,0-16.002
+        c43.683-7.823,97.646-8.026,147.333,0C177.616,434.15,177.642,449.969,173.667,449.514z
+                          ;
+                          M173.667,451.394c-49.298,0-102.782,0-147.334,0c-3.999,0-4-16.002,0-16.002
+        c44.697,0,96.586,0,147.334,0C177.667,435.392,177.668,451.394,173.667,451.394z
+                          " />
+      </path>
+      <path fill="#a07030" d="M101.368-73.685c0,12.164,0,15.18,0,28.519c0,22.702,0-13.661,0,8.304c0,14.48,0,18.233,0,30.512
+        c0,1.753-2.958,1.847-2.958,0c0-12.68,0-16.277,0-30.401c0-21.983,0,11.66,0-8.305c0-13.027,0-15.992,0-28.628
+        C98.411-75.883,101.368-75.592,101.368-73.685z">
+        <animate id="relleno_1" attributeName="d" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1; 0 0 0.6 1" begin="bizcocho_1.end" dur="0.5s" fill="freeze" values="
+                          M101.368-73.685c0,12.164,0,15.18,0,28.519c0,22.702,0-13.661,0,8.304c0,14.48,0,18.233,0,30.512
+        c0,1.753-2.958,1.847-2.958,0c0-12.68,0-16.277,0-30.401c0-21.983,0,11.66,0-8.305c0-13.027,0-15.992,0-28.628
+        C98.411-75.883,101.368-75.592,101.368-73.685z
+                          ;
+                          M101.368,350.885c0,12.164,0,65.18,0,78.518c0,22.703,0-33.66,0-11.695c0,14.48,0,28.232,0,40.512
+        c0,1.753-2.958,1.847-2.958,0c0-12.68,0-26.277,0-40.402c0-21.982,0,31.66,0,11.695c0-13.027,0-65.992,0-78.627
+        C98.411,348.686,101.368,348.977,101.368,350.885z
+                          ;
+                          M128.38,447.567c37.626,6.312,39.303,13.658,26.833,12.833c-22.653-1.499-13.636-0.831-23.302-0.831
+        c-14.48,0-17.884,0-30.163,0c-2.087,0-2.068,0-3.915,0c-13.333,0-8.963,0-23.088,0c-11.668,0-14.062,5.995-27.532,1.164
+        c-12.629-4.529,38.667-3.167,46.833-17.333C100.077,432.94,105.546,443.736,128.38,447.567z
+                          ;
+                          M173.667,451.394c2.875,0,2.997,9.257,0,9.131c-22.662-0.956-32.09-0.956-41.756-0.956
+        c-14.48,0-17.884,0-30.163,0c-2.087,0-2.068,0-3.915,0c-13.333,0-8.963,0-23.088,0c-11.668,0-34.99-0.294-48.412,1.831
+        c-4.109,0.65-3.01-10.006,0-10.006C37.129,451.394,149.379,451.394,173.667,451.394z
+                          " />
+      </path>
+      <path fill="#c9974a" d="M173.667,21.571c-33.174,0-111.467,0-147.334,0c-4,0-4-16.002,0-16.002c39.836,0,105.982,0,147.334,0
+        C177.668,5.569,177.667,21.571,173.667,21.571z">
+        <animate id="bizcocho_1" attributeName="d" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1; 0 0 1 1; 0.25 0 1 1; 0 0 1 1; 0.25 0 0.6 1" begin="2s" dur="0.8s" fill="freeze" values="
+                          M173.667,21.571c-33.174,0-111.467,0-147.334,0c-4,0-4-16.002,0-16.002c39.836,0,105.982,0,147.334,0
+        C177.668,5.569,177.667,21.571,173.667,21.571z
+                          ;
+                          M173.667,459.569c-33.197,16.002-110.782,16.002-147.334,0c-3.664-1.604,1.614-15.617,5.337-14.153
+        c40.702,16.002,94.289,16.104,136.505,0.103C171.917,444.1,177.271,457.832,173.667,459.569z
+                          ;
+                          M171.817,475.571c-39.361-3.001-105.438-2.571-143.556,0c-3.991,0.27-7.377-14.736-3.387-15.014
+        c41.553-2.888,104.421-3.121,150.51-0.233C179.378,460.574,175.806,475.875,171.817,475.571z
+                          ;
+                          M171.817,459.564c-38.8-12.188-104.504-13.762-143.556,0c-3.772,1.329-7.961-12.604-4.178-13.905
+        c40.864-14.064,105.114-15.52,151.918-0.973C179.822,445.874,175.634,460.762,171.817,459.564z
+                          ;
+                          M173.667,475.571c-46.376-5.005-105.924-4.003-147.334,0c-3.981,0.385-3.479-15.421,0.479-16.002
+        c43.087-6.327,97.705-7.083,146.855,0.438C177.621,460.613,177.644,476,173.667,475.571z
+                          ;
+                          M173.667,474.117c-46.376,1.866-105.638,2.01-147.334,0c-3.995-0.192-3.52-16.144,0.479-16.002
+        c43.794,1.55,96.341,1.541,145.723,0C176.532,457.99,177.663,473.956,173.667,474.117z
+                          ;
+                          M173.667,475.571c-46.512,0-105.486,0-147.334,0c-3.999,0-4-16.002,0-16.002c43.566,0,97.96,0,147.334,0
+        C177.667,459.569,177.666,475.571,173.667,475.571z
+                          " />
+      </path>
+      <path fill="#fff8e0" d="M104.812,113.216c0,3.119-2.164,5.67-4.812,5.67c-2.646,0-4.812-2.551-4.812-5.67c0-5.594,0-16.782,0-22.375
+        c0-5.143,0-15.427,0-20.568c0-7.333,0-21.998,0-29.33c0-5.523,0-16.569,0-22.092c0-3.295,0-9.885,0-13.181
+        C95.188,2.551,97.353,0,100,0c2.648,0,4.812,2.551,4.812,5.669c0,3.248,0,9.743,0,12.991c0,5.428,0,16.284,0,21.711
+        c0,7.618,0,22.854,0,30.472c0,4.952,0,14.854,0,19.807C104.812,96.292,104.812,107.576,104.812,113.216z">
+        <animate id="crema" attributeName="d" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1; 0 0 1 1; 0.25 0 1 1; 0 0 1 1; 0 0 0.58 1" begin="bizcocho_3.end" dur="2s" fill="freeze" values="
+                          M104.812,113.216c0,3.119-2.164,5.67-4.812,5.67c-2.646,0-4.812-2.551-4.812-5.67c0-5.594,0-16.782,0-22.375
+        c0-5.143,0-15.427,0-20.568c0-7.333,0-21.998,0-29.33c0-5.523,0-16.569,0-22.092c0-3.295,0-9.885,0-13.181
+        C95.188,2.551,97.353,0,100,0c2.648,0,4.812,2.551,4.812,5.669c0,3.248,0,9.743,0,12.991c0,5.428,0,16.284,0,21.711
+        c0,7.618,0,22.854,0,30.472c0,4.952,0,14.854,0,19.807C104.812,96.292,104.812,107.576,104.812,113.216z
+                          ;
+                          M104.812,405.897c0,3.119-2.164,5.67-4.812,5.67c-2.646,0-4.812-2.551-4.812-5.67c0-5.594,0-16.782,0-22.376
+        c0-5.143,0-15.426,0-20.568c0-7.332,0-21.997,0-29.33c0-5.522,0-16.568,0-22.092c0-3.295,0-9.885,0-13.181
+        c0-3.118,2.165-5.669,4.812-5.669c2.648,0,4.812,2.551,4.812,5.669c0,3.247,0,9.743,0,12.991c0,5.428,0,16.283,0,21.711
+        c0,7.618,0,22.854,0,30.473c0,4.951,0,14.854,0,19.807C104.812,388.972,104.812,400.256,104.812,405.897z
+                          ;
+                          M111.873,411.567c-3.119,0-9.226,0-11.874,0c-2.646,0-7.748,0-10.867,0c-7.086,0-12.698,0-18.292,0
+        c-6.592,0-12.871,7.371-19.166,3.008c-10.043-6.961-7.776-10.169,2.991-17.745c12.61-8.873,27.713,1.994,25.919-7.531
+        c-2.589-13.742,11.008-14.513,11.365-17.789c0.441-4.051,4.235-11.107,8.051-8.175c3.113,2.393,1.007,8.008,0,13.159
+        c-1.871,9.569,8.058,2.113,9.494,14.155c2.592,21.732,21.184-0.675,29.309,7.976c5.216,5.553,18.413,5.552,15.426,12.942
+        c-3.131,7.745-15.825-4.369-23.8,2.903C126.261,418.271,118.301,411.567,111.873,411.567z
+                          ;
+                          M111.873,411.567c-3.119,0-9.226,0-11.874,0c-2.646,0-9.734,4.069-12.853,4.069
+        c-7.086,0-10.712-4.069-16.306-4.069c-6.592,0-12.12,6.013-19.166,3.008c-7.053-3.008-7.458,2.026-18.659,1.165
+        c-6.832-0.525-7.522-3.034-7.533-6.265c-0.037-10.336,22.073-2.452,36.613-2.628c10.234-0.124,19.856-1.439,37.905-2.102
+        c16.642-0.61,32.699,1.552,46.009,1.927c12.438,0.351,29.663-8.99,31.532,3.315c0.773,5.093-5.605,3.342-11.211,9.579
+        c-5.093,5.667-7.59-4.605-12.965-3.832c-8.269,1.189-14.962-8.537-22.937-1.265C126.261,418.271,118.301,411.567,111.873,411.567z
+                          ;
+                          M110.946,413.652c-2.904-1.137-8.405-2.748-12.446-0.97c-6.099,2.685-7.273,10.358-13.253,8.242
+        c-7.843-2.775-8.953-5.008-14.546-5.01c-24.653-0.011-4.849,26.507-18.264,26.507c-12.377,0,5.791-33.537-19.422-26.682
+        c-7.703,2.095-9.806-0.942-9.817-4.173c-0.037-10.336,24.357-4.544,38.897-4.72c10.234-0.124,19.856-1.439,37.905-2.102
+        c16.642-0.61,32.699,1.552,46.009,1.927c12.438,0.351,28.973-8.865,31.532,3.315c1.449,6.896,0.318,15.624-3.874,15.624
+        c-7.619,0-1.788-15.192-19.243-7.111c-7.581,3.51-15.963-9.738-26.669,1.066C120.644,426.744,118.381,416.561,110.946,413.652z
+                          ;
+                          M111.547,413.9c-2.969-0.956-8.775-0.949-13.167-0.5c-14.667,1.5-8.325,16.508-14.667,16.666
+        c-6.667,0.166-0.167-13.5-13.013-14.151c-30.471-1.545-5.572,46.651-18.987,46.651c-12.377,0,10.333-50.166-18.667-44.5
+        c-7.835,1.531-9.537-1.417-9.548-4.647c-0.037-10.336,23.675-5.177,38.215-5.353c10.234-0.124,20.618-1.671,38.667-2.333
+        c16.642-0.61,32.023,1.458,45.333,1.833c12.438,0.351,33.819-8.431,33.199,4.001c-0.532,10.666,0.414,26.166-5.245,25.833
+        c-7.606-0.447-2.954-31.5-19.243-18.899c-7.985,6.177-17.658-5.969-27.377,5.732C118.88,434.066,121.38,417.067,111.547,413.9z
+                          ;
+                          M111.547,415.233c-6.667-0.834-9.667,4.667-13.833,3.333c-19.649-6.291-8.158,22.176-14.5,22.334
+        c-6.667,0.166,2.833-18-13.333-22.167c-29.544-7.615-9.667,43.833-20.167,43.833c-10.333,0,8.004-55.006-16.833-39
+        c-7.5,4.833-9.508-3.78-9.299-7.004c0.799-12.329,23.592-7.153,38.132-7.329c10.234-0.124,20.238-1.505,38.287-2.167
+        c16.642-0.61,32.903,1.125,46.213,1.5c12.438,0.351,35.058-5.579,31.863,6.451c-5.532,20.833,1.25,28.216-4.409,27.883
+        c-7.606-0.447-6.058-37.895-20.62-23.333c-10.167,10.166-15.972-0.747-25,12C119.547,443.568,121.798,416.515,111.547,415.233z
+                          " />
+      </path>
+      <rect x="10" y="475.571" fill="#fff8e0" width="180" height="4" />
+    </svg>
+    <canvas id="cake-canvas" style="position:absolute;top:0;left:0;width:100%;height:100%;display:block;"></canvas>
     <div id="cake-tap-hint" style="position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.62rem;color:rgba(250,246,240,.5);letter-spacing:2px;white-space:nowrap;animation:hintPulse 2s ease-in-out infinite;">
       ✦ ketuk kue untuk meniup ✦
     </div>
@@ -2606,12 +2753,24 @@ function renderPlaylistMenu(){
   const wrap=document.getElementById('playlist-menu');
   if(!wrap) return;
   wrap.innerHTML='';
+  const s13el=document.getElementById('s13');
+  const onCert=!!(s13el && s13el.classList.contains('active'));
+  if(onCert){
+    const hint=document.createElement('div');
+    hint.style.cssText="font-family:'Space Mono',monospace;font-size:.56rem;letter-spacing:1px;color:rgba(201,151,74,.65);padding:6px 10px 8px;text-align:center;border-bottom:1px solid rgba(201,151,74,.15);margin-bottom:4px;";
+    hint.textContent='✦ pilih lagu pembuka favoritmu ✦';
+    wrap.appendChild(hint);
+  }
   TRACKS.forEach(function(t,i){
     const b=document.createElement('button');
     b.className='playlist-item'+(i===cti?' playing':'');
     b.innerHTML='<span class="pl-title">'+t.title+'</span><span class="pl-artist">'+t.artist+'</span>';
     b.onclick=function(){
       swT(i);
+      if(onCert){
+        try{localStorage.setItem('nOpeningTrack', String(i));}catch(e){}
+        try{sfx('tr');}catch(e){}
+      }
       hidePlaylistMenu();
     };
     wrap.appendChild(b);
@@ -4069,7 +4228,18 @@ function goS2(){
 
   unlkA();
 
-  const targetTrack=0; // lagu pembuka default — bisa diganti kapan saja lewat dropdown HUD
+  const targetTrack=(function(){
+    // Lagu pembuka default = About You, kecuali sudah pernah pilih lagu favorit
+    // di stage Sertifikat sebelumnya (disimpan lewat localStorage 'nOpeningTrack').
+    try{
+      const saved=localStorage.getItem('nOpeningTrack');
+      if(saved!==null){
+        const idx=parseInt(saved,10);
+        if(!isNaN(idx)&&idx>=0&&idx<TRACKS.length) return idx;
+      }
+    }catch(e){}
+    return 0;
+  })();
   go('s1','s2');
   const ready=Promise.race([
     swT(targetTrack),
@@ -4225,40 +4395,176 @@ function go9b(){
   setTimeout(startFig,900);
 }
 
-// FIGURE PARTICLE
+// FIGURE PARTICLE — hujan kelopak & cahaya keemasan turun perlahan, murni suasana (tanpa membentuk objek)
 let figC,figCtx2,figPts=[],figDone2=false;
-function genCoords(W,H){const cx=W/2,cy=H*.62,s=Math.min(W,H)/780,co=[];
-function ln(x1,y1,x2,y2,c){const d=Math.hypot(x2-x1,y2-y1),st=Math.max(2,Math.ceil(d/(3.5*s)));for(let t=0;t<=st;t++)for(let w=-1;w<=1;w++)co.push({x:x1+(x2-x1)*(t/st)+w*s*.8,y:y1+(y2-y1)*(t/st),c});}
-function ci(px,py,r,c,f){const st=f?.12:.18;for(let a=0;a<Math.PI*2;a+=st)for(let rr=f?0:r-4*s;rr<=r;rr+=3*s)co.push({x:px+Math.cos(a)*rr,y:py+Math.sin(a)*rr,c});}
-const hY=cy-210*s,hR=38*s;
-ci(cx,hY,hR,'#faf6f0',false);ci(cx-12*s,hY-6*s,4*s,'#faf6f0',true);ci(cx+12*s,hY-6*s,4*s,'#faf6f0',true);
-for(let a=.3;a<=Math.PI-.3;a+=.18){co.push({x:cx+Math.cos(a)*16*s,y:hY+10*s+Math.sin(a)*10*s,c:'#faf6f0'});co.push({x:cx+Math.cos(a)*14*s,y:hY+11*s+Math.sin(a)*9*s,c:'#faf6f0'});}
-for(let a=0;a<Math.PI*2;a+=.3)co.push({x:cx+Math.cos(a)*(hR+6*s),y:hY-hR+Math.sin(a)*8*s,c:a%.9<.45?'#c97b84':'#c9974a'});
-for(let a=0;a<Math.PI*2;a+=Math.PI/4){const fx=cx+Math.cos(a)*(hR+8*s),fy=hY-hR+Math.sin(a)*8*s;ci(fx,fy,4*s,'#7a9e7e',true);}
-const nY=hY+hR;ln(cx,nY,cx,cy+10*s,'#faf6f0');const shY=nY+20*s;
-ln(cx,shY,cx-55*s,shY+40*s,'#faf6f0');ln(cx-55*s,shY+40*s,cx-5*s,shY+40*s,'#faf6f0');ln(cx,shY,cx+55*s,shY-20*s,'#faf6f0');ln(cx+55*s,shY-20*s,cx+65*s,shY+10*s,'#faf6f0');
-ln(cx,cy+10*s,cx-30*s,cy+90*s,'#faf6f0');ln(cx,cy+10*s,cx+30*s,cy+90*s,'#faf6f0');ln(cx-30*s,cy+90*s,cx-50*s,cy+90*s,'#faf6f0');ln(cx+30*s,cy+90*s,cx+50*s,cy+90*s,'#faf6f0');
-const ckX=cx-30*s,ckBY=shY+40*s,ckW=60*s,ckH=45*s,ckL=ckX-ckW/2,ckT=ckBY-ckH;
-ln(ckL,ckBY,ckL+ckW,ckBY,'#c97b84');ln(ckL,ckT,ckL+ckW,ckT,'#c97b84');ln(ckL,ckT,ckL,ckBY,'#c97b84');ln(ckL+ckW,ckT,ckL+ckW,ckBY,'#c97b84');ln(ckL+5*s,ckT+ckH/2,ckL+ckW-5*s,ckT+ckH/2,'#e8a8b0');
-for(let xi=ckL+10*s;xi<=ckL+ckW-10*s;xi+=14*s){ci(xi,ckT+ckH*.25,3*s,'#faf6f0',true);ci(xi+7*s,ckT+ckH*.75,3*s,'#c9974a',true);}
-const cdX=ckX,cdT=ckT-18*s;ln(cdX,ckT,cdX,cdT,'#c9974a');for(let a=0;a<Math.PI*2;a+=.25)co.push({x:cdX+Math.cos(a)*5*s*.6,y:cdT-7*s+Math.sin(a)*7*s*.5,c:a<1?'#fff8e0':a<2.5?'#c9974a':'#7a9e7e'});
-return co;}
-
 function startFig(){figC=document.getElementById('figc');if(!figC)return;figC.width=window.innerWidth;figC.height=window.innerHeight;figCtx2=figC.getContext('2d');figPts=[];figDone2=false;
-const co=genCoords(figC.width,figC.height),tot=co.length;
-co.forEach(c=>{const e=Math.floor(Math.random()*4);let sx,sy;if(e===0){sx=Math.random()*figC.width;sy=-20;}else if(e===1){sx=figC.width+20;sy=Math.random()*figC.height;}else if(e===2){sx=Math.random()*figC.width;sy=figC.height+20;}else{sx=-20;sy=Math.random()*figC.height;}figPts.push({x:sx,y:sy,tx:c.x,ty:c.y,col:c.c,sz:1.8+Math.random()*1.3,sp:.04+Math.random()*.05,al:0,ph:Math.random()*Math.PI*2,done:false});});
+const W=figC.width,H=figC.height;
+// Latar awal senada tema (bukan hitam pekat) — jejak cahaya akan menumpuk lembut di atasnya
+figCtx2.fillStyle='#0f0c09';
+figCtx2.fillRect(0,0,W,H);
+
+// Jumlah partikel baru per frame, diskalakan ke ukuran layar & dibatasi supaya tetap ringan di HP
+// (pen aslinya spawn 30/frame yang berat; kita turunkan drastis tapi pertahankan durasi hidup
+// panjang supaya jejak pilinnya tetap terasa panjang & mengalir seperti sulur tumbuh)
+const spawnRate=Math.max(3,Math.min(7,Math.round((W*H)/180000)));
+let particles={},particleIndex=0;
+const hueGold=()=>36+Math.random()*12, hueRose=()=>346+Math.random()*16, hueSage=()=>108+Math.random()*24;
+
+function spawnParticle(){
+  let rad=Math.round(Math.random()*20-10); if(rad===0)rad=1; // jaga-jaga hindari bagi nol dari kode asli
+  const light=Math.floor(Math.random()*40+16);
+  let color;
+  if(rad<-8){
+    color=Math.random()<.5?`hsla(${hueGold()},70%,${light}%,1)`:`hsla(${hueRose()},55%,${light}%,1)`;
+  }else{
+    const r=Math.random();
+    const hue=r<.4?hueGold():(r<.72?hueRose():hueSage());
+    const sat=r>=.72?32:58;
+    color=`hsla(${hue},${sat}%,${light}%,${(Math.random()*.7+.3).toFixed(2)})`;
+  }
+  particleIndex++;
+  const p={x:Math.random()*W,y:Math.random()*H,vx:1,vy:1,rad,life:0,maxLife:Math.random()*200,color,id:particleIndex};
+  particles[particleIndex]=p;
+  return p;
+}
+function stepParticle(p){
+  p.x+=(p.vx/p.rad)*Math.sin(p.vx);
+  p.y+=(p.vy/p.rad)*Math.cos(p.vy);
+  p.vx+=p.rad/10; p.vy+=p.rad/10;
+  p.life++;
+  if(p.life>=p.maxLife){delete particles[p.id];return;}
+  figCtx2.beginPath();
+  figCtx2.moveTo(p.x,p.y);
+  figCtx2.lineTo(p.x-(p.vx/p.rad)*Math.sin(p.vx),p.y-(p.vy/p.rad)*Math.cos(p.vy));
+  figCtx2.strokeStyle=p.color;
+  figCtx2.lineWidth=1;
+  figCtx2.stroke();
+}
+
+// ===== Wajah tersenyum sebagai penutup — digambar pakai path/shape canvas sendiri (vector asli),
+// BUKAN karakter emoji unicode (renderingnya beda-beda tiap device/OS). Bunga jadi aksen
+// dekoratif melingkar di sekitarnya. =====
+const faceR=Math.min(W*0.14,64);
+const faceX=W/2, faceY=H*0.47;
+
+// Aksen bunga kecil tersebar lembut di sekitar wajah (dekorasi)
+const accentPairs=[['#e8c87a','#c9974a'],['#e8a8b0','#c97b84'],['#b8d4bb','#7a9e7e']];
+let flowerPts=[];
+const ACCENT_N=13;
+for(let i=0;i<ACCENT_N;i++){
+  const ang=(Math.PI*2/ACCENT_N)*i+Math.random()*0.4;
+  const rr=faceR*2.1+Math.random()*faceR*0.6;
+  const pair=accentPairs[i%3];
+  flowerPts.push({
+    x:faceX+Math.cos(ang)*rr, y:faceY+Math.sin(ang)*rr*0.85,
+    colA:pair[0], colB:pair[1], sz:faceR*(0.19+Math.random()*0.1),
+    delay:(i/ACCENT_N)*750,
+  });
+}
+function drawFlowerDot(x,y,size,colA,colB,scale){
+  if(scale<=0.02)return;
+  const s=size*scale;
+  figCtx2.save();
+  figCtx2.translate(x,y);
+  for(let i=0;i<5;i++){
+    const ang=(Math.PI*2/5)*i-Math.PI/2;
+    figCtx2.beginPath();
+    figCtx2.ellipse(Math.cos(ang)*s*0.55,Math.sin(ang)*s*0.55,s*0.5,s*0.32,ang,0,Math.PI*2);
+    figCtx2.fillStyle=colA;
+    figCtx2.fill();
+  }
+  figCtx2.beginPath();
+  figCtx2.arc(0,0,s*0.3,0,Math.PI*2);
+  figCtx2.fillStyle=colB;
+  figCtx2.fill();
+  figCtx2.restore();
+}
+function easeOutBack(x){const c1=1.2,c3=c1+1;return 1+c3*Math.pow(x-1,3)+c1*Math.pow(x-1,2);}
+function easeOutCubic(x){return 1-Math.pow(1-x,3);}
+function drawSmileFace(cx,cy,r,scale){
+  if(scale<=0.02)return;
+  figCtx2.save();
+  figCtx2.translate(cx,cy);
+  figCtx2.scale(scale,scale);
+  // wajah — lingkaran krem lembut dengan garis tepi emas tipis
+  figCtx2.beginPath();
+  figCtx2.arc(0,0,r,0,Math.PI*2);
+  const faceGrad=figCtx2.createRadialGradient(-r*0.25,-r*0.3,r*0.1,0,0,r*1.05);
+  faceGrad.addColorStop(0,'#fdf3d8');
+  faceGrad.addColorStop(1,'#f0d9a0');
+  figCtx2.fillStyle=faceGrad;
+  figCtx2.fill();
+  figCtx2.lineWidth=r*0.045;
+  figCtx2.strokeStyle='#c9974a';
+  figCtx2.stroke();
+  // semburat pipi
+  figCtx2.beginPath();figCtx2.ellipse(-r*0.52,r*0.12,r*0.16,r*0.1,0,0,Math.PI*2);figCtx2.fillStyle='rgba(232,168,176,.55)';figCtx2.fill();
+  figCtx2.beginPath();figCtx2.ellipse(r*0.52,r*0.12,r*0.16,r*0.1,0,0,Math.PI*2);figCtx2.fillStyle='rgba(232,168,176,.55)';figCtx2.fill();
+  // mata — lengkung tersenyum (bukan bulat), khas ekspresi hangat
+  figCtx2.lineWidth=r*0.09;
+  figCtx2.lineCap='round';
+  figCtx2.strokeStyle='#6b4a2a';
+  figCtx2.beginPath();figCtx2.arc(-r*0.32,-r*0.08,r*0.16,Math.PI*1.1,Math.PI*1.9);figCtx2.stroke();
+  figCtx2.beginPath();figCtx2.arc(r*0.32,-r*0.08,r*0.16,Math.PI*1.1,Math.PI*1.9);figCtx2.stroke();
+  // senyum
+  figCtx2.beginPath();
+  figCtx2.arc(0,r*0.05,r*0.42,Math.PI*0.12,Math.PI*0.88);
+  figCtx2.strokeStyle='#a8663c';
+  figCtx2.lineWidth=r*0.075;
+  figCtx2.stroke();
+  figCtx2.restore();
+}
+
+// ===== JADWAL: sulur tumbuh dulu, lalu wajah senyum muncul sebagai penutup yang tetap ada =====
+const SWIRL_SPAWN_DUR=5200;   // partikel sulur berhenti muncul baru setelah ini (yang ada tetap jalan sampai mati)
+const FLOWER_START=5200, FLOWER_GROW=800, FLOWER_TOTAL_DUR=1700;
+const DUR=FLOWER_START+FLOWER_TOTAL_DUR;
+
 const bar=document.getElementById('asmbar'),lbl=document.getElementById('asmpct');
 if(figAnim)cancelAnimationFrame(figAnim);
+const t0=performance.now();
 function lp(){
-  // Clear canvas sepenuhnya lalu gambar ulang — menghilangkan bercak hitam di pinggiran
-  figCtx2.clearRect(0,0,figC.width,figC.height);let asm=0;const now=Date.now();
-figPts.forEach(p=>{const dx=p.tx-p.x,dy=p.ty-p.y;p.x+=dx*p.sp;p.y+=dy*p.sp;p.al=Math.min(1,p.al+.025);if(Math.hypot(dx,dy)<2.5)p.done=true;if(p.done)asm++;let dX=p.x,dY=p.y;if(p.done){const br=Math.sin(now*.0018+p.ph)*1;dX=p.tx+br*.5;dY=p.ty+br;}figCtx2.save();figCtx2.globalAlpha=p.al*.25;figCtx2.fillStyle=p.col;figCtx2.beginPath();figCtx2.arc(dX,dY,p.sz*2.5,0,Math.PI*2);figCtx2.fill();figCtx2.globalAlpha=p.al;figCtx2.fillStyle=p.done?'#faf6f0':p.col;figCtx2.beginPath();figCtx2.arc(dX,dY,p.done?p.sz*.8:p.sz,0,Math.PI*2);figCtx2.fill();figCtx2.restore();});
-const pct=Math.round((asm/tot)*100);if(bar)bar.style.width=pct+'%';if(lbl)lbl.textContent='ASSEMBLING '+pct+'%';
-if(!figDone2&&asm>=tot*.88){figDone2=true;const ft=document.getElementById('figtitle'),fs=document.getElementById('figsub'),aw=document.getElementById('asmwrap'),hd=document.getElementById('hud9b');if(ft)ft.textContent='Siluetmu Terbentuk 🌸';if(fs)fs.textContent='Bersiaplah untuk momen berikutnya...';if(aw)aw.style.display='none';
-setTimeout(()=>{if(figC){figC.style.transition='opacity .8s ease';figC.style.opacity='0';}if(hd){hd.style.transition='opacity .6s';hd.style.opacity='0';}setTimeout(()=>{if(figAnim){cancelAnimationFrame(figAnim);figAnim=null;}const nb=document.getElementById('n9b');if(nb)nb.style.display='inline-flex';},850);},1600);}
-if(!figDone2)figAnim=requestAnimationFrame(lp);}lp();}
+  const elapsed=performance.now()-t0;
+  // Overlay blend translucent — jejak cahaya lama memudar perlahan, bukan langsung bersih (clearRect)
+  figCtx2.globalCompositeOperation='overlay';
+  figCtx2.fillStyle='rgba(0,0,0,0.007)';
+  figCtx2.fillRect(0,0,W,H);
+  figCtx2.globalCompositeOperation='source-over';
+  if(elapsed<SWIRL_SPAWN_DUR)for(let i=0;i<spawnRate;i++)spawnParticle();
+  for(const k in particles)stepParticle(particles[k]);
 
-function cleanFig(){if(figAnim){cancelAnimationFrame(figAnim);figAnim=null;}if(figCtx2&&figC)figCtx2.clearRect(0,0,figC.width,figC.height);figPts=[];if(figC){figC.style.opacity='1';figC.style.transition='';}const hd=document.getElementById('hud9b');if(hd){hd.style.opacity='1';hd.style.transition='';}}
+  // Wajah senyum — vignette lembut dulu biar kontras dari kerumunan sulur, lalu aksen bunga
+  // melingkar, lalu wajahnya sendiri (digambar pakai path, pop-in dengan sedikit mantul).
+  // Semua digambar ulang tiap frame DI ATAS jejak sulur, jadi tidak ikut memudar.
+  if(elapsed>=FLOWER_START){
+    const revealT=elapsed-FLOWER_START;
+    const vg=figCtx2.createRadialGradient(faceX,faceY,10,faceX,faceY,faceR*2.6);
+    vg.addColorStop(0,'rgba(10,8,6,0.6)');
+    vg.addColorStop(1,'rgba(10,8,6,0)');
+    figCtx2.fillStyle=vg;
+    figCtx2.fillRect(0,0,W,H);
+
+    flowerPts.forEach(f=>{
+      const local=Math.max(0,Math.min(1,(revealT-f.delay)/700));
+      drawFlowerDot(f.x,f.y,f.sz,f.colA,f.colB,easeOutBack(local));
+    });
+
+    const faceLocal=Math.max(0,Math.min(1,(revealT-300)/700));
+    drawSmileFace(faceX,faceY,faceR,easeOutBack(faceLocal));
+  }
+
+  const pct=Math.min(100,Math.round((elapsed/DUR)*100));
+  if(bar)bar.style.width=pct+'%';if(lbl)lbl.textContent='TUMBUH '+pct+'%';
+  if(!figDone2&&elapsed>=DUR){figDone2=true;const aw=document.getElementById('asmwrap');if(aw)aw.style.display='none';
+setTimeout(()=>{const nb=document.getElementById('n9c');if(nb)nb.style.display='inline-flex';},700);}
+  // Animasi tetap berjalan sampai sulur benar-benar habis & nama selesai muncul — baru berhenti
+  // (hemat baterai), TIDAK di-fade ke kosong. Frame terakhir tetap menampilkan nama penuh.
+  const settled=elapsed>(FLOWER_START+FLOWER_GROW+1000)&&Object.keys(particles).length===0;
+  if(!settled)figAnim=requestAnimationFrame(lp);
+}
+lp();}
+
+function cleanFig(){if(figAnim){cancelAnimationFrame(figAnim);figAnim=null;}if(figCtx2&&figC)figCtx2.clearRect(0,0,figC.width,figC.height);figPts=[];if(figC){figC.style.opacity='1';figC.style.transition='';}}
 
 // UNIVERSE STARS
 function initUStar(){const uc=document.getElementById('usc');if(!uc)return;uc.width=window.innerWidth;uc.height=window.innerHeight;const ctx=uc.getContext('2d'),stars=[];for(let i=0;i<150;i++)stars.push({x:Math.random()*uc.width,y:Math.random()*uc.height,r:Math.random()*1.2+.3,sp:Math.random()*.003+.001,ph:Math.random()*Math.PI*2});function ul(){ctx.clearRect(0,0,uc.width,uc.height);const now=Date.now()*.001;stars.forEach(s=>{const a=.3+Math.sin(now*s.sp*10+s.ph)*.25;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(250,240,220,${Math.max(0,a)})`;ctx.fill();s.y-=s.sp*.5;if(s.y<0)s.y=uc.height;});uAnim=requestAnimationFrame(ul);}ul();}
@@ -4648,7 +4954,7 @@ function resetAll(){
   try{document.getElementById('lsig').style.opacity='0';}catch(e){}
   try{document.getElementById('nfl').style.display='none';}catch(e){}
   try{const shReset=document.getElementById('scroll-hint');if(shReset)shReset.style.opacity='1';}catch(e){}
-  ['n9b','ntarot','nphilo','npath'].forEach(id=>{try{const el=document.getElementById(id);if(el)el.style.display='none';}catch(e){}});
+  ['n9b','n9c','ntarot','nphilo','npath'].forEach(id=>{try{const el=document.getElementById(id);if(el)el.style.display='none';}catch(e){}});
   ['a1','a2','a3'].forEach(id=>{try{const e=document.getElementById(id);if(e)e.value='';}catch(e){}});
   [{id:'gr',svg:`<svg viewBox="0 0 32 32" width="30" height="30" fill="none"><path d="M16 4 L28 8 L28 18 C28 24 22 28 16 30 C10 28 4 24 4 18 L4 8 Z" fill="#7a9e7e" opacity=".7" stroke="#b8d4bb" stroke-width="1"/><path d="M11 16 L15 20 L21 12" stroke="#faf6f0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,lbl:'Raga'},{id:'gj',svg:`<svg viewBox="0 0 32 32" width="28" height="28" fill="none"><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(60 16 16)"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(120 16 16)"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(180 16 16)"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(240 16 16)"/><ellipse cx="16" cy="8" rx="4" ry="7" fill="#e8a8b0" opacity=".8" transform="rotate(300 16 16)"/><circle cx="16" cy="16" r="5" fill="#faf6f0"/></svg>`,lbl:'Jiwa'},{id:'gb2',svg:`<svg viewBox="0 0 32 32" width="28" height="28" fill="none"><path d="M16 28 C16 28 6 22 6 14 C6 9 11 5 16 8 C21 5 26 9 26 14 C26 22 16 28 16 28Z" fill="#7a9e7e" opacity=".8"/><line x1="16" y1="28" x2="16" y2="12" stroke="#b8d4bb" stroke-width="1.5" stroke-linecap="round"/></svg>`,lbl:'Batin'}].forEach(g=>{try{const e=document.getElementById(g.id);if(e){e.classList.remove('opened');e.innerHTML=`<div class="gico">${g.svg}</div><div class="glbl">${g.lbl}</div>`;}}catch(e){}});
   try{const ff=document.getElementById('flform'),fs=document.getElementById('flsuc');if(ff){ff.style.display='block';ff.style.opacity='1';ff.style.transform='';const b=ff.querySelector('button');if(b){b.disabled=false;b.textContent='Segel & Kirim ke Masa Depan 🌙';}}if(fs)fs.style.display='none';}catch(e){}
@@ -4660,12 +4966,9 @@ function resetAll(){
   figDone2=false;
   try{const cwrap=document.getElementById('cake-wrap');if(cwrap){cwrap.style.opacity='0';cwrap.style.transform='translateY(40px) scale(.95)';}}catch(e){}
   try{if(cakeAnimId){cancelAnimationFrame(cakeAnimId);cakeAnimId=null;}}catch(e){}
-  try{const hd=document.getElementById('hud9b');if(hd)hd.style.opacity='1';}catch(e){}
-  try{const ft=document.getElementById('figtitle');if(ft)ft.textContent='Semesta sedang membentuk siluetmu...';}catch(e){}
-  try{const fsb=document.getElementById('figsub');if(fsb)fsb.textContent='Partikel botanikal sedang berkumpul';}catch(e){}
   try{const aw=document.getElementById('asmwrap');if(aw)aw.style.display='';}catch(e){}
   try{const ab=document.getElementById('asmbar');if(ab)ab.style.width='0%';}catch(e){}
-  try{const ap=document.getElementById('asmpct');if(ap)ap.textContent='ASSEMBLING 0%';}catch(e){}
+  try{const ap=document.getElementById('asmpct');if(ap)ap.textContent='TUMBUH 0%';}catch(e){}
   try{if(figC){figC.style.opacity='1';figC.style.transition='';}}catch(e){}
   try{document.querySelectorAll('.tcard').forEach(c=>{c.classList.remove('flipped');c.style.opacity='';c.style.filter='';c.style.pointerEvents='';});}catch(e){}
   try{document.querySelectorAll('.phopt').forEach(c=>c.classList.remove('selected'));}catch(e){}
@@ -4807,7 +5110,7 @@ function initCakeCanvas() {
   // Use parent width or fallback — force layout calc
   const parent = canvas.parentElement;
   const W = (parent && parent.offsetWidth > 0) ? parent.offsetWidth : Math.min(320, window.innerWidth * 0.85);
-  const H = Math.round(W * 0.85);
+  const H = Math.round(W * (180 / 200)); // samakan rasio dengan crop viewBox SVG (0 330 200 180)
   canvas.style.height = H + 'px';
   canvas.width = Math.round(W * dpr);
   canvas.height = Math.round(H * dpr);
@@ -4815,11 +5118,21 @@ function initCakeCanvas() {
   ctx.scale(dpr, dpr);
   candlesBlown = false;
 
-  // Flame particles per candle
+  // Ulangi animasi SMIL SVG dari awal setiap kali stage ini dibuka
+  const svgEl = document.getElementById('cake-svg');
+  if (svgEl && typeof svgEl.setCurrentTime === 'function') {
+    try { svgEl.setCurrentTime(0); } catch (e) {}
+  }
+
+  // Posisi lilin dihitung dari bounding box asli path "crema" (swirl frosting) pada SVG
+  // referensi, dikonversi ke koordinat viewBox hasil crop (0 330 200 180), lalu ke fraksi W/H.
+  // Disesuaikan berdasarkan hasil render nyata: bentuk drip frosting di tengah ternyata
+  // adalah LEMBAH (celah antar tetesan), bukan puncak — jadi lilin tengah perlu turun
+  // lebih jauh, bukan lebih pendek, supaya dasarnya ikut tertanam di frosting.
   const CANDLES = [
-    { x: W * 0.28, baseY: H * 0.28 },
-    { x: W * 0.50, baseY: H * 0.22 },
-    { x: W * 0.72, baseY: H * 0.28 },
+    { x: W * 0.325, baseY: H * 0.33 },
+    { x: W * 0.50,  baseY: H * 0.315 },
+    { x: W * 0.675, baseY: H * 0.33 },
   ];
   const flames = CANDLES.map(c => ({
     ...c,
@@ -4831,111 +5144,64 @@ function initCakeCanvas() {
   window._cakeFlames = flames;
   let frame = 0;
 
-  function drawCake(ctx, W, H) {
-    // --- PLATE ---
-    const px = W * 0.1, py = H * 0.82, pw = W * 0.8, ph = H * 0.055;
-    const platGrad = ctx.createLinearGradient(px, py, px, py + ph);
-    platGrad.addColorStop(0, '#f2ead8');
-    platGrad.addColorStop(1, '#d4c9b0');
-    ctx.save();
-    ctx.beginPath();
-    ctx.ellipse(px + pw / 2, py + ph / 2, pw / 2, ph / 2, 0, 0, Math.PI * 2);
-    ctx.fillStyle = platGrad;
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(180,160,120,.5)';
-    ctx.lineWidth = 1;
-    ctx.stroke();
-    ctx.restore();
+  // --- JADWAL LILIN & API — disamakan PERSIS dengan waktu animasi SMIL pada SVG:
+  // crema (frosting) selesai tumbuh di bizcocho_3.end + 2s ≈ 6.6s, lilin "in" pada referensi
+  // asli mulai 6s selama 500ms, api mulai menyala di 6.5s. Kita pakai jadwal yang sama persis.
+  const buildT0 = performance.now();
+  const BUILD = {
+    candle: [6000, 6500],   // lilin turun dari atas, tepat setelah swirl frosting selesai tumbuh
+    ignite: [6500, 7100],   // api menyala
+  };
+  function bp2(key, elapsed) {
+    const r = BUILD[key];
+    if (elapsed <= r[0]) return 0;
+    if (elapsed >= r[1]) return 1;
+    return (elapsed - r[0]) / (r[1] - r[0]);
+  }
+  function easeSoft(x) { x = Math.max(0, Math.min(1, x)); return 1 - Math.pow(1 - x, 3); }
+  // Sinyal pantulan yang cepat meredam — HANYA aktif dekat momen "mendarat", bukan sepanjang
+  // gerak jatuh. Posisi turun halus (easeSoft), kesan "kenyal"-nya datang dari squash-stretch
+  // singkat di titik pendaratan saja.
+  function impactWobble(prog, startAt) {
+    if (prog <= startAt) return 0;
+    const t = (prog - startAt) / (1 - startAt);
+    return Math.exp(-5.5 * t) * Math.cos(t * Math.PI * 2.4);
+  }
 
-    // --- CAKE LAYERS (3 tiers) ---
-    const layers = [
-      { x: W*0.12, y: H*0.60, w: W*0.76, h: H*0.22, color1:'#c97b84', color2:'#a85060', frosting:'#f5c2c8', deco:'#e8a8b0' },
-      { x: W*0.18, y: H*0.42, w: W*0.64, h: H*0.20, color1:'#c9974a', color2:'#a07030', frosting:'#f5dfa0', deco:'#e8c87a' },
-      { x: W*0.26, y: H*0.27, w: W*0.48, h: H*0.17, color1:'#7a9e7e', color2:'#507050', frosting:'#c0dfc0', deco:'#b8d4bb' },
-    ];
-
-    layers.forEach((l, li) => {
-      ctx.save();
-      // Body
-      const bg = ctx.createLinearGradient(l.x, l.y, l.x + l.w, l.y + l.h);
-      bg.addColorStop(0, l.color1);
-      bg.addColorStop(1, l.color2);
-      ctx.beginPath();
-      ctx.roundRect(l.x, l.y, l.w, l.h, [0, 0, 8, 8]);
-      ctx.fillStyle = bg;
-      ctx.fill();
-
-      // Side shadow
-      const shadow = ctx.createLinearGradient(l.x, l.y, l.x + 20, l.y);
-      shadow.addColorStop(0, 'rgba(0,0,0,.18)');
-      shadow.addColorStop(1, 'transparent');
-      ctx.beginPath();
-      ctx.roundRect(l.x, l.y, l.w, l.h, [0, 0, 8, 8]);
-      ctx.fillStyle = shadow;
-      ctx.fill();
-
-      // Frosting drips
-      ctx.fillStyle = l.frosting;
-      ctx.beginPath();
-      ctx.rect(l.x, l.y, l.w, 7);
-      ctx.fill();
-      // Drip drops
-      const dripCount = Math.floor(l.w / 22);
-      for (let i = 0; i <= dripCount; i++) {
-        const dx = l.x + (i / dripCount) * l.w;
-        const dy = l.y + 7;
-        const dh = (Math.sin(i * 2.3 + li) * 0.5 + 0.5) * 14 + 6;
-        ctx.beginPath();
-        ctx.ellipse(dx, dy + dh / 2, 5, dh / 2, 0, 0, Math.PI * 2);
-        ctx.fillStyle = l.frosting;
-        ctx.fill();
-      }
-
-      // Decorative dots on cake body
-      for (let i = 0; i < 5; i++) {
-        const dx = l.x + l.w * (0.15 + i * 0.17);
-        const dy = l.y + l.h * 0.55;
-        ctx.beginPath();
-        ctx.arc(dx, dy, 3.5, 0, Math.PI * 2);
-        ctx.fillStyle = l.deco;
-        ctx.globalAlpha = 0.7;
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      }
-
-      // Horizontal stripe
-      ctx.beginPath();
-      ctx.moveTo(l.x + 10, l.y + l.h * 0.38);
-      ctx.lineTo(l.x + l.w - 10, l.y + l.h * 0.38);
-      ctx.strokeStyle = l.deco + 'aa';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([4, 6]);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.restore();
-    });
-
-    // --- CANDLE STICKS ---
+  function drawCandles(ctx, W, H) {
+    const candleLProg = bp2('candle', performance.now() - buildT0);
+    const candleProg = easeSoft(candleLProg);
+    const candleDrop = (1 - candleProg) * -H * 0.32;
+    const candleWobble = impactWobble(candleLProg, 0.68) * 0.8;
+    const candleSqY = 1 - candleWobble * 0.45;
+    const candleSqX = 1 + candleWobble * 0.3;
+    const candleColors = ['#e8a8b0', '#e8c87a', '#b8d4bb'];
     CANDLES.forEach((cd, i) => {
-      const cw = W * 0.04, ch = H * 0.10;
+      if (candleProg <= 0.01) return;
+      const cw = W * 0.026, ch = H * 0.11;
       const cx = cd.x - cw / 2, cy = cd.baseY;
-      const candleColors = ['#e8a8b0','#e8c87a','#b8d4bb'];
       const cg = ctx.createLinearGradient(cx, cy, cx + cw, cy + ch);
       cg.addColorStop(0, candleColors[i]);
       cg.addColorStop(1, 'rgba(200,180,180,.6)');
       ctx.save();
+      ctx.globalAlpha = candleProg;
+      ctx.translate(0, candleDrop);
+      const cPivotX = cd.x, cPivotY = cy + ch; // dasar lilin (tertanam di swirl) jadi jangkar
+      ctx.translate(cPivotX, cPivotY);
+      ctx.scale(candleSqX, candleSqY);
+      ctx.translate(-cPivotX, -cPivotY);
       ctx.beginPath();
-      ctx.roundRect(cx, cy, cw, ch, 3);
+      ctx.roundRect(cx, cy, cw, ch, 2);
       ctx.fillStyle = cg;
       ctx.fill();
       // Stripe
       ctx.beginPath();
-      ctx.moveTo(cx + 2, cy + ch * 0.4);
-      ctx.lineTo(cx + cw - 2, cy + ch * 0.4);
+      ctx.moveTo(cx + 1, cy + ch * 0.4);
+      ctx.lineTo(cx + cw - 1, cy + ch * 0.4);
       ctx.strokeStyle = 'rgba(255,255,255,.4)';
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 1;
       ctx.stroke();
-      // Wick
+      // Sumbu
       ctx.beginPath();
       ctx.moveTo(cd.x, cy);
       ctx.lineTo(cd.x, cy - H * 0.03);
@@ -4947,17 +5213,21 @@ function initCakeCanvas() {
   }
 
   function drawFlames(ctx, flames, frame) {
+    const igniteElapsed = performance.now() - buildT0;
+    const igniteProg = easeSoft(bp2('ignite', igniteElapsed));
     flames.forEach((fl, fi) => {
       if (fl.blown && fl.blowProg >= 1) return;
+      if (!fl.blown && igniteProg <= 0.01) return; // belum waktunya menyala
 
       // Progres padam lebih lambat agar dramatis, mengecil dan meliuk dulu
       if (fl.blown) fl.blowProg = Math.min(1, fl.blowProg + 0.022);
 
       const bp = fl.blown ? fl.blowProg : 0;
-      // Alpha: mulai fade di 40% progres agar ada waktu untuk efek mengecil
-      const alpha = fl.blown ? Math.max(0, 1 - Math.max(0, bp - 0.4) * 2.5) : 1;
-      // Scale mengecil seiring padam (dari 1 ke 0)
-      const dyingScale = fl.blown ? Math.max(0, 1 - bp * 1.1) : 1;
+      const ignite = fl.blown ? 1 : igniteProg;
+      // Alpha: mulai fade di 40% progres agar ada waktu untuk efek mengecil, tumbuh saat menyala
+      const alpha = (fl.blown ? Math.max(0, 1 - Math.max(0, bp - 0.4) * 2.5) : 1) * ignite;
+      // Scale mengecil seiring padam (dari 1 ke 0), membesar seiring menyala
+      const dyingScale = (fl.blown ? Math.max(0, 1 - bp * 1.1) : 1) * ignite;
       // Meliuk ke samping saat padam (tiupan dari sisi)
       const dyingLean = fl.blown ? bp * 18 : 0;
 
@@ -5114,23 +5384,9 @@ function initCakeCanvas() {
 
   function loop() {
     frame++;
-    ctx.clearRect(0, 0, W, H);
+    ctx.clearRect(0, 0, W, H); // transparan — SVG kue di lapisan bawah tetap terlihat
 
-    // Dark background gradient
-    const bg = ctx.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0, '#0f0c09');
-    bg.addColorStop(1, '#1a1410');
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
-
-    // Ambient glow behind cake
-    const ambGlow = ctx.createRadialGradient(W/2, H*0.55, 0, W/2, H*0.55, W*0.55);
-    ambGlow.addColorStop(0, 'rgba(201,151,74,.06)');
-    ambGlow.addColorStop(1, 'transparent');
-    ctx.fillStyle = ambGlow;
-    ctx.fillRect(0, 0, W, H);
-
-    drawCake(ctx, W, H);
+    drawCandles(ctx, W, H);
     drawSmoke(ctx, flames, frame);
     drawFlames(ctx, flames, frame);
 
@@ -5675,6 +5931,16 @@ document.addEventListener('DOMContentLoaded', function() {
     muts.forEach(function(m) {
       if (m.target.id === 's13' && m.target.classList.contains('active')) {
         setTimeout(startNextBdayCountdown, 800);
+        // Buka otomatis panel pilihan lagu, supaya bisa dipilih sebagai lagu pembuka favorit
+        setTimeout(function(){
+          const wrap=document.getElementById('playlist-menu');
+          const btn=document.getElementById('playlist-btn');
+          if(wrap && !wrap.classList.contains('show')){
+            renderPlaylistMenu();
+            wrap.classList.add('show');
+            if(btn) btn.classList.add('active');
+          }
+        }, 1200);
       }
       if (m.target.id === 's13' && !m.target.classList.contains('active')) {
         if (nbInt) { clearInterval(nbInt); nbInt = null; }
