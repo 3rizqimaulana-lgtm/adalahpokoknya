@@ -4594,7 +4594,7 @@ async function sealFL(){
   const data={syukur:s,tujuan:t,pesan:p,recipient:'Naffa Febry Cornelia',writtenAt:new Date().toISOString(),openAt:'2030-01-01'};
   localStorage.setItem('nfl',JSON.stringify(data));
   try{if(window._db)await window._db.collection('future_letters').add({...data,device:navigator.userAgent.substring(0,80)});}catch(e){}
-  if(typeof pbNotify==='function') pbNotify('Naffa menyegel Surat ke 2030 ✦');
+  if(typeof pbNotify==='function') pbNotify('Naffa menyegel Surat ke 2030 ✦', '', false);
   // Isi lengkap (syukur/tujuan/pesan) SENGAJA tidak lagi diteruskan ke
   // Telegram — baca isinya lewat tab "Surat ke 2030" di chat.html.
   const frm=document.getElementById('flform');frm.style.transition='opacity .5s,transform .5s';frm.style.opacity='0';frm.style.transform='scale(.95)';
@@ -4877,7 +4877,7 @@ function goS13(){
     localStorage.setItem('nbu','1');
     if(firstTime){
       localStorage.setItem('nfirstcert', new Date().toISOString());
-      if(typeof pbNotify==='function') pbNotify('Naffa menyelesaikan seluruh perjalanan! 🎉');
+      if(typeof pbNotify==='function') pbNotify('Naffa menyelesaikan seluruh perjalanan! 🎉', '', false);
     }
     // Snapshot pilihan-pilihan sepanjang perjalanan — dipakai buku kenangan &
     // ditampilkan lagi kalau pengunjung balik lagi di lain waktu.
@@ -5784,7 +5784,7 @@ function startRain() {
       }).catch(()=>{});
     }
   }catch(e){}
-  if(typeof pbNotify==='function') pbNotify('Naffa menulis di Ruang Hujan ✦');
+  if(typeof pbNotify==='function') pbNotify('Naffa menulis di Ruang Hujan ✦', '', false);
   // Isi lengkap SENGAJA tidak lagi diteruskan ke Telegram — baca isinya
   // lewat tab "Ruang Hujan" di chat.html.
 
@@ -6040,7 +6040,11 @@ function sendTelegram(text){
   }catch(e){}
 }
 
-function pbNotify(event, detail){
+// toTelegram=false untuk event yang tetap dicatat di Firestore (bisa dicek lewat
+// chat.html kapan saja) tapi TIDAK lagi push instan ke Telegram — supaya notifnya
+// tidak kebanyakan. Yang tetap push: buka taman (pertama kali & kunjungan ulang)
+// dan buka Chat Diam-diam.
+function pbNotify(event, detail, toTelegram){
   try{
     if(window._db){
       window._db.collection('silent_notify').add({
@@ -6049,6 +6053,7 @@ function pbNotify(event, detail){
       }).catch(function(){});
     }
   }catch(e){}
+  if(toTelegram===false) return;
   const msg='Taman Bulan — '+event+(detail?(' · '+detail):'');
   if(NOTIFY_WEBHOOK){
     try{ fetch(NOTIFY_WEBHOOK,{method:'POST',body:msg}).catch(function(){}); }catch(e){}
