@@ -4396,7 +4396,29 @@ function bloom(x,y,col){for(let i=0;i<14;i++){const d=document.createElement('di
 
 // PROGRESS
 function initProg(){const d=document.getElementById('pdots');d.innerHTML='';STAGES.forEach((_,i)=>{const p=document.createElement('div');p.className='pdot'+(i===0?' active':'');p.id='pd'+i;d.appendChild(p);});updProg(0);document.getElementById('phud').style.opacity='1';if(window._nmIsRevisit){initWelcomeBack();}else{runTerm();}}
-function updProg(i){STAGES.forEach((_,j)=>{const p=document.getElementById('pd'+j);if(!p)return;p.className='pdot'+(j<i?' done':j===i?' active':'');});document.getElementById('plbl').textContent=(i+1)+'/'+STAGES.length;}
+function updProg(i){STAGES.forEach((_,j)=>{const p=document.getElementById('pd'+j);if(!p)return;p.className='pdot'+(j<i?' done':j===i?' active':'');});document.getElementById('plbl').textContent=(i+1)+'/'+STAGES.length;sendPresence(STAGES[i],i);}
+
+// ===== LIVE PRESENCE — dipakai tab "Live" di chat.html untuk lihat posisi stage Naffa =====
+// (bukan isi tulisan/pilihan privat — cuma stage mana yang sedang dibuka & kapan terakhir aktif)
+let _curStageId=null,_curStageIdx=0;
+function sendPresence(stageId,idx){
+  _curStageId=stageId;_curStageIdx=idx;
+  if(!window._db)return;
+  try{
+    window._db.collection('live_presence').doc('naffa').set({
+      stageId:stageId,stageIdx:idx,total:STAGES.length,ts:new Date().toISOString()
+    },{merge:true}).catch(function(){});
+  }catch(e){}
+}
+setInterval(function(){if(_curStageId)sendPresence(_curStageId,_curStageIdx);},5000);
+
+// Kalau halaman ini dibuka di dalam iframe tab "Live" chat.html, terima perintah untuk
+// ikut lompat ke stage yang sama (murni tampilan, tidak baca/kirim isi tulisan apapun).
+window.addEventListener('message',function(e){
+  if(e && e.data && e.data.type==='nm_live_goto' && typeof devSkip==='function'){
+    try{devSkip(e.data.stageId);}catch(err){}
+  }
+});
 
 // PARALLAX
 let mx=0,my=0,tx=0,ty=0;
@@ -5661,7 +5683,7 @@ function devSkip(id){
   if(am&&am.paused){am.volume=1;am.play().then(()=>{initViz();document.getElementById('ahud').style.opacity='1';}).catch(()=>{});}
   if(id==='sci'){startCin();return;}
   if(id==='s8')trigLetter();
-  if(id==='s9b')setTimeout(startFig,900);
+  if(id==='s9b')setTimeout(initWebGLFlowers,900);
   if(id==='s13')setTimeout(confetti,700);
   if(id==='scd')startCD();
   if(id==='s10'){setTimeout(function(){initCakeCanvas();var gate=document.getElementById('mic-gate');if(gate)gate.style.display='flex';},900);}
