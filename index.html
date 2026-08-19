@@ -4412,14 +4412,6 @@ function sendPresence(stageId,idx){
 }
 setInterval(function(){if(_curStageId)sendPresence(_curStageId,_curStageIdx);},5000);
 
-// Kalau halaman ini dibuka di dalam iframe tab "Live" chat.html, terima perintah untuk
-// ikut lompat ke stage yang sama (murni tampilan, tidak baca/kirim isi tulisan apapun).
-window.addEventListener('message',function(e){
-  if(e && e.data && e.data.type==='nm_live_goto' && typeof devSkip==='function'){
-    try{devSkip(e.data.stageId);}catch(err){}
-  }
-});
-
 // PARALLAX
 let mx=0,my=0,tx=0,ty=0;
 const trkM=e=>{const cx=e.clientX||(e.touches&&e.touches[0].clientX)||0,cy=e.clientY||(e.touches&&e.touches[0].clientY)||0;tx=(window.innerWidth/2-cx)*.012;ty=(window.innerHeight/2-cy)*.012;};
