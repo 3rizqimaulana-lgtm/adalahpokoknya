@@ -131,16 +131,14 @@ header .sub{font-size:.75rem;color:rgba(255,253,247,.45);font-style:italic;margi
 </div>
 
 <!-- ===== PANEL: LIVE ===== -->
-<div class="panel" id="panel-live" style="align-items:center;">
-  <div id="live-status" style="display:flex;align-items:center;gap:8px;padding:14px 16px;font-family:'Space Mono',monospace;font-size:.68rem;letter-spacing:1px;">
-    <span id="live-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,253,247,.25);flex-shrink:0;"></span>
-    <span id="live-text" style="color:rgba(255,253,247,.6);">Menunggu data…</span>
-  </div>
-  <div style="width:100%;flex:1;position:relative;background:#0A1830;overflow:hidden;">
-    <iframe id="live-frame" style="width:100%;height:100%;border:0;display:none;" title="Live view Taman Bulan"></iframe>
-    <div id="live-placeholder" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-size:.85rem;color:rgba(255,253,247,.4);font-style:italic;">
-      Jendela live akan tampil begitu Naffa membuka Taman Bulan ✦
+<div class="panel" id="panel-live" style="align-items:center;justify-content:center;">
+  <div id="live-status" style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px;text-align:center;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span id="live-dot" style="width:10px;height:10px;border-radius:50%;background:rgba(255,253,247,.25);flex-shrink:0;"></span>
+      <span id="live-online-lbl" style="font-family:'Space Mono',monospace;font-size:.7rem;letter-spacing:2px;color:rgba(255,253,247,.6);text-transform:uppercase;">Menunggu data…</span>
     </div>
+    <div id="live-stage-lbl" style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;color:var(--gold-lt);"></div>
+    <div id="live-sub-lbl" style="font-family:'Space Mono',monospace;font-size:.62rem;letter-spacing:1px;color:rgba(255,253,247,.4);"></div>
   </div>
 </div>
 
@@ -371,10 +369,6 @@ document.getElementById('letter-save').addEventListener('click', function(){
   downloadText('surat-2030-naffa.txt', content);
 });
 // ---------- Live view ----------
-// ISI dengan URL situs Taman Bulan yang sudah kamu deploy (misal GitHub Pages-mu).
-// Selama masih kosong, tab Live cuma menampilkan status stage tanpa jendela pratinjau.
-const LIVE_SITE_URL = 'https://3rizqimaulana-lgtm.github.io/adalahpokoknya/';
-
 const STAGE_LABELS={
   s1:'01 · Pintu Taman', s2:'02 · Teka-Teki Bunga', s2b:'03 · Rahasia Tahun Lahir',
   scd:'04 · Dua Dekade Hidup', str:'05 · Kartu Ramalan Bulan', sph:'06 · Esensi Bunga & Hewan',
@@ -385,43 +379,33 @@ const STAGE_LABELS={
   sphoto:'19 · Bilik Foto', s13:'20 · Sertifikat'
 };
 
-let liveStarted=false, liveLastStage=null;
+let liveStarted=false;
 function startLive(){
   if(liveStarted) return;
   liveStarted=true;
-  const dot=document.getElementById('live-dot'), txt=document.getElementById('live-text');
-  const frame=document.getElementById('live-frame'), placeholder=document.getElementById('live-placeholder');
+  const dot=document.getElementById('live-dot'), onlineLbl=document.getElementById('live-online-lbl'),
+        stageLbl=document.getElementById('live-stage-lbl'), subLbl=document.getElementById('live-sub-lbl');
 
   db.collection('live_presence').doc('naffa').onSnapshot(function(doc){
-    if(!doc.exists) return;
+    if(!doc.exists){
+      onlineLbl.textContent='Belum ada data';
+      stageLbl.textContent='';
+      subLbl.textContent='Menunggu Naffa membuka Taman Bulan ✦';
+      return;
+    }
     const d=doc.data();
     const label=STAGE_LABELS[d.stageId]||d.stageId;
     const ageMs=Date.now()-new Date(d.ts).getTime();
     const online=ageMs<15000;
     dot.style.background=online?'#7FAE6A':'rgba(255,253,247,.25)';
     dot.style.boxShadow=online?'0 0 8px rgba(127,174,106,.7)':'none';
-    txt.textContent=(online?'Online':'Terakhir aktif '+Math.round(ageMs/1000)+'d lalu')
-      +' · Stage '+((d.stageIdx||0)+1)+'/'+(d.total||20)+' — '+label;
-
-    if(LIVE_SITE_URL){
-      placeholder.style.display='none';
-      frame.style.display='block';
-      if(!frame.src){
-        frame.src=LIVE_SITE_URL;
-        frame.onload=function(){ if(d.stageId) syncFrame(d.stageId); };
-      } else if(d.stageId!==liveLastStage){
-        syncFrame(d.stageId);
-      }
-    }
-    liveLastStage=d.stageId;
+    onlineLbl.textContent=online?'Online':'Terakhir aktif '+Math.round(ageMs/1000)+'d lalu';
+    stageLbl.textContent='Stage '+((d.stageIdx||0)+1)+'/'+(d.total||20);
+    subLbl.textContent=label;
   }, function(err){
-    txt.textContent='Gagal memuat status live.';
+    onlineLbl.textContent='Gagal memuat status live.';
     console.error(err);
   });
-}
-function syncFrame(stageId){
-  const frame=document.getElementById('live-frame');
-  try{ frame.contentWindow.postMessage({type:'nm_live_goto', stageId:stageId}, '*'); }catch(e){}
 }
 </script>
 </body>
